@@ -36,3 +36,11 @@ Build the Players page in Blazor WASM where users can add players by name, view 
 - Set `ApiBaseUrl` in `wwwroot/appsettings.json` (e.g. `http://localhost:5000`)
 - Use `@inject PlayerApiClient PlayerApi` in the component
 - `OnKeyDown` on the text field: call add on `Enter` key
+
+## Tasks
+
+- [ ] T1: Implement `PlayerApiClient` typed HttpClient service
+- [ ] T2: Register `PlayerApiClient` in `Program.cs` and set `ApiBaseUrl` in `appsettings.json` (blocks: T1)
+- [ ] T3: Build `Players.razor` page with add form (MudTextField + MudButton) (blocks: T1, T2)
+- [ ] T4: Add player table (MudTable) with per-row delete button (blocks: T3)
+- [ ] T5: Add form validation, Enter-key support, and loading skeleton (blocks: T3, T4)

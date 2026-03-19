@@ -33,3 +33,12 @@ Implement the core domain entities and the shared DTOs used to transfer data bet
 - Domain entities are plain C# classes with no framework dependencies
 - DTOs are records or simple classes — no domain logic, only data
 - `Team` hash code: `HashCode.Combine` on both player IDs unordered (e.g. XOR the two hashes or sort before combining)
+
+## Tasks
+
+- [ ] T1: Create `Player` entity (`Id`, `Name`)
+- [ ] T2: Create `Team` entity with order-independent `IEquatable<Team>` (blocks: T1)
+- [ ] T3: Create `Match` entity (`MatchNumber`, `Team1`, `Team2`) (blocks: T2)
+- [ ] T4: Create `PlayerDto` and `MatchDto` in `Winterplein.Shared/DTOs/`
+- [ ] T5: Create `AddPlayerRequest` and `GenerateMatchesResponse` DTOs (blocks: T4)
+- [ ] T6: Write Team equality and hash code unit tests (blocks: T2)

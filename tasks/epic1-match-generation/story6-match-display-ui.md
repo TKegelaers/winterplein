@@ -33,3 +33,12 @@ Build the Matches page where users can generate all possible doubles matches fro
 - Use `<Virtualize Items="matches" Context="match">` for smooth rendering of 630+ rows
 - `GenerateMatchesResponse.Matches` is a flat `List<MatchDto>` — no nested objects to unwrap
 - Format display name: `$"{m.Team1Player1} & {m.Team1Player2} vs {m.Team2Player1} & {m.Team2Player2}"`
+
+## Tasks
+
+- [ ] T1: Implement `MatchApiClient` typed HttpClient service
+- [ ] T2: Register `MatchApiClient` in `Program.cs` (blocks: T1)
+- [ ] T3: Build `Matches.razor` page with player count and match count preview (blocks: T1, T2)
+- [ ] T4: Add "Generate Matches" button with disabled state and spinner (blocks: T3)
+- [ ] T5: Render match results in a virtualized list (blocks: T4)
+- [ ] T6: Handle regeneration — clear previous results before new request (blocks: T5)

@@ -38,3 +38,12 @@ Finalize the MudBlazor layout and navigation, add a home page with app overview,
 - Share player count via a lightweight `AppState` service (scoped) injected into both layout and pages
 - MudBlazor providers (`MudThemeProvider`, `MudPopoverProvider`, `MudDialogProvider`, `MudSnackbarProvider`) must be in `App.razor` or `MainLayout.razor`
 - Use `MudTheme` to define custom palette — avoid inline styles
+
+## Tasks
+
+- [ ] T1: Create `AppState` scoped service and register in `Program.cs`
+- [ ] T2: Update `MainLayout.razor` with MudAppBar, collapsible MudDrawer, and NavMenu (blocks: T1)
+- [ ] T3: Build `Home.razor` page with app description, stats, and quick-action buttons (blocks: T1)
+- [ ] T4: Add MudSnackbar notifications for player added/removed actions (blocks: T2)
+- [ ] T5: Add MudProgressLinear/MudSkeleton loading indicators across pages (blocks: T2)
+- [ ] T6: Configure custom MudBlazor theme with tennis/sport palette (blocks: T2)

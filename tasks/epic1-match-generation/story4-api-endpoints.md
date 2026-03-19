@@ -45,3 +45,12 @@ Expose the player management and match generation functionality via a minimal AS
 - Return `TypedResults` for proper OpenAPI type inference
 - DTOs come from `Winterplein.Shared` — no domain types leak into API responses
 - Map Domain → DTO inside endpoint handlers (or a thin mapper class)
+
+## Tasks
+
+- [ ] T1: Implement `InMemoryPlayerRepository` in Infrastructure (blocks: `IPlayerRepository` from Story 3)
+- [ ] T2: Register `IPlayerRepository` and `IMatchGeneratorService` in DI (blocks: T1)
+- [ ] T3: Implement player endpoints (`GET`, `POST`, `DELETE /api/players`) (blocks: T2)
+- [ ] T4: Add validation — reject empty names (400), missing player (404) (blocks: T3)
+- [ ] T5: Implement match endpoints (`POST /api/matches/generate`, `GET /api/matches/count`) (blocks: T2)
+- [ ] T6: Smoke-test all endpoints with `curl` or Swagger (blocks: T3, T4, T5)

@@ -59,3 +59,15 @@ dotnet add tests/Winterplein.IntegrationTests reference src/Winterplein.Api
 # MudBlazor
 dotnet add src/Winterplein.Client package MudBlazor
 ```
+
+## Tasks
+
+- [ ] T1: Create solution file (`dotnet new sln -n Winterplein`)
+- [ ] T2: Scaffold all 8 projects (blocks: T1)
+- [ ] T3: Add all projects to solution (blocks: T2)
+- [ ] T4: Set up project references per Clean Architecture (blocks: T3)
+- [ ] T5: Install MudBlazor NuGet package in Client (blocks: T3)
+- [ ] T6: Configure CORS in API to allow Client origin (blocks: T3)
+- [ ] T7: Add MudBlazor providers and CSS/JS to Client (blocks: T5)
+- [ ] T8: Scaffold basic layout with AppBar and NavDrawer placeholder links (blocks: T7)
+- [ ] T9: Verify `dotnet build` passes with no errors (blocks: T4, T6, T8)
