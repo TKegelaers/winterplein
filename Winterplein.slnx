@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Winterplein.Api/Winterplein.Api.csproj" />
+    <Project Path="src/Winterplein.Application/Winterplein.Application.csproj" />
+    <Project Path="src/Winterplein.Client/Winterplein.Client.csproj" />
+    <Project Path="src/Winterplein.Domain/Winterplein.Domain.csproj" />
+    <Project Path="src/Winterplein.Infrastructure/Winterplein.Infrastructure.csproj" />
+    <Project Path="src/Winterplein.Shared/Winterplein.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Winterplein.IntegrationTests/Winterplein.IntegrationTests.csproj" />
+    <Project Path="tests/Winterplein.UnitTests/Winterplein.UnitTests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,6 @@
+@Winterplein.Api_HostAddress = http://localhost:5095
+
+GET {{Winterplein.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
