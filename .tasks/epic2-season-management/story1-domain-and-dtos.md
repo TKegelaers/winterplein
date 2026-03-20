@@ -11,7 +11,7 @@ Implement the `Season` domain entity with computed matchday enumeration and the 
 
 ### Domain entity (`Winterplein.Domain/Entities/Season.cs`)
 
-- `Id` (Guid), `Name` (string)
+- `Id` (int), `Name` (string)
 - `StartDate` (DateOnly), `EndDate` (DateOnly)
 - `Weekday` (DayOfWeek), `StartHour` (TimeOnly), `EndHour` (TimeOnly)
 - `GetMatchdays()` → `IReadOnlyList<DateOnly>` — enumerates all dates in [StartDate, EndDate] that fall on `Weekday`
@@ -19,7 +19,7 @@ Implement the `Season` domain entity with computed matchday enumeration and the 
 
 ### Shared DTOs (`Winterplein.Shared/DTOs/`)
 
-- **`SeasonDto`** — all entity fields + `Matchdays` (List\<DateOnly\>), `MatchdayCount` (int)
+- **`SeasonDto`** — `Id` (int) + all entity fields + `Matchdays` (List\<DateOnly\>), `MatchdayCount` (int)
 - **`CreateSeasonRequest`** — `Name`, `StartDate`, `EndDate`, `Weekday`, `StartHour`, `EndHour`
 - **`UpdateSeasonRequest`** — same fields as `CreateSeasonRequest`
 
@@ -33,5 +33,5 @@ Implement the `Season` domain entity with computed matchday enumeration and the 
 
 - [ ] T1: Create `Season` entity with all properties and `GetMatchdays()` method
 - [ ] T2: Add validation logic to `Season` (empty name, EndDate <= StartDate, EndHour <= StartHour) (blocks: T1)
-- [ ] T3: Create `SeasonDto` record with `Matchdays` and `MatchdayCount` (blocks: T1)
+- [ ] T3: Create `SeasonDto` record with `Id` (int), `Matchdays` and `MatchdayCount` (blocks: T1)
 - [ ] T4: Create `CreateSeasonRequest` and `UpdateSeasonRequest` records

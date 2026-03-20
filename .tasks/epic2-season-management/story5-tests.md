@@ -21,7 +21,7 @@ Write unit tests for domain logic and CQRS handlers, and integration tests for t
   - Throws when EndDate <= StartDate
   - Throws when EndHour <= StartHour
 - **CQRS handler tests (mocked `ISeasonRepository`):**
-  - `CreateSeasonCommandHandler` — creates season and returns a Guid
+  - `CreateSeasonCommandHandler` — creates season and returns an `int` Id
   - `GetSeasonsQueryHandler` — returns all seasons from repository
   - `GetSeasonByIdQueryHandler` — returns correct season; returns null for unknown Id
   - `UpdateSeasonCommandHandler` — updates season; returns false for unknown Id

@@ -13,18 +13,18 @@ Build the season management UI in Blazor WASM using MudBlazor, including list, c
 
 - Typed `HttpClient` wrapper with methods:
   - `GetSeasonsAsync()` → `List<SeasonDto>`
-  - `GetSeasonAsync(Guid id)` → `SeasonDto?`
+  - `GetSeasonAsync(int id)` → `SeasonDto?`
   - `CreateSeasonAsync(CreateSeasonRequest)` → `SeasonDto`
-  - `UpdateSeasonAsync(Guid id, UpdateSeasonRequest)` → `SeasonDto?`
-  - `DeleteSeasonAsync(Guid id)` → `bool`
-  - `GetMatchdaysAsync(Guid id)` → `List<DateOnly>`
+  - `UpdateSeasonAsync(int id, UpdateSeasonRequest)` → `SeasonDto?`
+  - `DeleteSeasonAsync(int id)` → `bool`
+  - `GetMatchdaysAsync(int id)` → `List<DateOnly>`
 
 ### Pages
 
 - **Season List** (`/seasons`) — `MudTable` with columns: Name, Weekday, Start Date, End Date, Time, Matchday Count, Actions (Edit/Delete/View)
 - **Season Create** (`/seasons/create`) — uses `SeasonForm` component
-- **Season Edit** (`/seasons/{id}/edit`) — loads existing season, uses `SeasonForm` component
-- **Season Detail** (`/seasons/{id}`) — season summary + `MudTable` listing computed matchdays
+- **Season Edit** (`/seasons/{id:int}/edit`) — loads existing season, uses `SeasonForm` component
+- **Season Detail** (`/seasons/{id:int}`) — season summary + `MudTable` listing computed matchdays
 
 ### Shared component (`SeasonForm.razor`)
 
@@ -44,12 +44,12 @@ Build the season management UI in Blazor WASM using MudBlazor, including list, c
 
 ## Tasks
 
-- [ ] T1: Implement `SeasonApiClient` with all API methods
+- [ ] T1: Implement `SeasonApiClient` with all API methods (using `int id` parameters)
 - [ ] T2: Register `SeasonApiClient` as typed HttpClient in `Program.cs` (blocks: T1)
 - [ ] T3: Add "Seasons" nav link to `NavMenu.razor`
 - [ ] T4: Build season list page (`/seasons`) with `MudTable` and delete confirmation dialog (blocks: T1, T2)
 - [ ] T5: Build `SeasonForm.razor` reusable component with validation and matchday preview (blocks: T1)
 - [ ] T6: Build create page (`/seasons/create`) using `SeasonForm` (blocks: T4, T5)
-- [ ] T7: Build edit page (`/seasons/{id}/edit`) using `SeasonForm` (blocks: T4, T5)
-- [ ] T8: Build detail page (`/seasons/{id}`) with matchday list (blocks: T1, T2)
+- [ ] T7: Build edit page (`/seasons/{id:int}/edit`) using `SeasonForm` (blocks: T4, T5)
+- [ ] T8: Build detail page (`/seasons/{id:int}`) with matchday list (blocks: T1, T2)
 - [ ] T9: Add delete confirmation `MudDialog` to list page (blocks: T4)

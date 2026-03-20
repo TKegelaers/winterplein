@@ -13,16 +13,16 @@ Implement the CQRS commands/queries with MediatR handlers and an in-memory repos
 
 - **`ISeasonRepository`** interface in `Interfaces/` — GetAll, GetById, Add, Update, Delete
 - **Commands:**
-  - `CreateSeasonCommand` (Name, StartDate, EndDate, Weekday, StartHour, EndHour) → `Guid`
-  - `UpdateSeasonCommand` (Id + same fields as Create) → `bool`
-  - `DeleteSeasonCommand` (Id: Guid) → `bool`
+  - `CreateSeasonCommand` (Name, StartDate, EndDate, Weekday, StartHour, EndHour) → `int`
+  - `UpdateSeasonCommand` (Id: int + same fields as Create) → `bool`
+  - `DeleteSeasonCommand` (Id: int) → `bool`
 - **Queries:**
   - `GetSeasonsQuery` → `List<Season>`
-  - `GetSeasonByIdQuery` (Id: Guid) → `Season?`
+  - `GetSeasonByIdQuery` (Id: int) → `Season?`
 
 ### Infrastructure layer (`Winterplein.Infrastructure/Persistence/`)
 
-- **`InMemorySeasonRepository`** backed by `ConcurrentDictionary<Guid, Season>`
+- **`InMemorySeasonRepository`** backed by `ConcurrentDictionary<int, Season>`
 - Registered as Singleton in DI
 
 ## Technical Notes
@@ -34,10 +34,10 @@ Implement the CQRS commands/queries with MediatR handlers and an in-memory repos
 ## Tasks
 
 - [ ] T1: Define `ISeasonRepository` interface with GetAll, GetById, Add, Update, Delete
-- [ ] T2: Create `CreateSeasonCommand` + handler — builds `Season`, calls `Add`, returns new Id (blocks: T1, Story 1 T1)
+- [ ] T2: Create `CreateSeasonCommand` + handler — builds `Season`, calls `Add`, returns new `int` Id (blocks: T1, Story 1 T1)
 - [ ] T3: Create `GetSeasonsQuery` + handler — returns all seasons (blocks: T1)
-- [ ] T4: Create `GetSeasonByIdQuery` + handler — returns season or null (blocks: T1)
-- [ ] T5: Create `UpdateSeasonCommand` + handler — updates existing season, returns false if not found (blocks: T1)
-- [ ] T6: Create `DeleteSeasonCommand` + handler — removes season, returns false if not found (blocks: T1)
-- [ ] T7: Implement `InMemorySeasonRepository` using `ConcurrentDictionary` (blocks: T1)
+- [ ] T4: Create `GetSeasonByIdQuery` (Id: int) + handler — returns season or null (blocks: T1)
+- [ ] T5: Create `UpdateSeasonCommand` (Id: int) + handler — updates existing season, returns false if not found (blocks: T1)
+- [ ] T6: Create `DeleteSeasonCommand` (Id: int) + handler — removes season, returns false if not found (blocks: T1)
+- [ ] T7: Implement `InMemorySeasonRepository` using `ConcurrentDictionary<int, Season>` (blocks: T1)
 - [ ] T8: Register `InMemorySeasonRepository` as Singleton for `ISeasonRepository` in DI (blocks: T7)
