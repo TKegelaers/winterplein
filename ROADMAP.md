@@ -12,7 +12,7 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 | # | Story | Description | Status |
 |---|-------|-------------|--------|
-| 1 | [Project Setup](.tasks/epic1-match-generation/story1-project-setup.md) | Scaffold solution with all projects, MudBlazor, CORS | In Progress (T1–T3 done) |
+| 1 | [Project Setup](.tasks/epic1-match-generation/story1-project-setup.md) | Scaffold solution with all projects, MudBlazor, CORS | Done |
 | 2 | [Domain Models](.tasks/epic1-match-generation/story2-domain-models.md) | Player, Team, Match entities + Shared DTOs | Pending |
 | 3 | [Match Generation Service](.tasks/epic1-match-generation/story3-match-generation-service.md) | C(N,4)×3 algorithm, unit tests | Pending |
 | 4 | [API Endpoints](.tasks/epic1-match-generation/story4-api-endpoints.md) | Minimal API for players and match generation | Pending |

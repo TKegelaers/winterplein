@@ -69,5 +69,5 @@ dotnet add src/Winterplein.Client package MudBlazor
 - [x] T5: Install MudBlazor NuGet package in Client (blocks: T3)
 - [x] T6: Configure CORS in API to allow Client origin (blocks: T3)
 - [x] T7: Add MudBlazor providers and CSS/JS to Client (blocks: T5)
-- [ ] T8: Scaffold basic layout with AppBar and NavDrawer placeholder links (blocks: T7)
-- [ ] T9: Verify `dotnet build` passes with no errors (blocks: T4, T6, T8)
+- [x] T8: Scaffold basic layout with AppBar and NavDrawer placeholder links (blocks: T7)
+- [x] T9: Verify `dotnet build` passes with no errors (blocks: T4, T6, T8)
