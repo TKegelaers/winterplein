@@ -22,13 +22,24 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 ---
 
+---
+
+## Epic 2 — Season Management
+
+> Manage seasons with a name, date range, weekly matchday, and start/end hours. Matchdays are computed from the date range and weekday — not stored.
+
+| # | Story | Description | Status |
+|---|-------|-------------|--------|
+| 1 | [Domain Entity & Shared DTOs](.tasks/epic2-season-management/story1-domain-and-dtos.md) | `Season` entity with `GetMatchdays()`, `SeasonDto`, Create/Update request DTOs | Pending |
+| 2 | [CQRS Handlers & In-Memory Repository](.tasks/epic2-season-management/story2-cqrs-and-repository.md) | MediatR commands/queries, `ISeasonRepository`, `InMemorySeasonRepository` | Pending |
+| 3 | [Minimal API Endpoints](.tasks/epic2-season-management/story3-api-endpoints.md) | CRUD + matchdays endpoints, `SeasonMapper`, DI registration | Pending |
+| 4 | [Blazor WASM UI](.tasks/epic2-season-management/story4-blazor-ui.md) | `SeasonApiClient`, list/create/edit/detail pages, `SeasonForm` component | Pending |
+| 5 | [Tests](.tasks/epic2-season-management/story5-tests.md) | Unit tests for domain + handlers, integration tests for API endpoints | Pending |
+
+---
+
 ## Future Epics
 
 | Epic | Description |
 |------|-------------|
-| Epic 2 — Match Scheduling | Assign matches to time slots and courts |
-| Epic 3 — Score Tracking | Record scores, determine winners, calculate standings |
-| Epic 4 — Player Statistics | Win/loss records, partner performance, head-to-head stats |
-| Epic 5 — Persistence | SQLite/PostgreSQL with EF Core; save/load tournaments |
-| Epic 6 — Tournament Modes | Round-robin, Swiss-system, bracket elimination |
-| Epic 7 — Export & Share | PDF/Excel export of schedule and results |
+
