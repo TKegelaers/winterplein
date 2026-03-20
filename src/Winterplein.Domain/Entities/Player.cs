@@ -5,12 +5,13 @@ namespace Winterplein.Domain.Entities;
 
 public class Player
 {
-    public int Id { get; set; }
+    public int Id { get; }
     public Name Name { get; }
     public Gender Gender { get; set; }
 
-    public Player(Name name)
+    public Player(int id, Name name)
     {
+        Id = id;
         Name = name ?? throw new ArgumentNullException(nameof(name));
     }
 }

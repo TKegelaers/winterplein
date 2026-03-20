@@ -10,7 +10,7 @@ public class PlayerTests
     public void Player_StoresProperties()
     {
         var name = new Name("John", "Doe");
-        var player = new Player(name) { Id = 1, Gender = Gender.Female };
+        var player = new Player(1, name) { Gender = Gender.Female };
 
         Assert.Equal(1, player.Id);
         Assert.Equal(name, player.Name);
@@ -20,6 +20,6 @@ public class PlayerTests
     [Fact]
     public void Player_Constructor_ThrowsWhenNameIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => new Player(null!));
+        Assert.Throws<ArgumentNullException>(() => new Player(1, null!));
     }
 }

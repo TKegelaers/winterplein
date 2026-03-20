@@ -7,15 +7,15 @@ namespace Winterplein.UnitTests.Domain;
 public class TeamTests
 {
     private static Player MakePlayer(int id) =>
-        new(new Name("Test", "Player")) { Id = id, Gender = Gender.Male };
+        new(id, new Name("Test", "Player")) { Gender = Gender.Male };
 
     [Fact]
     public void Team_AB_Equals_Team_BA()
     {
         var a = MakePlayer(1);
         var b = MakePlayer(2);
-        var team1 = new Team(a, b) { Id = 1 };
-        var team2 = new Team(b, a) { Id = 2 };
+        var team1 = new Team(1, a, b);
+        var team2 = new Team(2, b, a);
 
         Assert.Equal(team1, team2);
     }
@@ -26,8 +26,8 @@ public class TeamTests
         var a = MakePlayer(1);
         var b = MakePlayer(2);
         var c = MakePlayer(3);
-        var team1 = new Team(a, b) { Id = 1 };
-        var team2 = new Team(a, c) { Id = 2 };
+        var team1 = new Team(1, a, b);
+        var team2 = new Team(2, a, c);
 
         Assert.NotEqual(team1, team2);
     }
@@ -37,8 +37,8 @@ public class TeamTests
     {
         var a = MakePlayer(1);
         var b = MakePlayer(2);
-        var team1 = new Team(a, b) { Id = 1 };
-        var team2 = new Team(b, a) { Id = 2 };
+        var team1 = new Team(1, a, b);
+        var team2 = new Team(2, b, a);
 
         Assert.Equal(team1.GetHashCode(), team2.GetHashCode());
     }
@@ -48,7 +48,7 @@ public class TeamTests
     {
         var a = MakePlayer(1);
         var b = MakePlayer(2);
-        var team = new Team(a, b) { Id = 1 };
+        var team = new Team(1, a, b);
 
         Assert.Equal(a, team.Player1);
         Assert.Equal(b, team.Player2);
@@ -58,13 +58,13 @@ public class TeamTests
     public void Team_Constructor_ThrowsWhenPlayer1IsNull()
     {
         var b = MakePlayer(2);
-        Assert.Throws<ArgumentNullException>(() => new Team(null!, b));
+        Assert.Throws<ArgumentNullException>(() => new Team(1, null!, b));
     }
 
     [Fact]
     public void Team_Constructor_ThrowsWhenPlayer2IsNull()
     {
         var a = MakePlayer(1);
-        Assert.Throws<ArgumentNullException>(() => new Team(a, null!));
+        Assert.Throws<ArgumentNullException>(() => new Team(1, a, null!));
     }
 }

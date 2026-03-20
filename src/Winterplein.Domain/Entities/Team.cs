@@ -2,12 +2,13 @@ namespace Winterplein.Domain.Entities;
 
 public class Team : IEquatable<Team>
 {
-    public int Id { get; set; }
+    public int Id { get; }
     public Player Player1 { get; }
     public Player Player2 { get; }
 
-    public Team(Player player1, Player player2)
+    public Team(int id, Player player1, Player player2)
     {
+        Id = id;
         Player1 = player1 ?? throw new ArgumentNullException(nameof(player1));
         Player2 = player2 ?? throw new ArgumentNullException(nameof(player2));
     }
