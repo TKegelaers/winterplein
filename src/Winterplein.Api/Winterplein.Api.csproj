@@ -10,4 +10,10 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Winterplein.Application\Winterplein.Application.csproj" />
+    <ProjectReference Include="..\Winterplein.Infrastructure\Winterplein.Infrastructure.csproj" />
+    <ProjectReference Include="..\Winterplein.Shared\Winterplein.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -65,7 +65,7 @@ dotnet add src/Winterplein.Client package MudBlazor
 - [x] T1: Create solution file (`dotnet new sln -n Winterplein`)
 - [x] T2: Scaffold all 8 projects (blocks: T1)
 - [x] T3: Add all projects to solution (blocks: T2)
-- [ ] T4: Set up project references per Clean Architecture (blocks: T3)
+- [x] T4: Set up project references per Clean Architecture (blocks: T3)
 - [ ] T5: Install MudBlazor NuGet package in Client (blocks: T3)
 - [ ] T6: Configure CORS in API to allow Client origin (blocks: T3)
 - [ ] T7: Add MudBlazor providers and CSS/JS to Client (blocks: T5)
