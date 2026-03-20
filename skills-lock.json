@@ -36,6 +36,11 @@
       "sourceType": "github",
       "computedHash": "2607fc60629b82b257136dd2a7a373f0a4466c0b49df7746d845d59313c99b21"
     },
+    "net-cqrs": {
+      "source": "mitkox/ai-coding-factory",
+      "sourceType": "github",
+      "computedHash": "b520524e7c2b4ec844a0b2fd31e000b5604bfc9acbac6ccec0cb65f70291b5e2"
+    },
     "nuget-manager": {
       "source": "github/awesome-copilot",
       "sourceType": "github",

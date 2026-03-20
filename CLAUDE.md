@@ -10,7 +10,7 @@ Winterplein is a tennis doubles match generator. Given N players, it generates a
 - .tasks/ = one folder per epic and one file per user story
 - User stories have tasks with dependencies using TaskCreate and addBlockedBy."
 
-**Tech stack:** .NET 10 · Blazor WebAssembly · ASP.NET Core Minimal API · MudBlazor · Clean Architecture
+**Tech stack:** .NET 10 · Blazor WebAssembly · ASP.NET Core Minimal API · MudBlazor · Clean Architecture · CQRS · MediatR
 
 ## Workflow
 
@@ -49,7 +49,7 @@ Clean Architecture with strict dependency rules:
 ```
 Winterplein.Domain          — entities, no external dependencies
 Winterplein.Shared          — DTOs shared between API and Client, no external dependencies
-Winterplein.Application     — use cases/services, refs Domain
+Winterplein.Application     — CQRS commands/queries/handlers (MediatR), refs Domain
 Winterplein.Infrastructure  — EF Core, external services, refs Application + Domain
 Winterplein.Api             — ASP.NET Core Minimal API, refs Application + Infrastructure + Shared
 Winterplein.Client          — Blazor WASM (MudBlazor), refs Shared only
@@ -65,7 +65,8 @@ The solution is scaffolded (Story 1 T1-T3 complete) but most projects contain on
 
 ## Development Notes
 
-- The match generation algorithm lives (or will live) in `Winterplein.Application` as a service
+- The application layer uses CQRS via MediatR: commands (write) and queries (read) live in `Winterplein.Application`, handlers are registered via `services.AddMediatR(...)`
+- The match generation algorithm lives (or will live) in `Winterplein.Application` as a MediatR query handler
 - API uses Minimal APIs pattern (no controllers)
 - CORS must allow the Blazor client origin (`http://localhost:5149`) — configure in `Winterplein.Api/Program.cs`
 - MudBlazor is the UI component library for the Blazor client
