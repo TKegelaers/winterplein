@@ -1,6 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddSingleton<Winterplein.Application.Interfaces.IMatchGeneratorService, Winterplein.Application.Services.MatchGeneratorService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", policy =>
