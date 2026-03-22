@@ -11,7 +11,7 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 > Generate all possible doubles matches from a player list.
 
 | # | Story | Description | Status |
-|---|-------|-------------|--------|
+| --- | ------- | ------------- | -------- |
 | 1 | [Project Setup](.tasks/epic1-match-generation/story1-project-setup.md) | Scaffold solution with all projects, MudBlazor, CORS | Done |
 | 2 | [Domain Models](.tasks/epic1-match-generation/story2-domain-models.md) | Player, Team, Match entities + Shared DTOs | Pending |
 | 3 | [Match Generation Service](.tasks/epic1-match-generation/story3-match-generation-service.md) | C(N,4)×3 algorithm, unit tests | Pending |
@@ -29,7 +29,7 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 > Manage seasons with a name, date range, weekly matchday, and start/end hours. Matchdays are computed from the date range and weekday — not stored.
 
 | # | Story | Description | Status |
-|---|-------|-------------|--------|
+| --- | ------- | ------------- | -------- |
 | 1 | [Domain Entity & Shared DTOs](.tasks/epic2-season-management/story1-domain-and-dtos.md) | `Season` entity with `GetMatchdays()`, `SeasonDto`, Create/Update request DTOs | Pending |
 | 2 | [CQRS Handlers & In-Memory Repository](.tasks/epic2-season-management/story2-cqrs-and-repository.md) | MediatR commands/queries, `ISeasonRepository`, `InMemorySeasonRepository` | Pending |
 | 3 | [Minimal API Endpoints](.tasks/epic2-season-management/story3-api-endpoints.md) | CRUD + matchdays endpoints, `SeasonMapper`, DI registration | Pending |
@@ -42,4 +42,3 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 | Epic | Description |
 |------|-------------|
-

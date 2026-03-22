@@ -46,7 +46,7 @@ dotnet test --filter "FullyQualifiedName~MyTestClass.MyTestMethod"
 
 Clean Architecture with strict dependency rules:
 
-```
+``` text
 Winterplein.Domain          — entities, no external dependencies
 Winterplein.Shared          — DTOs shared between API and Client, no external dependencies
 Winterplein.Application     — CQRS commands/queries/handlers (MediatR), refs Domain + Shared

@@ -11,7 +11,8 @@ Scaffold the full solution with all projects following Clean Architecture. Confi
 
 - `Winterplein.sln` exists at repo root containing all 9 projects
 - Project structure:
-  ```
+
+  ``` text
   src/
     Winterplein.Client/         ← Blazor WASM, targets net10.0
     Winterplein.Api/            ← ASP.NET Core minimal API, targets net10.0
@@ -23,6 +24,7 @@ Scaffold the full solution with all projects following Clean Architecture. Confi
     Winterplein.UnitTests/      ← xUnit, references Application + Domain
     Winterplein.IntegrationTests/ ← xUnit, references Api
   ```
+
 - Project references follow Clean Architecture (Domain has no refs, Client only refs Shared)
 - MudBlazor NuGet package installed in `Winterplein.Client`
 - MudBlazor configured: providers in layout, CSS/JS linked in `index.html`
