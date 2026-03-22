@@ -14,5 +14,5 @@ public class PlayerBuilder
     public PlayerBuilder WithName(Name name) { _name = name; return this; }
     public PlayerBuilder WithGender(Gender gender) { _gender = gender; return this; }
 
-    public Player Build() => new(_id, _name) { Gender = _gender };
+    public Player Build() => new(_id, _name, _gender);
 }
