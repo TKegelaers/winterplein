@@ -1,40 +1,35 @@
 using Winterplein.Domain.Entities;
-using Winterplein.Domain.Enums;
-using Winterplein.Domain.ValueObjects;
+using Winterplein.UnitTests.Common.Builders;
 
 namespace Winterplein.UnitTests.Domain;
 
 public class MatchTests
 {
-    private static Player MakePlayer(int id) =>
-        new(id, new Name("Test", "Player")) { Gender = Gender.Male };
-
-    private static Team MakeTeam(int id, int p1Id, int p2Id) =>
-        new(id, MakePlayer(p1Id), MakePlayer(p2Id));
-
     [Fact]
     public void Match_StoresProperties()
     {
-        var team1 = MakeTeam(1, 1, 2);
-        var team2 = MakeTeam(2, 3, 4);
+        var team1 = new TeamBuilder().WithId(1).WithPlayer1(new PlayerBuilder().WithId(1).Build()).WithPlayer2(new PlayerBuilder().WithId(2).Build()).Build();
+        var team2 = new TeamBuilder().WithId(2).WithPlayer1(new PlayerBuilder().WithId(3).Build()).WithPlayer2(new PlayerBuilder().WithId(4).Build()).Build();
         var match = new Match(1, team1, team2);
 
-        Assert.Equal(1, match.Id);
-        Assert.Equal(team1, match.Team1);
-        Assert.Equal(team2, match.Team2);
+        match.Id.Should().Be(1);
+        match.Team1.Should().Be(team1);
+        match.Team2.Should().Be(team2);
     }
 
     [Fact]
     public void Match_Constructor_ThrowsWhenTeam1IsNull()
     {
-        var team2 = MakeTeam(2, 3, 4);
-        Assert.Throws<ArgumentNullException>(() => new Match(1, null!, team2));
+        var team2 = new TeamBuilder().WithId(2).WithPlayer1(new PlayerBuilder().WithId(3).Build()).WithPlayer2(new PlayerBuilder().WithId(4).Build()).Build();
+        var act = () => new Match(1, null!, team2);
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
     public void Match_Constructor_ThrowsWhenTeam2IsNull()
     {
-        var team1 = MakeTeam(1, 1, 2);
-        Assert.Throws<ArgumentNullException>(() => new Match(1, team1, null!));
+        var team1 = new TeamBuilder().WithId(1).WithPlayer1(new PlayerBuilder().WithId(1).Build()).WithPlayer2(new PlayerBuilder().WithId(2).Build()).Build();
+        var act = () => new Match(1, team1, null!);
+        act.Should().Throw<ArgumentNullException>();
     }
 }

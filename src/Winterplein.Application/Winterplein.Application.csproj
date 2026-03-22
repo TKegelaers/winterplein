@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Winterplein.Domain\Winterplein.Domain.csproj" />
+    <ProjectReference Include="..\Winterplein.Shared\Winterplein.Shared.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

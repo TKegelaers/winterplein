@@ -11,7 +11,8 @@ public class NameTests
     [InlineData("John", "   ")]
     public void Name_Throws_WhenFirstOrLastNameIsEmptyOrWhitespace(string first, string last)
     {
-        Assert.Throws<ArgumentException>(() => new Name(first, last));
+        var act = () => new Name(first, last);
+        act.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -19,7 +20,7 @@ public class NameTests
     {
         var name = new Name("John", "Doe");
 
-        Assert.Equal("John", name.FirstName);
-        Assert.Equal("Doe", name.LastName);
+        name.FirstName.Should().Be("John");
+        name.LastName.Should().Be("Doe");
     }
 }

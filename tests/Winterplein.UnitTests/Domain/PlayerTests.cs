@@ -12,14 +12,15 @@ public class PlayerTests
         var name = new Name("John", "Doe");
         var player = new Player(1, name) { Gender = Gender.Female };
 
-        Assert.Equal(1, player.Id);
-        Assert.Equal(name, player.Name);
-        Assert.Equal(Gender.Female, player.Gender);
+        player.Id.Should().Be(1);
+        player.Name.Should().Be(name);
+        player.Gender.Should().Be(Gender.Female);
     }
 
     [Fact]
     public void Player_Constructor_ThrowsWhenNameIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => new Player(1, null!));
+        var act = () => new Player(1, null!);
+        act.Should().Throw<ArgumentNullException>();
     }
 }
