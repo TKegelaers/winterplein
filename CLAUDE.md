@@ -49,19 +49,22 @@ Clean Architecture with strict dependency rules:
 ```
 Winterplein.Domain          — entities, no external dependencies
 Winterplein.Shared          — DTOs shared between API and Client, no external dependencies
-Winterplein.Application     — CQRS commands/queries/handlers (MediatR), refs Domain
+Winterplein.Application     — CQRS commands/queries/handlers (MediatR), refs Domain + Shared
 Winterplein.Infrastructure  — EF Core, external services, refs Application + Domain
 Winterplein.Api             — ASP.NET Core Minimal API, refs Application + Infrastructure + Shared
 Winterplein.Client          — Blazor WASM (MudBlazor), refs Shared only
-tests/Winterplein.UnitTests        — xUnit, refs Application + Domain
-tests/Winterplein.IntegrationTests — xUnit, refs Api
+tests/Winterplein.UnitTests        — xUnit + FluentAssertions, refs Application + Domain + UnitTests.Common
+tests/Winterplein.UnitTests.Common — Test builders, refs Domain
+tests/Winterplein.IntegrationTests — xUnit + FluentAssertions, refs Api + UnitTests.Common
 ```
 
 Key constraint: `Winterplein.Client` only references `Winterplein.Shared` — it communicates with the API over HTTP, never directly calling application or domain code.
 
 ## Current State
 
-The solution is scaffolded (Story 1 T1-T3 complete) but most projects contain only placeholder `Class1.cs` files. Feature work begins at Story 1 T4 (project references) through Story 7 (UI polish). See `.tasks/epic1-match-generation/` for detailed story files and task checklists.
+Stories 1 (project setup) and 2 (domain models) are complete. The domain layer has entities (`Player`, `Team`, `Match`), enums (`Gender`), and value objects (`Name`). `Winterplein.Shared` has DTOs (`PlayerDto`, `TeamDto`, `MatchDto`). `Winterplein.Application` has Domain→DTO extension-method mappers in `Mappers/`.
+
+Next work is Story 3 (match generation service). See `.tasks/epic1-match-generation/` for detailed story files and task checklists.
 
 ## Development Notes
 
@@ -71,3 +74,6 @@ The solution is scaffolded (Story 1 T1-T3 complete) but most projects contain on
 - CORS must allow the Blazor client origin (`http://localhost:5149`) — configure in `Winterplein.Api/Program.cs`
 - MudBlazor is the UI component library for the Blazor client
 - xUnit is used for all tests; `Xunit` is globally imported in test projects
+- FluentAssertions is used alongside xUnit; `FluentAssertions` is globally imported in test projects
+- Test builders live in `tests/Winterplein.UnitTests.Common/Builders/` (`PlayerBuilder`, `TeamBuilder`, `MatchBuilder`, `NameBuilder`)
+- Domain→DTO mappers are extension methods in `src/Winterplein.Application/Mappers/`
