@@ -1,4 +1,5 @@
 using Winterplein.Application.Services;
+using Winterplein.Domain.Entities;
 using Winterplein.UnitTests.Common.Builders;
 
 namespace Winterplein.UnitTests.Application;
@@ -7,7 +8,7 @@ public class MatchGeneratorServiceTests
 {
     private readonly MatchGeneratorService _sut = new();
 
-    private static List<Winterplein.Domain.Entities.Player> BuildPlayers(int count)
+    private static List<Player> BuildPlayers(int count)
         => Enumerable.Range(1, count)
             .Select(i => new PlayerBuilder().WithId(i).Build())
             .ToList();
@@ -57,13 +58,13 @@ public class MatchGeneratorServiceTests
 
         var result = _sut.GenerateAllMatches(players);
 
-        // A match is a duplicate if it has the same two teams (ignoring order of teams and order within team)
+        // A match is a duplicate if it has the same four players in the same two-team split
+        // Key: sort each team's ids, then sort the two team strings so team order doesn't matter
         var matchKeys = result.Select(m =>
         {
-            var t1 = new HashSet<int> { m.Team1.Player1.Id, m.Team1.Player2.Id };
-            var t2 = new HashSet<int> { m.Team2.Player1.Id, m.Team2.Player2.Id };
-            var ordered = new[] { t1, t2 }.OrderBy(s => s.Min()).ThenBy(s => s.Max()).ToList();
-            return string.Join("|", ordered.Select(s => string.Join(",", s.OrderBy(x => x))));
+            var t1 = string.Join(",", new[] { m.Team1.Player1.Id, m.Team1.Player2.Id }.OrderBy(x => x));
+            var t2 = string.Join(",", new[] { m.Team2.Player1.Id, m.Team2.Player2.Id }.OrderBy(x => x));
+            return string.Join("|", new[] { t1, t2 }.OrderBy(s => s));
         }).ToList();
 
         matchKeys.Should().OnlyHaveUniqueItems();

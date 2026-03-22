@@ -14,7 +14,6 @@ public class MatchGeneratorService : IMatchGeneratorService
             return matches;
 
         int matchNumber = 1;
-        int teamId = 1;
 
         for (int i = 0; i < n - 3; i++)
         for (int j = i + 1; j < n - 2; j++)
@@ -27,19 +26,13 @@ public class MatchGeneratorService : IMatchGeneratorService
             var d = players[l];
 
             // AB vs CD
-            matches.Add(new Match(matchNumber++,
-                new Team(teamId++, a, b),
-                new Team(teamId++, c, d)));
+            matches.Add(new Match(matchNumber++, new Team(0, a, b), new Team(0, c, d)));
 
             // AC vs BD
-            matches.Add(new Match(matchNumber++,
-                new Team(teamId++, a, c),
-                new Team(teamId++, b, d)));
+            matches.Add(new Match(matchNumber++, new Team(0, a, c), new Team(0, b, d)));
 
             // AD vs BC
-            matches.Add(new Match(matchNumber++,
-                new Team(teamId++, a, d),
-                new Team(teamId++, b, c)));
+            matches.Add(new Match(matchNumber++, new Team(0, a, d), new Team(0, b, c)));
         }
 
         return matches;

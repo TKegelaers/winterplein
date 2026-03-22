@@ -6,5 +6,5 @@ public interface IPlayerRepository
 {
     IReadOnlyList<Player> GetAll();
     void Add(Player player);
-    void Remove(Guid id);
+    void Remove(int id);
 }
