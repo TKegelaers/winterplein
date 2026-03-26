@@ -102,7 +102,6 @@ git commit -m "$(cat <<'EOF'
 
 <optional body>
 
-<optional footer>
 EOF
 )"
 ```
@@ -114,7 +113,7 @@ EOF
 - Imperative mood: "fix bug" not "fixes bug"
 - Reference issues: `Closes #123`, `Refs #456`
 - Keep description under 72 characters
-- Don't write Co-Authored-By trailers
+- NEVER write Co-Authored-By trailers
 
 ## Git Safety Protocol
 

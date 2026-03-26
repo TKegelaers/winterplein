@@ -70,9 +70,9 @@ for i in 0..N-4:
 
 ## Tasks
 
-- [ ] T1: Define `IMatchGeneratorService` interface
-- [ ] T2: Define `IPlayerRepository` interface
-- [ ] T3: Implement `MatchGeneratorService` with C(N,4)×3 algorithm (blocks: T1)
-- [ ] T4: Implement `CalculateMatchCount` without generating matches (blocks: T1)
-- [ ] T5: Write unit tests for match counts (3/4/6/8/10 players) (blocks: T3, T4)
-- [ ] T6: Write no-duplicate-matches test (blocks: T3)
+- [x] T1: Define `IMatchGeneratorService` interface
+- [x] T2: Define `IPlayerRepository` interface
+- [x] T3: Implement `MatchGeneratorService` with C(N,4)×3 algorithm (blocks: T1)
+- [x] T4: Implement `CalculateMatchCount` without generating matches (blocks: T1)
+- [x] T5: Write unit tests for match counts (3/4/6/8/10 players) (blocks: T3, T4)
+- [x] T6: Write no-duplicate-matches test (blocks: T3)
