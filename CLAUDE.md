@@ -16,7 +16,7 @@ Winterplein is a tennis doubles match generator. Given N players, it generates a
 
 1. Always read ROADMAP.md before starting work
 2. Pick the next incomplete task from the relevant .tasks/epic file
-3. Before starting the work on a new User Story allways create a new branch beginning with `feat/`
+3. Before starting the work on a new User Story allways create a new branch based on develop beginning with `feat/`
 4. Mark tasks as done when complete
 5. Update ROADMAP.md progress after each session
 
