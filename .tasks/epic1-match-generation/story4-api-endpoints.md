@@ -48,9 +48,9 @@ Expose the player management and match generation functionality via a minimal AS
 
 ## Tasks
 
-- [ ] T1: Implement `InMemoryPlayerRepository` in Infrastructure (blocks: `IPlayerRepository` from Story 3)
-- [ ] T2: Register `IPlayerRepository` and `IMatchGeneratorService` in DI (blocks: T1)
-- [ ] T3: Implement player endpoints (`GET`, `POST`, `DELETE /api/players`) (blocks: T2)
-- [ ] T4: Add validation — reject empty names (400), missing player (404) (blocks: T3)
-- [ ] T5: Implement match endpoints (`POST /api/matches/generate`, `GET /api/matches/count`) (blocks: T2)
+- [x] T1: Implement `InMemoryPlayerRepository` in Infrastructure (blocks: `IPlayerRepository` from Story 3)
+- [x] T2: Register `IPlayerRepository` and `IMatchGeneratorService` in DI (blocks: T1)
+- [x] T3: Implement player endpoints (`GET`, `POST`, `DELETE /api/players`) (blocks: T2)
+- [x] T4: Add validation — reject empty names (400), missing player (404) (blocks: T3)
+- [x] T5: Implement match endpoints (`POST /api/matches/generate`, `GET /api/matches/count`) (blocks: T2)
 - [ ] T6: Smoke-test all endpoints with `curl` or Swagger (blocks: T3, T4, T5)
