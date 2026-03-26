@@ -1,0 +1,22 @@
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Winterplein.Application.Commands.GenerateMatches;
+using Winterplein.Application.Queries.GetMatchCount;
+
+namespace Winterplein.Api.Controllers;
+
+[ApiController]
+[Route("api/matches")]
+public class MatchesController(ISender sender) : ControllerBase
+{
+    [HttpPost("generate")]
+    public async Task<IActionResult> Generate() =>
+        Ok(await sender.Send(new GenerateMatchesCommand()));
+
+    [HttpGet("count")]
+    public async Task<IActionResult> Count()
+    {
+        var count = await sender.Send(new GetMatchCountQuery());
+        return Ok(new { count });
+    }
+}
