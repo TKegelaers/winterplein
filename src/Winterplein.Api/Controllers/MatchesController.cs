@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Winterplein.Application.Commands.GenerateMatches;
 using Winterplein.Application.Queries.GetMatchCount;
+using Winterplein.Shared.DTOs;
 
 namespace Winterplein.Api.Controllers;
 
@@ -17,6 +18,6 @@ public class MatchesController(ISender sender) : ControllerBase
     public async Task<IActionResult> Count()
     {
         var count = await sender.Send(new GetMatchCountQuery());
-        return Ok(new { count });
+        return Ok(new MatchCountResponse(count));
     }
 }

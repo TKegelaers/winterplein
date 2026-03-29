@@ -18,28 +18,14 @@ public class PlayersController(ISender sender) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add(AddPlayerRequest request)
     {
-        try
-        {
-            var player = await sender.Send(new AddPlayerCommand(request.FirstName, request.LastName, request.Gender));
-            return Created($"/api/players/{player.Id}", player);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var player = await sender.Send(new AddPlayerCommand(request.FirstName, request.LastName, request.Gender));
+        return Created($"/api/players/{player.Id}", player);
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        try
-        {
-            await sender.Send(new RemovePlayerCommand(id));
-            return NoContent();
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound();
-        }
+        await sender.Send(new RemovePlayerCommand(id));
+        return NoContent();
     }
 }

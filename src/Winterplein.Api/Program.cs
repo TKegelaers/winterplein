@@ -1,3 +1,4 @@
+using Winterplein.Api.ExceptionHandling;
 using Winterplein.Application.Interfaces;
 using Winterplein.Application.Queries.GetAllPlayers;
 using Winterplein.Application.Services;
@@ -7,13 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllPlayersQuery).Assembly));
 builder.Services.AddSingleton<IPlayerRepository, InMemoryPlayerRepository>();
 builder.Services.AddSingleton<IMatchGeneratorService, MatchGeneratorService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", policy =>
-        policy.WithOrigins("http://localhost:5149", "http://localhost:5173")
+        policy.WithOrigins("http://localhost:5149")
               .AllowAnyMethod()
               .AllowAnyHeader());
 });
@@ -26,6 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowClient");
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.MapControllers();
 
