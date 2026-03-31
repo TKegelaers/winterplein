@@ -1,0 +1,162 @@
+@page "/players"
+@using Winterplein.Client.Services
+@using Winterplein.Shared.DTOs
+@inject PlayerApiClient PlayerApi
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h5" Class="mb-4">Players</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudTextField @bind-Value="_firstName"
+                          Label="First Name"
+                          Variant="Variant.Outlined"
+                          Immediate="true"
+                          Error="@_firstNameError"
+                          ErrorText="First name is required"
+                          OnKeyDown="OnKeyDown" />
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudTextField @bind-Value="_lastName"
+                          Label="Last Name"
+                          Variant="Variant.Outlined"
+                          Immediate="true"
+                          Error="@_lastNameError"
+                          ErrorText="Last name is required"
+                          OnKeyDown="OnKeyDown" />
+        </MudItem>
+        <MudItem xs="12" sm="2">
+            <MudSelect @bind-Value="_gender" Label="Gender" Variant="Variant.Outlined">
+                <MudSelectItem Value="GenderDto.Male">Male</MudSelectItem>
+                <MudSelectItem Value="GenderDto.Female">Female</MudSelectItem>
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       OnClick="AddPlayer"
+                       Disabled="@(!IsFormValid || _isSubmitting)"
+                       FullWidth="true">
+                Add
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@if (_loading)
+{
+    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+}
+else
+{
+    <MudText Typo="Typo.subtitle1" Class="mb-2">@_players.Count players</MudText>
+
+    <MudTable Items="_players" Hover="true" Striped="true" Elevation="2">
+        <HeaderContent>
+            <MudTh>First Name</MudTh>
+            <MudTh>Last Name</MudTh>
+            <MudTh>Gender</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.FirstName</MudTd>
+            <MudTd>@context.LastName</MudTd>
+            <MudTd>@context.Gender</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Error"
+                               OnClick="() => RemovePlayer(context.Id)" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+@code {
+    private List<PlayerDto> _players = [];
+    private string _firstName = string.Empty;
+    private string _lastName = string.Empty;
+    private GenderDto _gender = GenderDto.Male;
+    private bool _loading = true;
+    private bool _isSubmitting;
+    private bool _firstNameError;
+    private bool _lastNameError;
+
+    private bool IsFormValid =>
+        !string.IsNullOrWhiteSpace(_firstName) && !string.IsNullOrWhiteSpace(_lastName);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPlayers();
+    }
+
+    private async Task LoadPlayers()
+    {
+        _loading = true;
+        try
+        {
+            _players = await PlayerApi.GetPlayersAsync();
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to load players. Please try again.", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task AddPlayer()
+    {
+        _firstNameError = string.IsNullOrWhiteSpace(_firstName);
+        _lastNameError = string.IsNullOrWhiteSpace(_lastName);
+
+        if (_firstNameError || _lastNameError)
+            return;
+
+        _isSubmitting = true;
+        try
+        {
+            var request = new AddPlayerRequest(_firstName.Trim(), _lastName.Trim(), _gender);
+            await PlayerApi.AddPlayerAsync(request);
+
+            _firstName = string.Empty;
+            _lastName = string.Empty;
+            _gender = GenderDto.Male;
+            _firstNameError = false;
+            _lastNameError = false;
+
+            await LoadPlayers();
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to add player. Please try again.", Severity.Error);
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+
+    private async Task RemovePlayer(int id)
+    {
+        try
+        {
+            await PlayerApi.RemovePlayerAsync(id);
+            await LoadPlayers();
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to remove player. Please try again.", Severity.Error);
+        }
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && IsFormValid)
+            await AddPlayer();
+    }
+}
