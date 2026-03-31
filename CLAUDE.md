@@ -67,7 +67,7 @@ Stories 1–4 are complete:
 - **Story 1** — project setup
 - **Story 2** — domain models: entities (`Player`, `Team`, `Match`), enums (`Gender`), value objects (`Name`); `Winterplein.Shared` DTOs (`PlayerDto`, `TeamDto`, `MatchDto`); Domain→DTO extension-method mappers in `Winterplein.Application/Mappers/`
 - **Story 3** — match generation service: `GenerateMatchesCommandHandler` using C(N,4)×3 algorithm in `Winterplein.Application`
-- **Story 4** — API endpoints: `PlayersController` and `MatchesController` using CQRS/MediatR; global exception handler; CORS configured
+- **Story 4** — API endpoints: `PlayersController` and `MatchesController` using CQRS/MediatR; global exception handler; CORS configured; Swagger UI at `/swagger`; `GenderDto` enum in `Winterplein.Shared`; `JsonStringEnumConverter` configured globally; `WinterpleinApiFactory` + 19 integration tests
 
 Next work is Story 5 (Player Management UI). See `.tasks/` for detailed story files and task checklists.
 

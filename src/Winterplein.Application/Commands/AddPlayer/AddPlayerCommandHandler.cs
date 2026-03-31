@@ -12,9 +12,7 @@ public class AddPlayerCommandHandler(IPlayerRepository repo)
 {
     public Task<PlayerDto> Handle(AddPlayerCommand request, CancellationToken cancellationToken)
     {
-        if (!Enum.TryParse<Gender>(request.Gender, ignoreCase: true, out var gender))
-            throw new ArgumentException($"Invalid gender '{request.Gender}'. Valid values: Male, Female.");
-
+        var gender = (Gender)request.Gender;
         var name = new Name(request.FirstName, request.LastName);
         var player = repo.Add(name, gender);
         return Task.FromResult(player.ToDto());

@@ -12,7 +12,7 @@ public class MatchesController(ISender sender) : ControllerBase
 {
     [HttpPost("generate")]
     public async Task<IActionResult> Generate() =>
-        Ok(await sender.Send(new GenerateMatchesCommand()));
+        StatusCode(StatusCodes.Status201Created, await sender.Send(new GenerateMatchesCommand()));
 
     [HttpGet("count")]
     public async Task<IActionResult> Count()
