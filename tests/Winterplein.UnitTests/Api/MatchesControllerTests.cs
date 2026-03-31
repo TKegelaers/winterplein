@@ -16,15 +16,16 @@ public class MatchesControllerTests
     public MatchesControllerTests() => _sut = new MatchesController(_sender.Object);
 
     [Fact]
-    public async Task Generate_ReturnsOkWithResponse()
+    public async Task Generate_Returns201WithResponse()
     {
         var response = new GenerateMatchesResponse([], 0);
         _sender.Setup(s => s.Send(It.IsAny<GenerateMatchesCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
 
         var result = await _sut.Generate();
 
-        var ok = result.Should().BeOfType<OkObjectResult>().Subject;
-        ok.Value.Should().Be(response);
+        var created = result.Should().BeOfType<ObjectResult>().Subject;
+        created.StatusCode.Should().Be(201);
+        created.Value.Should().Be(response);
     }
 
     [Fact]

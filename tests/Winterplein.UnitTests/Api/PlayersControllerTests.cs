@@ -34,7 +34,7 @@ public class PlayersControllerTests
         var dto = new PlayerDto(5, "Jane", "Doe", "Female");
         _sender.Setup(s => s.Send(It.IsAny<AddPlayerCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync(dto);
 
-        var result = await _sut.Add(new AddPlayerRequest("Jane", "Doe", "Female"));
+        var result = await _sut.Add(new AddPlayerRequest("Jane", "Doe", GenderDto.Female));
 
         var created = result.Should().BeOfType<CreatedResult>().Subject;
         created.Location.Should().Be("/api/players/5");
