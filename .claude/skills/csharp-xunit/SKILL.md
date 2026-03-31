@@ -1,68 +1,234 @@
 ---
 name: csharp-xunit
-description: 'Get best practices for XUnit unit testing, including data-driven tests'
+description: >
+  Write xUnit unit tests in C# using FluentAssertions, Moq, and the Builder pattern.
+  Use this skill whenever the user asks to write, add, or improve unit tests in a C# project,
+  or when writing a new handler/service/controller and tests should accompany it.
+  Also trigger for questions like "how do I test X", "add tests for Y", "write a test that checks Z".
+license: MIT
+compatibility: opencode
+metadata:
+  audience: .net-developers
+  framework: xunit
+  patterns: unit-testing, fluent-assertions, moq, builder-pattern
 ---
 
-# XUnit Best Practices
 
-Your goal is to help me write effective unit tests with XUnit, covering both standard and data-driven testing approaches.
 
-## Project Setup
 
-- Use a separate test project with naming convention `[ProjectName].Tests`
-- Reference Microsoft.NET.Test.Sdk, xunit, and xunit.runner.visualstudio packages
-- Create test classes that match the classes being tested (e.g., `CalculatorTests` for `Calculator`)
-- Use .NET SDK test commands: `dotnet test` for running tests
+## What I Do
 
-## Test Structure
+I help you write clean, idiomatic xUnit tests following the project conventions:
+- `[Fact]` tests with FluentAssertions for assertions
+- Moq for mocking dependencies
+- Builder pattern for creating domain objects
+- AAA (Arrange-Act-Assert) structure but never write "Arrange", "Act", "Assert" comments
+- Correct naming, namespacing, and file placement
 
-- No test class attributes required (unlike MSTest/NUnit)
-- Use fact-based tests with `[Fact]` attribute for simple tests
-- Follow the Arrange-Act-Assert (AAA) pattern
-- Name tests using the pattern `MethodName_Scenario_ExpectedBehavior`
-- Use constructor for setup and `IDisposable.Dispose()` for teardown
-- Use `IClassFixture<T>` for shared context between tests in a class
-- Use `ICollectionFixture<T>` for shared context between multiple test classes
+## When to Use Me
 
-## Standard Tests
+Use this skill when:
+- Writing unit tests for a new handler, service, or controller
+- Adding tests to existing code
+- Asking how to test a particular scenario (exception, async, HTTP result type)
+- Unsure which assertion or mock pattern to use
 
-- Keep tests focused on a single behavior
-- Avoid testing multiple behaviors in one test method
-- Use clear assertions that express intent
-- Include only the assertions needed to verify the test case
-- Make tests independent and idempotent (can run in any order)
-- Avoid test interdependencies
+## Stack
 
-## Data-Driven Tests
+- **xUnit** — `[Fact]` for single cases; `[Theory]` + `[InlineData]`/`[MemberData]` for parameterised
+- **FluentAssertions** — all assertions; never use xUnit's `Assert.*`
+- **Moq** — `Mock<IFoo>` with `.Setup()` and `.Verify()`
+- **Builder pattern** — test data via builders in `tests/[Project].UnitTests.Common/Builders/`
 
-- Use `[Theory]` combined with data source attributes
-- Use `[InlineData]` for inline test data
-- Use `[MemberData]` for method-based test data
-- Use `[ClassData]` for class-based test data
-- Create custom data attributes by implementing `DataAttribute`
-- Use meaningful parameter names in data-driven tests
+`Xunit` and `FluentAssertions` are globally imported — no `using` needed for them.
 
-## Assertions
+---
 
-- Use `Assert.Equal` for value equality
-- Use `Assert.Same` for reference equality
-- Use `Assert.True`/`Assert.False` for boolean conditions
-- Use `Assert.Contains`/`Assert.DoesNotContain` for collections
-- Use `Assert.Matches`/`Assert.DoesNotMatch` for regex pattern matching
-- Use `Assert.Throws<T>` or `await Assert.ThrowsAsync<T>` to test exceptions
-- Use fluent assertions library for more readable assertions
+## Test class structure
 
-## Mocking and Isolation
+```csharp
+// One class per SUT. Filename: [Sut]Tests.cs
+// Namespace matches folder: Winterplein.UnitTests.[Layer]
 
-- Consider using Moq or NSubstitute alongside XUnit
-- Mock dependencies to isolate units under test
-- Use interfaces to facilitate mocking
-- Consider using a DI container for complex test setups
+public class FooServiceTests
+{
+    private readonly Mock<IBarRepository> _repo = new();
+    private readonly FooService _sut;
 
-## Test Organization
+    public FooServiceTests() => _sut = new FooService(_repo.Object);
+}
+```
 
-- Group tests by feature or component
-- Use `[Trait("Category", "CategoryName")]` for categorization
-- Use collection fixtures to group tests with shared dependencies
-- Consider output helpers (`ITestOutputHelper`) for test diagnostics
-- Skip tests conditionally with `Skip = "reason"` in fact/theory attributes
+Name the SUT field `_sut` when unambiguous, or by role (`_handler`, `_controller`) when the type makes it clear.
+
+---
+
+## Test naming
+
+Pattern: `MethodName_ExpectedOutcome` or `MethodName_ExpectedOutcome_WhenCondition`
+
+```
+Handle_ReturnsPlayerDto
+Handle_ThrowsArgumentException_WhenGenderInvalid
+Handle_CallsRepoWithCorrectGender
+GetAll_ReturnsOkWithPlayers
+Delete_ReturnsNoContent
+```
+
+---
+
+## AAA structure
+
+```csharp
+[Fact]
+public async Task Handle_ReturnsPlayerDto()
+{
+    var player = new PlayerBuilder().WithId(5).Build();
+    _repo.Setup(r => r.Add(It.IsAny<Name>(), It.IsAny<Gender>())).Returns(player);
+
+    var result = await _sut.Handle(new AddPlayerCommand("John", "Doe", "Male"), CancellationToken.None);
+
+    result.Id.Should().Be(5);
+    result.FirstName.Should().Be("John");
+}
+```
+
+Keep Arrange separate. Act and Assert can share a line for trivial cases.
+
+---
+
+## Moq patterns
+
+```csharp
+// Setup sync return
+_repo.Setup(r => r.GetAll()).Returns(players);
+_repo.Setup(r => r.Add(It.IsAny<Name>(), It.IsAny<Gender>())).Returns(player);
+
+// Setup async return
+_sender.Setup(s => s.Send(It.IsAny<MyQuery>(), It.IsAny<CancellationToken>()))
+       .ReturnsAsync(result);
+
+// Setup throw
+_repo.Setup(r => r.Remove(99)).Throws(new KeyNotFoundException());
+
+// Verify call count + arguments
+_repo.Verify(r => r.Remove(42), Times.Once);
+_sender.Verify(s => s.Send(It.Is<RemovePlayerCommand>(c => c.Id == 1),
+                            It.IsAny<CancellationToken>()), Times.Once);
+```
+
+---
+
+## FluentAssertions patterns
+
+```csharp
+// Scalar / object equality
+result.Id.Should().Be(5);
+result.Should().Be(expected);
+result.Should().BeEquivalentTo(other);   // deep structural equality
+
+// Collections
+result.Should().HaveCount(2);
+result.Should().BeEmpty();
+result[0].Id.Should().Be(1);
+
+// HTTP result types (controller tests)
+var ok = result.Should().BeOfType<OkObjectResult>().Subject;
+ok.Value.Should().Be(players);
+
+var created = result.Should().BeOfType<CreatedResult>().Subject;
+created.Location.Should().Be("/api/players/5");
+created.Value.Should().Be(dto);
+
+result.Should().BeOfType<NoContentResult>();
+
+// Sync exception
+var act = () => new Foo(null!);
+act.Should().Throw<ArgumentNullException>();
+
+// Async exception
+var act = () => _sut.Handle(command, CancellationToken.None);
+await act.Should().ThrowAsync<ArgumentException>()
+         .WithMessage("*Invalid gender*");   // * = wildcard
+```
+
+---
+
+## Builder pattern
+
+Use builders from `tests/[Project].UnitTests.Common/Builders/` for domain objects.
+They provide safe defaults so tests only configure what they care about:
+
+```csharp
+var player = new PlayerBuilder().Build();                           // defaults
+var player = new PlayerBuilder().WithId(5).WithGender(Gender.Female).Build();
+var name   = new NameBuilder().WithFirst("Jane").Build();
+var match  = new MatchBuilder().WithId(99).Build();
+```
+
+When a builder doesn't exist for a new type, create one in `UnitTests.Common/Builders/`
+following the same fluent `With*` pattern.
+
+---
+
+## What to cover per unit
+
+1. **Happy path** — correct input, correct output
+2. **Correct delegation** — right method called with right arguments (`Verify`)
+3. **Error cases** — invalid input throws the right exception type and message
+4. **Edge cases** — empty collections, nulls, boundary values where behaviour differs
+
+---
+
+## Test layers
+
+### Domain (`UnitTests/Domain/`)
+No mocks. Construct entities directly.
+
+```csharp
+[Fact]
+public void Player_StoresProperties()
+{
+    var name = new Name("John", "Doe");
+    var player = new Player(1, name, Gender.Female);
+
+    player.Id.Should().Be(1);
+    player.Name.Should().Be(name);
+    player.Gender.Should().Be(Gender.Female);
+}
+
+[Fact]
+public void Player_Constructor_ThrowsWhenNameIsNull()
+{
+    var act = () => new Player(1, null!, Gender.Male);
+    act.Should().Throw<ArgumentNullException>();
+}
+```
+
+### Mapper tests (`UnitTests/Application/`)
+No mocks. Call the extension method, assert DTO fields.
+
+```csharp
+[Fact]
+public void ToDto_MapsAllProperties()
+{
+    var match = new MatchBuilder().WithId(99).Build();
+    var dto = match.ToDto();
+
+    dto.Id.Should().Be(99);
+    dto.Team1.Should().BeEquivalentTo(match.Team1.ToDto());
+}
+```
+
+### Handler tests (`UnitTests/Application/Handlers/`)
+Mock the repository interface. Test return value and verify calls.
+
+### Controller tests (`UnitTests/Api/`)
+Mock `ISender`. Test HTTP result type, `Location` header, and body value.
+
+```csharp
+private readonly Mock<ISender> _sender = new();
+private readonly MyController _sut;
+
+public MyControllerTests() => _sut = new MyController(_sender.Object);
+```
