@@ -63,13 +63,15 @@ Key constraint: `Winterplein.Client` only references `Winterplein.Shared` — it
 
 ## Current State
 
-Stories 1–4 are complete:
+Stories 1–6 (Epic 1) are complete:
 - **Story 1** — project setup
 - **Story 2** — domain models: entities (`Player`, `Team`, `Match`), enums (`Gender`), value objects (`Name`); `Winterplein.Shared` DTOs (`PlayerDto`, `TeamDto`, `MatchDto`); Domain→DTO extension-method mappers in `Winterplein.Application/Mappers/`
 - **Story 3** — match generation service: `GenerateMatchesCommandHandler` using C(N,4)×3 algorithm in `Winterplein.Application`
 - **Story 4** — API endpoints: `PlayersController` and `MatchesController` using CQRS/MediatR; global exception handler; CORS configured; Swagger UI at `/swagger`; `GenderDto` enum in `Winterplein.Shared`; `JsonStringEnumConverter` configured globally; `WinterpleinApiFactory` + 19 integration tests
+- **Story 5** — Player Management UI: `PlayerApiClient` typed HttpClient; `Players.razor` page with add/remove form and MudTable list
+- **Story 6** — Match Display UI: `MatchApiClient` typed HttpClient; `Matches.razor` page with player count, expected match count, generate button (disabled <4 players, spinner while generating), virtualized match list using `<Virtualize>`
 
-Next work is Story 5 (Player Management UI). See `.tasks/` for detailed story files and task checklists.
+Next work is Story 7 (UI Polish). See `.tasks/` for detailed story files and task checklists.
 
 ## Shell Commands
 

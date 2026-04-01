@@ -14,5 +14,7 @@ var apiBaseUrl = builder.Configuration["ApiBaseUrl"]
     ?? throw new InvalidOperationException("ApiBaseUrl is not configured.");
 builder.Services.AddHttpClient<PlayerApiClient>(client =>
     client.BaseAddress = new Uri(apiBaseUrl));
+builder.Services.AddHttpClient<MatchApiClient>(client =>
+    client.BaseAddress = new Uri(apiBaseUrl));
 
 await builder.Build().RunAsync();

@@ -1,0 +1,114 @@
+@page "/matches"
+@using Winterplein.Client.Services
+@using Winterplein.Shared.DTOs
+@inject PlayerApiClient PlayerApi
+@inject MatchApiClient MatchApi
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h5" Class="mb-4">Matches</MudText>
+
+@if (_loading)
+{
+    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+}
+else
+{
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudText Class="mb-1">@_players.Count players registered</MudText>
+        <MudText Class="mb-3">@_expectedMatchCount possible matches</MudText>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   OnClick="GenerateMatches"
+                   Disabled="@(!HasEnoughPlayers || _generating)">
+            @if (_generating)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                <span>Generating...</span>
+            }
+            else
+            {
+                <span>Generate Matches</span>
+            }
+        </MudButton>
+
+        @if (!HasEnoughPlayers)
+        {
+            <MudAlert Severity="Severity.Warning" Class="mt-3">
+                At least 4 players are required to generate doubles matches.
+            </MudAlert>
+        }
+    </MudPaper>
+
+    @if (_hasGenerated)
+    {
+        <MudAlert Severity="Severity.Success" Class="mb-4">Generated @_matches.Count matches</MudAlert>
+
+        <MudPaper Class="pa-4" Elevation="2" Style="height:600px; overflow-y:auto;">
+            <Virtualize Items="_matches" Context="match">
+                <MudText Class="py-1">Match #@match.Id: @FormatMatch(match)</MudText>
+            </Virtualize>
+        </MudPaper>
+    }
+}
+
+@code {
+    private List<PlayerDto> _players = [];
+    private List<MatchDto> _matches = [];
+    private int _expectedMatchCount;
+    private bool _loading = true;
+    private bool _generating;
+    private bool _hasGenerated;
+
+    private bool HasEnoughPlayers => _players.Count >= 4;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var playersTask = PlayerApi.GetPlayersAsync();
+            var countTask = MatchApi.GetMatchCountAsync();
+            await Task.WhenAll(playersTask, countTask);
+            _players = playersTask.Result;
+            _expectedMatchCount = countTask.Result;
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to load page data. Please try again.", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task GenerateMatches()
+    {
+        _generating = true;
+        _matches = [];
+        _hasGenerated = false;
+        StateHasChanged();
+        try
+        {
+            var response = await MatchApi.GenerateMatchesAsync();
+            _matches = response.Matches;
+            _hasGenerated = true;
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to generate matches. Please try again.", Severity.Error);
+        }
+        finally
+        {
+            _generating = false;
+        }
+    }
+
+    private static string FormatMatch(MatchDto m) =>
+        $"{m.Team1.Player1.FirstName} {m.Team1.Player1.LastName} & " +
+        $"{m.Team1.Player2.FirstName} {m.Team1.Player2.LastName} vs " +
+        $"{m.Team2.Player1.FirstName} {m.Team2.Player1.LastName} & " +
+        $"{m.Team2.Player2.FirstName} {m.Team2.Player2.LastName}";
+}
