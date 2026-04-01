@@ -41,3 +41,7 @@ Implement the CQRS commands/queries with MediatR handlers and an in-memory repos
 - [ ] T6: Create `DeleteSeasonCommand` (Id: int) + handler — removes season, returns false if not found (blocks: T1)
 - [ ] T7: Implement `InMemorySeasonRepository` using `ConcurrentDictionary<int, Season>` (blocks: T1)
 - [ ] T8: Register `InMemorySeasonRepository` as Singleton for `ISeasonRepository` in DI (blocks: T7)
+- [ ] T9: Add `Player? GetById(int id)` to `IPlayerRepository` and implement in `InMemoryPlayerRepository`
+- [ ] T10: Create `AddSeasonPlayerCommand(SeasonId, PlayerId)` + handler — loads season + player via repositories, calls `season.AddPlayer(player)`, calls `Update`, returns `SeasonDto?` (null if season or player not found) (blocks: T1, T9, Story 1 T5)
+- [ ] T11: Create `RemoveSeasonPlayerCommand(SeasonId, PlayerId)` + handler — loads season, calls `season.RemovePlayer(playerId)`, calls `Update`, returns `bool` false if season not found (blocks: T1, Story 1 T5)
+- [ ] T12: Create `GetSeasonPlayersQuery(SeasonId)` + handler — returns `List<PlayerDto>?` (null if season not found) (blocks: T1, Story 1 T5, T6)

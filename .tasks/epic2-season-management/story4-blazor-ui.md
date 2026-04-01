@@ -44,12 +44,13 @@ Build the season management UI in Blazor WASM using MudBlazor, including list, c
 
 ## Tasks
 
-- [ ] T1: Implement `SeasonApiClient` with all API methods (using `int id` parameters)
+- [ ] T1: Implement `SeasonApiClient` with all API methods (using `int id` parameters) including `GetSeasonPlayersAsync(int id)`, `AddPlayerToSeasonAsync(int seasonId, AddSeasonPlayerRequest)`, `RemovePlayerFromSeasonAsync(int seasonId, int playerId)`
 - [ ] T2: Register `SeasonApiClient` as typed HttpClient in `Program.cs` (blocks: T1)
 - [ ] T3: Add "Seasons" nav link to `NavMenu.razor`
 - [ ] T4: Build season list page (`/seasons`) with `MudTable` and delete confirmation dialog (blocks: T1, T2)
 - [ ] T5: Build `SeasonForm.razor` reusable component with validation and matchday preview (blocks: T1)
 - [ ] T6: Build create page (`/seasons/create`) using `SeasonForm` (blocks: T4, T5)
 - [ ] T7: Build edit page (`/seasons/{id:int}/edit`) using `SeasonForm` (blocks: T4, T5)
-- [ ] T8: Build detail page (`/seasons/{id:int}`) with matchday list (blocks: T1, T2)
+- [ ] T8: Build detail page (`/seasons/{id:int}`) with matchday list and player management section (blocks: T1, T2, T9)
 - [ ] T9: Add delete confirmation `MudDialog` to list page (blocks: T4)
+- [ ] T10: Add player management section to detail page — `MudTable` of enrolled players with remove button (with `MudDialog` confirmation); `MudSelect<PlayerDto>` populated from `/api/players` filtered to non-enrolled players with "Add" button (blocks: T1, T8)
