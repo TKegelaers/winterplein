@@ -16,13 +16,12 @@ Winterplein is a tennis doubles match generator. Given N players, it generates a
 
 1. Always read ROADMAP.md before starting work
 2. Pick the next incomplete task from the relevant .tasks/epic file
-3. Before starting the work on a new User Story always create a new branch beginning with `feat/`; use `fix/` for bugfixes
-4. Mark tasks as done when complete
-5. Update ROADMAP.md progress after each session
+3. Mark tasks as done when complete
+4. Update ROADMAP.md after implementing or creating new epics, user stories or tasks.
 
 ## Commands
 
-```bash
+```powershell
 # Build entire solution
 dotnet build
 
@@ -63,30 +62,20 @@ Key constraint: `Winterplein.Client` only references `Winterplein.Shared` — it
 
 ## Current State
 
-Stories 1–6 (Epic 1) are complete:
-- **Story 1** — project setup
-- **Story 2** — domain models: entities (`Player`, `Team`, `Match`), enums (`Gender`), value objects (`Name`); `Winterplein.Shared` DTOs (`PlayerDto`, `TeamDto`, `MatchDto`); Domain→DTO extension-method mappers in `Winterplein.Application/Mappers/`
-- **Story 3** — match generation service: `GenerateMatchesCommandHandler` using C(N,4)×3 algorithm in `Winterplein.Application`
-- **Story 4** — API endpoints: `PlayersController` and `MatchesController` using CQRS/MediatR; global exception handler; CORS configured; Swagger UI at `/swagger`; `GenderDto` enum in `Winterplein.Shared`; `JsonStringEnumConverter` configured globally; `WinterpleinApiFactory` + 19 integration tests
-- **Story 5** — Player Management UI: `PlayerApiClient` typed HttpClient; `Players.razor` page with add/remove form and MudTable list
-- **Story 6** — Match Display UI: `MatchApiClient` typed HttpClient; `Matches.razor` page with player count, expected match count, generate button (disabled <4 players, spinner while generating), virtualized match list using `<Virtualize>`
+See ROADMAP.md for the authoritative status table. Summary:
 
-Next work is Story 7 (UI Polish). See `.tasks/` for detailed story files and task checklists.
+**Epic 1 — Match Generation**
+- Stories 1–6: Done
+- Story 7 (UI Polish — layout, home page, responsive design): **next up**
 
-## Shell Commands
-
-When generating shell commands:
-
-- Never use `cd`, `cd &&`, or any compound directory‑changing commands.
-- Always use `git -C <path>` for Git operations.
-- If I provide a command using `cd`, rewrite it using `git -C` automatically.
-
+**Epic 2 — Season Management**
+- Stories 1–5: all Pending
 
 ## Development Notes
 
 - The application layer uses CQRS via MediatR: commands (write) and queries (read) live in `Winterplein.Application`, handlers are registered via `services.AddMediatR(...)`
 - The match generation algorithm lives in `Winterplein.Application` as a MediatR command handler (`GenerateMatchesCommandHandler`)
-- API uses Controllers
+- API uses Controllers (`[ApiController]` + `ControllerBase`) for both epics
 - CORS must allow the Blazor client origin (`http://localhost:5149`) — configure in `Winterplein.Api/Program.cs`
 - MudBlazor is the UI component library for the Blazor client
 - xUnit is used for all tests; `Xunit` is globally imported in test projects

@@ -1,11 +1,11 @@
-# Story 3 — Minimal API Endpoints
+# Story 3 — API Endpoints
 
 **Epic:** Epic 2 — Season Management
 **Dependencies:** Story 2
 
 ## Description
 
-Expose season CRUD and matchday computation via ASP.NET Core Minimal API endpoints, using MediatR and a static mapper.
+Expose season CRUD and matchday computation via an ASP.NET Core Controller, using MediatR and a static mapper.
 
 ## Acceptance Criteria
 
@@ -21,8 +21,8 @@ Expose season CRUD and matchday computation via ASP.NET Core Minimal API endpoin
 | GET | `/api/seasons/{id}/matchdays` | — | `List<DateOnly>` 200 / 404 |
 
 - `{id}` route parameters are `int`
-- Grouped with `app.MapGroup("/api/seasons")`
-- Return types use `TypedResults`
+- Controller inherits from `ControllerBase` with `[ApiController]` and `[Route("api/seasons")]`
+- Return types use `IActionResult`
 - Validation returns 400 for empty name, EndDate <= StartDate, EndHour <= StartHour
 
 ### Mapper
@@ -31,20 +31,20 @@ Expose season CRUD and matchday computation via ASP.NET Core Minimal API endpoin
 
 ## Technical Notes
 
-- Each endpoint delegates to MediatR — no business logic in endpoint handlers
+- Each action delegates to MediatR — no business logic in the controller
 - `SeasonMapper.ToDto` populates `Matchdays` by calling `season.GetMatchdays()`
 - Register MediatR scanning `Winterplein.Application` assembly and `ISeasonRepository` → `InMemorySeasonRepository` in `Program.cs`
 
 ## Tasks
 
 - [ ] T1: Create static `SeasonMapper` class with `ToDto(Season season)` method mapping all fields including `Players` (using existing `PlayerMapper`) (blocks: Story 1 T5, T6)
-- [ ] T2: Implement GET `/api/seasons` and GET `/api/seasons/{id:int}` endpoints (blocks: T1, Story 2 T3, Story 2 T4)
+- [ ] T2: Implement GET `/api/seasons` and GET `/api/seasons/{id:int}` actions (blocks: T1, Story 2 T3, Story 2 T4)
 - [ ] T3: Implement POST `/api/seasons` with request validation (blocks: T1, Story 2 T2)
 - [ ] T4: Implement PUT `/api/seasons/{id:int}` with request validation (blocks: T1, Story 2 T5)
-- [ ] T5: Implement DELETE `/api/seasons/{id:int}` endpoint (blocks: T1, Story 2 T6)
-- [ ] T6: Implement GET `/api/seasons/{id:int}/matchdays` endpoint (blocks: T2)
+- [ ] T5: Implement DELETE `/api/seasons/{id:int}` action (blocks: T1, Story 2 T6)
+- [ ] T6: Implement GET `/api/seasons/{id:int}/matchdays` action (blocks: T2)
 - [ ] T7: Register MediatR + `ISeasonRepository` DI in `Program.cs` (blocks: Story 2 T8)
-- [ ] T8: Implement player-season endpoints (blocks: T1, Story 2 T10, T11, T12):
+- [ ] T8: Implement player-season actions (blocks: T1, Story 2 T10, T11, T12):
   - `GET /api/seasons/{id:int}/players` → `List<PlayerDto>` 200 / 404
   - `POST /api/seasons/{id:int}/players` body: `AddSeasonPlayerRequest` → `SeasonDto` 200 / 404 / 400
   - `DELETE /api/seasons/{id:int}/players/{playerId:int}` → 204 / 404 / 400
