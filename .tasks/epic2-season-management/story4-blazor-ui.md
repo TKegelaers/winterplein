@@ -44,13 +44,13 @@ Build the season management UI in Blazor WASM using MudBlazor, including list, c
 
 ## Tasks
 
-- [ ] T1: Implement `SeasonApiClient` with all API methods (using `int id` parameters) including `GetSeasonPlayersAsync(int id)`, `AddPlayerToSeasonAsync(int seasonId, AddSeasonPlayerRequest)`, `RemovePlayerFromSeasonAsync(int seasonId, int playerId)`
-- [ ] T2: Register `SeasonApiClient` as typed HttpClient in `Program.cs` (blockedBy: T1)
-- [ ] T3: Add "Seasons" nav link to `NavMenu.razor`
-- [ ] T4: Build season list page (`/seasons`) with `MudTable` and delete confirmation dialog (blockedBy: T1, T2)
-- [ ] T5: Build `SeasonForm.razor` reusable component with validation and matchday preview (blockedBy: T1)
-- [ ] T6: Build create page (`/seasons/create`) using `SeasonForm` (blockedBy: T4, T5)
-- [ ] T7: Build edit page (`/seasons/{id:int}/edit`) using `SeasonForm` (blockedBy: T4, T5)
-- [ ] T8: Build detail page (`/seasons/{id:int}`) with matchday list and player management section (blockedBy: T1, T2, T9)
-- [ ] T9: Add delete confirmation `MudDialog` to list page (blockedBy: T4)
-- [ ] T10: Add player management section to detail page — `MudTable` of enrolled players with remove button (with `MudDialog` confirmation); `MudSelect<PlayerDto>` populated from `/api/players` filtered to non-enrolled players with "Add" button (blockedBy: T1, T8)
+- [x] T1: Implement `SeasonApiClient` with all API methods (using `int id` parameters) including `GetSeasonPlayersAsync(int id)`, `AddPlayerToSeasonAsync(int seasonId, AddSeasonPlayerRequest)`, `RemovePlayerFromSeasonAsync(int seasonId, int playerId)`
+- [x] T2: Register `SeasonApiClient` as typed HttpClient in `Program.cs` (blockedBy: T1)
+- [x] T3: Add "Seasons" nav link to `NavMenu.razor`
+- [x] T4: Build season list page (`/seasons`) with `MudTable` and delete confirmation dialog (blockedBy: T1, T2)
+- [x] T5: Build `SeasonForm.razor` reusable component with validation and matchday preview (blockedBy: T1)
+- [x] T6: Build create page (`/seasons/create`) using `SeasonForm` (blockedBy: T4, T5)
+- [x] T7: Build edit page (`/seasons/{id:int}/edit`) using `SeasonForm` (blockedBy: T4, T5)
+- [x] T8: Build detail page (`/seasons/{id:int}`) with matchday list and player management section (blockedBy: T1, T2, T9)
+- [x] T9: Add delete confirmation `MudDialog` to list page (blockedBy: T4)
+- [x] T10: Add player management section to detail page — `MudTable` of enrolled players with remove button (with `MudDialog` confirmation); `MudSelect<PlayerDto>` populated from `/api/players` filtered to non-enrolled players with "Add" button (blockedBy: T1, T8)

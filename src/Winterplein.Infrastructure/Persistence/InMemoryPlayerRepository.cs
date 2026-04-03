@@ -17,6 +17,12 @@ public class InMemoryPlayerRepository : IPlayerRepository
             return _players.ToList();
     }
 
+    public Player? GetById(int id)
+    {
+        lock (_lock)
+            return _players.FirstOrDefault(p => p.Id == id);
+    }
+
     public int Count
     {
         get { lock (_lock) return _players.Count; }

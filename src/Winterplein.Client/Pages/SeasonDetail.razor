@@ -1,0 +1,194 @@
+@page "/seasons/{Id:int}"
+@using Winterplein.Shared.DTOs
+@inject SeasonApiClient SeasonApi
+@inject PlayerApiClient PlayerApi
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+@inject IDialogService DialogService
+
+@if (_loading)
+{
+    <MudSkeleton />
+}
+else if (_season == null)
+{
+    <MudAlert Severity="Severity.Error">Season not found.</MudAlert>
+}
+else
+{
+    <div class="d-flex align-center justify-space-between mb-4">
+        <MudText Typo="Typo.h5">@_season.Name</MudText>
+        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Edit"
+                   OnClick="@(() => Navigation.NavigateTo($"/seasons/{Id}/edit"))">
+            Edit
+        </MudButton>
+    </div>
+
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudText><strong>Weekday:</strong> @_season.Weekday</MudText>
+                <MudText><strong>Period:</strong> @_season.StartDate.ToShortDateString() – @_season.EndDate.ToShortDateString()</MudText>
+                <MudText><strong>Time:</strong> @_season.StartHour.ToString("HH:mm") – @_season.EndHour.ToString("HH:mm")</MudText>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudText><strong>Matchdays:</strong> @_season.MatchdayCount</MudText>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <MudText Typo="Typo.h6" Class="mb-2">Matchdays</MudText>
+    @if (_season.Matchdays.Count == 0)
+    {
+        <MudText Color="Color.Secondary" Class="mb-4">No matchdays in this period.</MudText>
+    }
+    else
+    {
+        <MudTable Items="_season.Matchdays" Hover="true" Dense="true" Class="mb-4">
+            <HeaderContent>
+                <MudTh>#</MudTh>
+                <MudTh>Date</MudTh>
+                <MudTh>Day</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@(_season.Matchdays.IndexOf(context) + 1)</MudTd>
+                <MudTd>@context.ToShortDateString()</MudTd>
+                <MudTd>@context.DayOfWeek</MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+
+    <MudText Typo="Typo.h6" Class="mb-2">Players</MudText>
+
+    <div class="d-flex align-center gap-2 mb-3">
+        <MudSelect T="PlayerDto" @bind-Value="_selectedPlayer" Label="Add player"
+                   ToStringFunc="@(p => p == null ? "" : $"{p.FirstName} {p.LastName}")"
+                   Dense="true" Style="max-width: 300px;">
+            @foreach (var player in _availablePlayers)
+            {
+                <MudSelectItem Value="player">@player.FirstName @player.LastName</MudSelectItem>
+            }
+        </MudSelect>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   Disabled="@(_selectedPlayer == null)"
+                   OnClick="AddPlayer">Add</MudButton>
+    </div>
+
+    @if (_season.Players.Count == 0)
+    {
+        <MudText Color="Color.Secondary">No players enrolled.</MudText>
+    }
+    else
+    {
+        <MudTable Items="_season.Players" Hover="true" Striped="true">
+            <HeaderContent>
+                <MudTh>First Name</MudTh>
+                <MudTh>Last Name</MudTh>
+                <MudTh>Gender</MudTh>
+                <MudTh>Action</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.FirstName</MudTd>
+                <MudTd>@context.LastName</MudTd>
+                <MudTd>@context.Gender</MudTd>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.PersonRemove" Color="Color.Error"
+                                   Title="Remove" OnClick="@(() => ConfirmRemovePlayer(context))" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private SeasonDto? _season;
+    private List<PlayerDto> _allPlayers = [];
+    private List<PlayerDto> _availablePlayers = [];
+    private PlayerDto? _selectedPlayer;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        _loading = true;
+        try
+        {
+            var seasonTask = SeasonApi.GetSeasonAsync(Id);
+            var playersTask = PlayerApi.GetPlayersAsync();
+            await Task.WhenAll(seasonTask, playersTask);
+            _season = seasonTask.Result;
+            _allPlayers = playersTask.Result;
+            RefreshAvailablePlayers();
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to load season.", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void RefreshAvailablePlayers()
+    {
+        if (_season == null) return;
+        var enrolledIds = _season.Players.Select(p => p.Id).ToHashSet();
+        _availablePlayers = _allPlayers.Where(p => !enrolledIds.Contains(p.Id)).ToList();
+        _selectedPlayer = null;
+    }
+
+    private async Task AddPlayer()
+    {
+        if (_selectedPlayer == null) return;
+        try
+        {
+            var result = await SeasonApi.AddPlayerToSeasonAsync(Id, new AddSeasonPlayerRequest(_selectedPlayer.Id));
+            if (result != null)
+            {
+                _season = result;
+                RefreshAvailablePlayers();
+                Snackbar.Add("Player added.", Severity.Success);
+            }
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to add player.", Severity.Error);
+        }
+    }
+
+    private async Task ConfirmRemovePlayer(PlayerDto player)
+    {
+        var confirmed = await DialogService.ShowMessageBoxAsync(
+            "Confirm Remove",
+            $"Remove {player.FirstName} {player.LastName} from this season?",
+            yesText: "Remove", cancelText: "Cancel");
+        if (confirmed == true)
+            await RemovePlayer(player.Id);
+    }
+
+    private async Task RemovePlayer(int playerId)
+    {
+        try
+        {
+            await SeasonApi.RemovePlayerFromSeasonAsync(Id, playerId);
+            _season = await SeasonApi.GetSeasonAsync(Id);
+            RefreshAvailablePlayers();
+            Snackbar.Add("Player removed.", Severity.Success);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Cannot remove: season must have at least 4 players.", Severity.Warning);
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to remove player.", Severity.Error);
+        }
+    }
+}

@@ -14,6 +14,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllPlayersQuery).Assembly));
 // TODO: Replace Singleton with Scoped when switching to real persistence (e.g. EF Core)
 builder.Services.AddSingleton<IPlayerRepository, InMemoryPlayerRepository>();
+builder.Services.AddSingleton<ISeasonRepository, InMemorySeasonRepository>();
 builder.Services.AddSingleton<IMatchGeneratorService, MatchGeneratorService>();
 builder.Services.AddCors(options =>
 {

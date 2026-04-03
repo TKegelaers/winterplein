@@ -1,0 +1,31 @@
+@page "/seasons/create"
+@using Winterplein.Shared.DTOs
+@inject SeasonApiClient SeasonApi
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+<MudText Typo="Typo.h5" Class="mb-4">New Season</MudText>
+
+<MudPaper Class="pa-4" Elevation="2">
+    <SeasonForm SubmitLabel="Create" OnSubmit="HandleSubmit" OnCancel="Cancel" />
+</MudPaper>
+
+@code {
+    private async Task HandleSubmit((string Name, DateOnly StartDate, DateOnly EndDate, DayOfWeek Weekday, TimeOnly StartHour, TimeOnly EndHour) values)
+    {
+        try
+        {
+            var request = new CreateSeasonRequest(values.Name, values.StartDate, values.EndDate,
+                values.Weekday, values.StartHour, values.EndHour);
+            var created = await SeasonApi.CreateSeasonAsync(request);
+            Snackbar.Add("Season created.", Severity.Success);
+            Navigation.NavigateTo($"/seasons/{created.Id}");
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to create season.", Severity.Error);
+        }
+    }
+
+    private void Cancel() => Navigation.NavigateTo("/seasons");
+}

@@ -7,6 +7,7 @@ namespace Winterplein.Application.Interfaces;
 public interface IPlayerRepository
 {
     IReadOnlyList<Player> GetAll();
+    Player? GetById(int id);
     int Count { get; }
     Player Add(Name name, Gender gender);
     void Remove(int id);

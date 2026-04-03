@@ -30,11 +30,11 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 | # | Story | Description | Status |
 | --- | ------- | ------------- | -------- |
-| 1 | [Define Season Domain & DTOs](.tasks/epic2-season-management/story1-domain-and-dtos.md) | `Season` entity with `GetMatchdays()`, `SeasonDto`, Create/Update request DTOs | Pending |
-| 2 | [Implement Season CQRS & Repository](.tasks/epic2-season-management/story2-cqrs-and-repository.md) | MediatR commands/queries, `ISeasonRepository`, `InMemorySeasonRepository` | Pending |
-| 3 | [Build Season API](.tasks/epic2-season-management/story3-api-endpoints.md) | CRUD + matchdays endpoints, `SeasonMapper`, DI registration | Pending |
-| 4 | [Build Season UI](.tasks/epic2-season-management/story4-blazor-ui.md) | `SeasonApiClient`, list/create/edit/detail pages, `SeasonForm` component | Pending |
-| 5 | [Write Season Tests](.tasks/epic2-season-management/story5-tests.md) | Unit tests for domain + handlers, integration tests for API endpoints | Pending |
+| 1 | [Define Season Domain & DTOs](.tasks/epic2-season-management/story1-domain-and-dtos.md) | `Season` entity with `GetMatchdays()`, `SeasonDto`, Create/Update request DTOs | Done |
+| 2 | [Implement Season CQRS & Repository](.tasks/epic2-season-management/story2-cqrs-and-repository.md) | MediatR commands/queries, `ISeasonRepository`, `InMemorySeasonRepository` | Done |
+| 3 | [Build Season API](.tasks/epic2-season-management/story3-api-endpoints.md) | CRUD + matchdays endpoints, `SeasonMapper`, DI registration | Done |
+| 4 | [Build Season UI](.tasks/epic2-season-management/story4-blazor-ui.md) | `SeasonApiClient`, list/create/edit/detail pages, `SeasonForm` component | Done |
+| 5 | [Write Season Tests](.tasks/epic2-season-management/story5-tests.md) | Unit tests for domain + handlers, integration tests for API endpoints | Done |
 
 ---
 

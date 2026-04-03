@@ -12,14 +12,19 @@ public class WinterpleinApiFactory : WebApplicationFactory<Program>
     {
         builder.ConfigureServices(services =>
         {
-            // Replace the singleton from Program.cs with a fresh instance per factory,
+            // Replace singletons from Program.cs with fresh instances per factory,
             // so each test class gets an isolated, empty repository.
-            var descriptor = services.SingleOrDefault(
+            var playerDescriptor = services.SingleOrDefault(
                 d => d.ServiceType == typeof(IPlayerRepository));
-            if (descriptor != null)
-                services.Remove(descriptor);
-
+            if (playerDescriptor != null)
+                services.Remove(playerDescriptor);
             services.AddSingleton<IPlayerRepository, InMemoryPlayerRepository>();
+
+            var seasonDescriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof(ISeasonRepository));
+            if (seasonDescriptor != null)
+                services.Remove(seasonDescriptor);
+            services.AddSingleton<ISeasonRepository, InMemorySeasonRepository>();
         });
     }
 }
