@@ -65,11 +65,10 @@ Key constraint: `Winterplein.Client` only references `Winterplein.Shared` — it
 See ROADMAP.md for the authoritative status table. Summary:
 
 **Epic 1 — Match Generation**
-- Stories 1–6: Done
-- Story 7 (UI Polish — layout, home page, responsive design): **next up**
+- Stories 1–7: all Done
 
 **Epic 2 — Season Management**
-- Stories 1–5: all Pending
+- Stories 1–5: all Pending — **next up: Story 1 (Season Domain & DTOs)**
 
 ## Development Notes
 
@@ -83,3 +82,5 @@ See ROADMAP.md for the authoritative status table. Summary:
 - Moq is used for mocking; `using Moq;` must be added explicitly (not globally imported)
 - Test builders live in `tests/Winterplein.UnitTests.Common/Builders/` (`PlayerBuilder`, `TeamBuilder`, `MatchBuilder`, `NameBuilder`)
 - Domain→DTO mappers are extension methods in `src/Winterplein.Application/Mappers/`
+- `AppState` (scoped service in `Winterplein.Client/Services/`) holds `PlayerCount` and `MatchCount` for cross-component state sharing; components subscribe via `AppState.OnChange` and implement `IDisposable` to unsubscribe
+- Custom MudBlazor theme is defined in `Winterplein.Client/WinterpleinTheme.cs` (tennis/sport palette: green primary, amber secondary)
