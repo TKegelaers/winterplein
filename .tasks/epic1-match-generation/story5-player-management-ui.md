@@ -1,4 +1,4 @@
-# Story 5 — Player Management UI
+# Story 5 — Build Player UI
 
 **Epic:** Epic 1 — Match Generation
 **Dependencies:** Story 4 (API endpoints)
@@ -46,7 +46,7 @@ Build the Players page in Blazor WASM where users can add players by first name,
 ## Tasks
 
 - [x] T1: Implement `PlayerApiClient` with `GetPlayersAsync`, `AddPlayerAsync(AddPlayerRequest)`, and `RemovePlayerAsync(int id)`
-- [x] T2: Register `PlayerApiClient` in `Program.cs` and set `ApiBaseUrl` in `appsettings.json` (blocks: T1)
-- [x] T3: Build `Players.razor` page with add form (First Name + Last Name MudTextFields, Gender MudSelect, MudButton) (blocks: T1, T2)
-- [x] T4: Add player table (MudTable) with columns First Name, Last Name, Gender, and per-row delete button (blocks: T3)
-- [x] T5: Add form validation (blank name fields), Enter-key support on text fields, and loading skeleton (blocks: T3, T4)
+- [x] T2: Register `PlayerApiClient` in `Program.cs` and set `ApiBaseUrl` in `appsettings.json` (blockedBy: T1)
+- [x] T3: Build `Players.razor` page with add form (First Name + Last Name MudTextFields, Gender MudSelect, MudButton) (blockedBy: T1, T2)
+- [x] T4: Add player table (MudTable) with columns First Name, Last Name, Gender, and per-row delete button (blockedBy: T3)
+- [x] T5: Add form validation (blank name fields), Enter-key support on text fields, and loading skeleton (blockedBy: T3, T4)

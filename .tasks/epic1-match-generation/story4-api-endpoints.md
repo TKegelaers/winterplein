@@ -1,4 +1,4 @@
-# Story 4 — API Endpoints
+# Story 4 — Build Player & Match API
 
 **Epic:** Epic 1 — Match Generation
 **Dependencies:** Story 3 (match generation service)
@@ -48,15 +48,15 @@ Expose the player management and match generation functionality via a minimal AS
 
 ## Tasks
 
-- [x] T1: Implement `InMemoryPlayerRepository` in Infrastructure (blocks: `IPlayerRepository` from Story 3)
-- [x] T2: Register `IPlayerRepository` and `IMatchGeneratorService` in DI (blocks: T1)
-- [x] T3: Implement player endpoints (`GET`, `POST`, `DELETE /api/players`) (blocks: T2)
-- [x] T4: Add validation — reject empty names (400), missing player (404) (blocks: T3)
-- [x] T5: Implement match endpoints (`POST /api/matches/generate`, `GET /api/matches/count`) (blocks: T2)
-- [x] T6: Add Swagger (Swashbuckle) — OpenAPI spec generation and Swagger UI at `/swagger` (blocks: T3, T5)
-- [x] T7: Add `WinterpleinApiFactory` (`WebApplicationFactory<Program>`) in `Winterplein.IntegrationTests` — resets `InMemoryPlayerRepository` between tests (blocks: T3, T5)
-- [x] T8: Integration tests for `GET /api/players` — returns 200 with empty list when no players exist (blocks: T7)
-- [x] T9: Integration tests for `POST /api/players` — returns 201 with `PlayerDto` and `Location` header; returns 400 for blank name (blocks: T7)
-- [x] T10: Integration tests for `DELETE /api/players/{id}` — returns 204 for known player; returns 404 for unknown id (blocks: T7)
-- [x] T11: Integration tests for `POST /api/matches/generate` — returns 200 with correct match count after adding players (blocks: T7)
-- [x] T12: Integration tests for `GET /api/matches/count` — returns 200 with correct count (blocks: T7)
+- [x] T1: Implement `InMemoryPlayerRepository` in Infrastructure (blockedBy: `IPlayerRepository` from Story 3)
+- [x] T2: Register `IPlayerRepository` and `IMatchGeneratorService` in DI (blockedBy: T1)
+- [x] T3: Implement player endpoints (`GET`, `POST`, `DELETE /api/players`) (blockedBy: T2)
+- [x] T4: Add validation — reject empty names (400), missing player (404) (blockedBy: T3)
+- [x] T5: Implement match endpoints (`POST /api/matches/generate`, `GET /api/matches/count`) (blockedBy: T2)
+- [x] T6: Add Swagger (Swashbuckle) — OpenAPI spec generation and Swagger UI at `/swagger` (blockedBy: T3, T5)
+- [x] T7: Add `WinterpleinApiFactory` (`WebApplicationFactory<Program>`) in `Winterplein.IntegrationTests` — resets `InMemoryPlayerRepository` between tests (blockedBy: T3, T5)
+- [x] T8: Integration tests for `GET /api/players` — returns 200 with empty list when no players exist (blockedBy: T7)
+- [x] T9: Integration tests for `POST /api/players` — returns 201 with `PlayerDto` and `Location` header; returns 400 for blank name (blockedBy: T7)
+- [x] T10: Integration tests for `DELETE /api/players/{id}` — returns 204 for known player; returns 404 for unknown id (blockedBy: T7)
+- [x] T11: Integration tests for `POST /api/matches/generate` — returns 200 with correct match count after adding players (blockedBy: T7)
+- [x] T12: Integration tests for `GET /api/matches/count` — returns 200 with correct count (blockedBy: T7)

@@ -1,4 +1,4 @@
-# Story 1 — Project Setup
+# Story 1 — Set Up Solution
 
 **Epic:** Epic 1 — Match Generation
 **Dependencies:** None
@@ -65,11 +65,11 @@ dotnet add src/Winterplein.Client package MudBlazor
 ## Tasks
 
 - [x] T1: Create solution file (`dotnet new sln -n Winterplein`)
-- [x] T2: Scaffold all 8 projects (blocks: T1)
-- [x] T3: Add all projects to solution (blocks: T2)
-- [x] T4: Set up project references per Clean Architecture (blocks: T3)
-- [x] T5: Install MudBlazor NuGet package in Client (blocks: T3)
-- [x] T6: Configure CORS in API to allow Client origin (blocks: T3)
-- [x] T7: Add MudBlazor providers and CSS/JS to Client (blocks: T5)
-- [x] T8: Scaffold basic layout with AppBar and NavDrawer placeholder links (blocks: T7)
-- [x] T9: Verify `dotnet build` passes with no errors (blocks: T4, T6, T8)
+- [x] T2: Scaffold all 8 projects (blockedBy: T1)
+- [x] T3: Add all projects to solution (blockedBy: T2)
+- [x] T4: Set up project references per Clean Architecture (blockedBy: T3)
+- [x] T5: Install MudBlazor NuGet package in Client (blockedBy: T3)
+- [x] T6: Configure CORS in API to allow Client origin (blockedBy: T3)
+- [x] T7: Add MudBlazor providers and CSS/JS to Client (blockedBy: T5)
+- [x] T8: Scaffold basic layout with AppBar and NavDrawer placeholder links (blockedBy: T7)
+- [x] T9: Verify `dotnet build` passes with no errors (blockedBy: T4, T6, T8)

@@ -1,4 +1,4 @@
-# Story 7 — UI Polish
+# Story 7 — Polish UI
 
 **Epic:** Epic 1 — Match Generation
 **Dependencies:** Story 6 (match display UI)
@@ -42,8 +42,8 @@ Finalize the MudBlazor layout and navigation, add a home page with app overview,
 ## Tasks
 
 - [ ] T1: Create `AppState` scoped service and register in `Program.cs`
-- [ ] T2: Update `MainLayout.razor` with MudAppBar, collapsible MudDrawer, and NavMenu (blocks: T1)
-- [ ] T3: Build `Home.razor` page with app description, stats, and quick-action buttons (blocks: T1)
-- [ ] T4: Add MudSnackbar notifications for player added/removed actions (blocks: T2)
-- [ ] T5: Add MudProgressLinear/MudSkeleton loading indicators across pages (blocks: T2)
-- [ ] T6: Configure custom MudBlazor theme with tennis/sport palette (blocks: T2)
+- [ ] T2: Update `MainLayout.razor` with MudAppBar, collapsible MudDrawer, and NavMenu (blockedBy: T1)
+- [ ] T3: Build `Home.razor` page with app description, stats, and quick-action buttons (blockedBy: T1)
+- [ ] T4: Add MudSnackbar notifications for player added/removed actions (blockedBy: T2)
+- [ ] T5: Add MudProgressLinear/MudSkeleton loading indicators across pages (blockedBy: T2)
+- [ ] T6: Configure custom MudBlazor theme with tennis/sport palette (blockedBy: T2)
