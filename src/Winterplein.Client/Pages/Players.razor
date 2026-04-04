@@ -1,8 +1,8 @@
 @page "/players"
-@using Winterplein.Client.Services
 @using Winterplein.Shared.DTOs
 @inject PlayerApiClient PlayerApi
 @inject ISnackbar Snackbar
+@inject AppState AppState
 
 <MudText Typo="Typo.h5" Class="mb-4">Players</MudText>
 
@@ -98,6 +98,7 @@ else
         try
         {
             _players = await PlayerApi.GetPlayersAsync();
+            AppState.PlayerCount = _players.Count;
         }
         catch (Exception)
         {
@@ -130,6 +131,7 @@ else
             _lastNameError = false;
 
             await LoadPlayers();
+            Snackbar.Add($"Player {request.FirstName} {request.LastName} added.", Severity.Success);
         }
         catch (Exception)
         {
@@ -147,6 +149,7 @@ else
         {
             await PlayerApi.RemovePlayerAsync(id);
             await LoadPlayers();
+            Snackbar.Add("Player removed.", Severity.Success);
         }
         catch (Exception)
         {

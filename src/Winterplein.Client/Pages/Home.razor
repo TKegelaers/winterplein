@@ -1,7 +1,103 @@
-﻿@page "/"
+@page "/"
+@inject AppState AppState
+@inject PlayerApiClient PlayerApi
+@inject MatchApiClient MatchApi
+@implements IDisposable
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Winterplein</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudContainer MaxWidth="MaxWidth.Medium" Class="pa-4">
+    <MudText Typo="Typo.h4" Class="mb-2">Welcome to Winterplein</MudText>
+    <MudText Typo="Typo.body1" Class="mb-6">
+        Winterplein generates all possible doubles tennis match combinations from your registered players.
+        Add players, then generate matches to see every possible 2v2 pairing.
+    </MudText>
 
-Welcome to your new app.
+    @if (_loading)
+    {
+        <MudGrid Class="mb-6">
+            <MudItem xs="12" sm="6">
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="120px" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="120px" />
+            </MudItem>
+        </MudGrid>
+    }
+    else
+    {
+        <MudGrid Class="mb-6">
+            <MudItem xs="12" sm="6">
+                <MudPaper Class="pa-4 d-flex flex-column align-center" Elevation="2">
+                    <MudIcon Icon="@Icons.Material.Filled.People" Size="Size.Large" Color="Color.Primary" Class="mb-2" />
+                    <MudText Typo="Typo.h3">@AppState.PlayerCount</MudText>
+                    <MudText Typo="Typo.subtitle1">Players</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudPaper Class="pa-4 d-flex flex-column align-center" Elevation="2">
+                    <MudIcon Icon="@Icons.Material.Filled.SportsTennis" Size="Size.Large" Color="Color.Secondary" Class="mb-2" />
+                    <MudText Typo="Typo.h3">@AppState.MatchCount</MudText>
+                    <MudText Typo="Typo.subtitle1">Possible Matches</MudText>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           FullWidth="true"
+                           Href="/players"
+                           StartIcon="@Icons.Material.Filled.PersonAdd"
+                           Size="Size.Large">
+                    Manage Players
+                </MudButton>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Secondary"
+                           FullWidth="true"
+                           Href="/matches"
+                           StartIcon="@Icons.Material.Filled.SportsTennis"
+                           Size="Size.Large">
+                    Generate Matches
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    }
+</MudContainer>
+
+@code {
+    private bool _loading = true;
+
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += StateHasChanged;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var playersTask = PlayerApi.GetPlayersAsync();
+            var countTask = MatchApi.GetMatchCountAsync();
+            await Task.WhenAll(playersTask, countTask);
+            AppState.PlayerCount = playersTask.Result.Count;
+            AppState.MatchCount = countTask.Result;
+        }
+        catch
+        {
+            // Counts remain 0 on failure
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= StateHasChanged;
+    }
+}

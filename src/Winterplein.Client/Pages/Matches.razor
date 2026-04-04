@@ -1,9 +1,9 @@
 @page "/matches"
-@using Winterplein.Client.Services
 @using Winterplein.Shared.DTOs
 @inject PlayerApiClient PlayerApi
 @inject MatchApiClient MatchApi
 @inject ISnackbar Snackbar
+@inject AppState AppState
 
 <MudText Typo="Typo.h5" Class="mb-4">Matches</MudText>
 
@@ -73,6 +73,8 @@ else
             await Task.WhenAll(playersTask, countTask);
             _players = playersTask.Result;
             _expectedMatchCount = countTask.Result;
+            AppState.PlayerCount = _players.Count;
+            AppState.MatchCount = _expectedMatchCount;
         }
         catch (Exception)
         {
@@ -95,6 +97,7 @@ else
             var response = await MatchApi.GenerateMatchesAsync();
             _matches = response.Matches;
             _hasGenerated = true;
+            Snackbar.Add($"Generated {_matches.Count} matches!", Severity.Success);
         }
         catch (Exception)
         {

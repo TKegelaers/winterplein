@@ -16,5 +16,9 @@ builder.Services.AddHttpClient<PlayerApiClient>(client =>
     client.BaseAddress = new Uri(apiBaseUrl));
 builder.Services.AddHttpClient<MatchApiClient>(client =>
     client.BaseAddress = new Uri(apiBaseUrl));
+builder.Services.AddHttpClient<SeasonApiClient>(client =>
+    client.BaseAddress = new Uri(apiBaseUrl));
+
+builder.Services.AddScoped<AppState>();
 
 await builder.Build().RunAsync();

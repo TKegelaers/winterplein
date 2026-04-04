@@ -1,4 +1,4 @@
-# Story 5 — Tests
+# Story 5 — Write Season Tests
 
 **Epic:** Epic 2 — Season Management
 **Dependencies:** Story 1 (unit tests), Story 3 (integration tests)
@@ -52,12 +52,12 @@ Write unit tests for domain logic and CQRS handlers, and integration tests for t
 
 ## Tasks
 
-- [ ] T1: Write `GetMatchdays()` unit tests covering correctness and edge cases (blocks: Story 1 T1)
-- [ ] T2: Write `Season` validation unit tests (blocks: Story 1 T2)
-- [ ] T3: Write CQRS handler unit tests with mocked repository (blocks: Story 2)
-- [ ] T4: Write integration tests for full CRUD cycle (blocks: Story 3)
-- [ ] T5: Write integration tests for validation errors and matchdays endpoint (blocks: Story 3)
-- [ ] T6: Write `Season.AddPlayer`/`RemovePlayer` unit tests: happy path, duplicate throws, null throws, not-found throws, remove throws when exactly 4 players enrolled (blocks: Story 1 T5)
-- [ ] T7: Write handler unit tests for `AddSeasonPlayerCommandHandler`, `RemoveSeasonPlayerCommandHandler`, `GetSeasonPlayersQueryHandler` — happy path + not-found cases (blocks: Story 2 T10, T11, T12)
-- [ ] T8: Write integration tests for player-season endpoints: add player 200, unknown season 404, unknown player 404, list players 200, remove player 204, remove unknown player 404, remove when only 4 enrolled → 400 (blocks: Story 3 T8)
-- [ ] T9: Add `WithPlayer(Player)` method to `SeasonBuilder` in `tests/Winterplein.UnitTests.Common/Builders/` (blocks: Story 1 T5)
+- [x] T1: Write `GetMatchdays()` unit tests covering correctness and edge cases (blockedBy: Story 1 T1)
+- [x] T2: Write `Season` validation unit tests (blockedBy: Story 1 T2)
+- [x] T3: Write CQRS handler unit tests with mocked repository (blockedBy: Story 2)
+- [x] T4: Write integration tests for full CRUD cycle (blockedBy: Story 3)
+- [x] T5: Write integration tests for validation errors and matchdays endpoint (blockedBy: Story 3)
+- [x] T6: Write `Season.AddPlayer`/`RemovePlayer` unit tests: happy path, duplicate throws, null throws, not-found throws, remove throws when exactly 4 players enrolled (blockedBy: Story 1 T5)
+- [x] T7: Write handler unit tests for `AddSeasonPlayerCommandHandler`, `RemoveSeasonPlayerCommandHandler`, `GetSeasonPlayersQueryHandler` — happy path + not-found cases (blockedBy: Story 2 T10, T11, T12)
+- [x] T8: Write integration tests for player-season endpoints: add player 200, unknown season 404, unknown player 404, list players 200, remove player 204, remove unknown player 404, remove when only 4 enrolled → 400 (blockedBy: Story 3 T8)
+- [x] T9: Add `WithPlayer(Player)` method to `SeasonBuilder` in `tests/Winterplein.UnitTests.Common/Builders/` (blockedBy: Story 1 T5)

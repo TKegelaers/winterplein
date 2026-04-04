@@ -1,4 +1,4 @@
-# Story 3 — Match Generation Service
+# Story 3 — Implement Match Generator
 
 **Epic:** Epic 1 — Match Generation
 **Dependencies:** Story 2 (domain models)
@@ -72,7 +72,7 @@ for i in 0..N-4:
 
 - [x] T1: Define `IMatchGeneratorService` interface
 - [x] T2: Define `IPlayerRepository` interface
-- [x] T3: Implement `MatchGeneratorService` with C(N,4)×3 algorithm (blocks: T1)
-- [x] T4: Implement `CalculateMatchCount` without generating matches (blocks: T1)
-- [x] T5: Write unit tests for match counts (3/4/6/8/10 players) (blocks: T3, T4)
-- [x] T6: Write no-duplicate-matches test (blocks: T3)
+- [x] T3: Implement `MatchGeneratorService` with C(N,4)×3 algorithm (blockedBy: T1)
+- [x] T4: Implement `CalculateMatchCount` without generating matches (blockedBy: T1)
+- [x] T5: Write unit tests for match counts (3/4/6/8/10 players) (blockedBy: T3, T4)
+- [x] T6: Write no-duplicate-matches test (blockedBy: T3)

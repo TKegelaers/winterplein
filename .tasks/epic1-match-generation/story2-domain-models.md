@@ -1,4 +1,4 @@
-# Story 2 — Domain Models
+# Story 2 — Define Domain Models
 
 **Epic:** Epic 1 — Match Generation
 **Dependencies:** Story 1 (project setup)
@@ -45,10 +45,10 @@ Implement the core domain entities and the shared DTOs used to transfer data bet
 ## Tasks
 
 - [x] T1: Create `Gender` enum (`Male`, `Female`) and `Name` value object (`FirstName`, `LastName`) with validation
-- [x] T2: Create `Player` entity (`Id` int, `Name` Name, `Gender` Gender) (blocks: T1)
-- [x] T3: Create `Team` entity (`Id` int) with order-independent `IEquatable<Team>` (blocks: T2)
-- [x] T4: Create `Match` entity (`Id` int, `Team1`, `Team2`) (blocks: T3)
+- [x] T2: Create `Player` entity (`Id` int, `Name` Name, `Gender` Gender) (blockedBy: T1)
+- [x] T3: Create `Team` entity (`Id` int) with order-independent `IEquatable<Team>` (blockedBy: T2)
+- [x] T4: Create `Match` entity (`Id` int, `Team1`, `Team2`) (blockedBy: T3)
 - [x] T5: Create `PlayerDto` and `MatchDto` in `Winterplein.Shared/DTOs/`
-- [x] T6: Create `AddPlayerRequest` and `GenerateMatchesResponse` DTOs (blocks: T5)
-- [x] T7: Write Team equality and hash code unit tests (blocks: T3)
-- [x] T8: Write Name value object validation tests (blocks: T1)
+- [x] T6: Create `AddPlayerRequest` and `GenerateMatchesResponse` DTOs (blockedBy: T5)
+- [x] T7: Write Team equality and hash code unit tests (blockedBy: T3)
+- [x] T8: Write Name value object validation tests (blockedBy: T1)

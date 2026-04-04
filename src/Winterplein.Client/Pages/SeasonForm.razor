@@ -1,0 +1,152 @@
+@using Winterplein.Shared.DTOs
+
+<EditForm Model="_model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12">
+            <MudTextField @bind-Value="_model.Name" Label="Name" Required="true"
+                          RequiredError="Name is required." Immediate="true" />
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudDatePicker Label="Start Date" @bind-Date="_startDate" Required="true"
+                           RequiredError="Start date is required." />
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudDatePicker Label="End Date" @bind-Date="_endDate" Required="true"
+                           RequiredError="End date is required." />
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudSelect T="DayOfWeek" @bind-Value="_model.Weekday" Label="Weekday">
+                @foreach (var day in Enum.GetValues<DayOfWeek>())
+                {
+                    <MudSelectItem Value="day">@day</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudTimePicker Label="Start Hour" @bind-Time="_startTime" Required="true"
+                           RequiredError="Start hour is required." />
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudTimePicker Label="End Hour" @bind-Time="_endTime" Required="true"
+                           RequiredError="End hour is required." />
+        </MudItem>
+    </MudGrid>
+
+    @if (!string.IsNullOrEmpty(_validationError))
+    {
+        <MudAlert Severity="Severity.Error" Class="mt-3">@_validationError</MudAlert>
+    }
+
+    @if (_previewMatchdayCount.HasValue)
+    {
+        <MudPaper Class="pa-3 mt-4" Elevation="0" Style="background-color: var(--mud-palette-background-grey);">
+            <MudText Typo="Typo.subtitle2">Preview</MudText>
+            <MudText>Matchdays: <strong>@_previewMatchdayCount</strong></MudText>
+            @if (_previewFirst.HasValue)
+            {
+                <MudText>First: <strong>@_previewFirst.Value.ToShortDateString()</strong></MudText>
+                <MudText>Last: <strong>@_previewLast!.Value.ToShortDateString()</strong></MudText>
+            }
+            else
+            {
+                <MudText>No matchdays fall on @_model.Weekday in this range.</MudText>
+            }
+        </MudPaper>
+    }
+
+    <div class="d-flex gap-2 mt-4">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                   Disabled="@_isSubmitting">
+            @SubmitLabel
+        </MudButton>
+        <MudButton Variant="Variant.Text" OnClick="OnCancel">Cancel</MudButton>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public string SubmitLabel { get; set; } = "Save";
+    [Parameter] public SeasonDto? InitialValues { get; set; }
+    [Parameter] public EventCallback<(string Name, DateOnly StartDate, DateOnly EndDate, DayOfWeek Weekday, TimeOnly StartHour, TimeOnly EndHour)> OnSubmit { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    private SeasonFormModel _model = new();
+    private DateTime? _startDate;
+    private DateTime? _endDate;
+    private TimeSpan? _startTime;
+    private TimeSpan? _endTime;
+    private string? _validationError;
+    private bool _isSubmitting;
+    private int? _previewMatchdayCount;
+    private DateOnly? _previewFirst;
+    private DateOnly? _previewLast;
+
+    protected override void OnParametersSet()
+    {
+        if (InitialValues != null)
+        {
+            _model.Name = InitialValues.Name;
+            _model.Weekday = InitialValues.Weekday;
+            _startDate = InitialValues.StartDate.ToDateTime(TimeOnly.MinValue);
+            _endDate = InitialValues.EndDate.ToDateTime(TimeOnly.MinValue);
+            _startTime = InitialValues.StartHour.ToTimeSpan();
+            _endTime = InitialValues.EndHour.ToTimeSpan();
+            UpdatePreview();
+        }
+    }
+
+    private void UpdatePreview()
+    {
+        if (_startDate == null || _endDate == null) { _previewMatchdayCount = null; return; }
+        var start = DateOnly.FromDateTime(_startDate.Value);
+        var end = DateOnly.FromDateTime(_endDate.Value);
+        if (end <= start) { _previewMatchdayCount = null; return; }
+
+        var matchdays = new List<DateOnly>();
+        var current = start;
+        while (current <= end)
+        {
+            if (current.DayOfWeek == _model.Weekday)
+                matchdays.Add(current);
+            current = current.AddDays(1);
+        }
+        _previewMatchdayCount = matchdays.Count;
+        _previewFirst = matchdays.Count > 0 ? matchdays[0] : null;
+        _previewLast = matchdays.Count > 0 ? matchdays[^1] : null;
+    }
+
+    private async Task OnValidSubmit()
+    {
+        _validationError = null;
+
+        if (_startDate == null) { _validationError = "Start date is required."; return; }
+        if (_endDate == null) { _validationError = "End date is required."; return; }
+        if (_startTime == null) { _validationError = "Start hour is required."; return; }
+        if (_endTime == null) { _validationError = "End hour is required."; return; }
+
+        var startDate = DateOnly.FromDateTime(_startDate.Value);
+        var endDate = DateOnly.FromDateTime(_endDate.Value);
+        var startHour = TimeOnly.FromTimeSpan(_startTime.Value);
+        var endHour = TimeOnly.FromTimeSpan(_endTime.Value);
+
+        if (endDate <= startDate) { _validationError = "End date must be after start date."; return; }
+        if (endHour <= startHour) { _validationError = "End hour must be after start hour."; return; }
+
+        _isSubmitting = true;
+        try
+        {
+            await OnSubmit.InvokeAsync((_model.Name, startDate, endDate, _model.Weekday, startHour, endHour));
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+
+    private class SeasonFormModel
+    {
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Name is required.")]
+        public string Name { get; set; } = string.Empty;
+        public DayOfWeek Weekday { get; set; } = DayOfWeek.Monday;
+    }
+}

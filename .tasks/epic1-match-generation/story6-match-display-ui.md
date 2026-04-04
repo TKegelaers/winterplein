@@ -1,4 +1,4 @@
-# Story 6 — Match Display UI
+# Story 6 — Build Match Display
 
 **Epic:** Epic 1 — Match Generation
 **Dependencies:** Story 5 (player management UI)
@@ -37,8 +37,8 @@ Build the Matches page where users can generate all possible doubles matches fro
 ## Tasks
 
 - [x] T1: Implement `MatchApiClient` typed HttpClient service
-- [x] T2: Register `MatchApiClient` in `Program.cs` (blocks: T1)
-- [x] T3: Build `Matches.razor` page with player count and match count preview (blocks: T1, T2)
-- [x] T4: Add "Generate Matches" button with disabled state and spinner (blocks: T3)
-- [x] T5: Render match results in a virtualized list (blocks: T4)
-- [x] T6: Handle regeneration — clear previous results before new request (blocks: T5)
+- [x] T2: Register `MatchApiClient` in `Program.cs` (blockedBy: T1)
+- [x] T3: Build `Matches.razor` page with player count and match count preview (blockedBy: T1, T2)
+- [x] T4: Add "Generate Matches" button with disabled state and spinner (blockedBy: T3)
+- [x] T5: Render match results in a virtualized list (blockedBy: T4)
+- [x] T6: Handle regeneration — clear previous results before new request (blockedBy: T5)
