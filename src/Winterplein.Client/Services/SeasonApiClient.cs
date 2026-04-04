@@ -1,14 +1,21 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Winterplein.Shared.DTOs;
 
 namespace Winterplein.Client.Services;
 
 public class SeasonApiClient(HttpClient httpClient)
 {
+    private static readonly JsonSerializerOptions _json = new(JsonSerializerDefaults.Web)
+    {
+        Converters = { new JsonStringEnumConverter() }
+    };
+
     public async Task<List<SeasonDto>> GetSeasonsAsync()
     {
-        var result = await httpClient.GetFromJsonAsync<List<SeasonDto>>("/api/seasons");
+        var result = await httpClient.GetFromJsonAsync<List<SeasonDto>>("/api/seasons", _json);
         return result ?? [];
     }
 
@@ -17,22 +24,22 @@ public class SeasonApiClient(HttpClient httpClient)
         var response = await httpClient.GetAsync($"/api/seasons/{id}");
         if (response.StatusCode == HttpStatusCode.NotFound) return null;
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<SeasonDto>();
+        return await response.Content.ReadFromJsonAsync<SeasonDto>(_json);
     }
 
     public async Task<SeasonDto> CreateSeasonAsync(CreateSeasonRequest request)
     {
-        var response = await httpClient.PostAsJsonAsync("/api/seasons", request);
+        var response = await httpClient.PostAsJsonAsync("/api/seasons", request, _json);
         response.EnsureSuccessStatusCode();
-        return (await response.Content.ReadFromJsonAsync<SeasonDto>())!;
+        return (await response.Content.ReadFromJsonAsync<SeasonDto>(_json))!;
     }
 
     public async Task<SeasonDto?> UpdateSeasonAsync(int id, UpdateSeasonRequest request)
     {
-        var response = await httpClient.PutAsJsonAsync($"/api/seasons/{id}", request);
+        var response = await httpClient.PutAsJsonAsync($"/api/seasons/{id}", request, _json);
         if (response.StatusCode == HttpStatusCode.NotFound) return null;
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<SeasonDto>();
+        return await response.Content.ReadFromJsonAsync<SeasonDto>(_json);
     }
 
     public async Task<bool> DeleteSeasonAsync(int id)
@@ -57,10 +64,10 @@ public class SeasonApiClient(HttpClient httpClient)
 
     public async Task<SeasonDto?> AddPlayerToSeasonAsync(int seasonId, AddSeasonPlayerRequest request)
     {
-        var response = await httpClient.PostAsJsonAsync($"/api/seasons/{seasonId}/players", request);
+        var response = await httpClient.PostAsJsonAsync($"/api/seasons/{seasonId}/players", request, _json);
         if (response.StatusCode == HttpStatusCode.NotFound) return null;
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<SeasonDto>();
+        return await response.Content.ReadFromJsonAsync<SeasonDto>(_json);
     }
 
     public async Task<bool> RemovePlayerFromSeasonAsync(int seasonId, int playerId)
