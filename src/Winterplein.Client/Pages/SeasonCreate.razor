@@ -21,8 +21,9 @@
             Snackbar.Add("Season created.", Severity.Success);
             Navigation.NavigateTo($"/seasons/{created.Id}");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.Error.WriteLine(ex);
             Snackbar.Add("Failed to create season.", Severity.Error);
         }
     }
