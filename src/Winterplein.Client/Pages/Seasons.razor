@@ -1,0 +1,103 @@
+@page "/seasons"
+@using Winterplein.Shared.DTOs
+@inject SeasonApiClient SeasonApi
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h5" Class="mb-4">Seasons</MudText>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mb-4"
+           OnClick="@(() => Navigation.NavigateTo("/seasons/create"))">
+    New Season
+</MudButton>
+
+@if (_loading)
+{
+    <MudSkeleton />
+}
+else if (_seasons.Count == 0)
+{
+    <MudText Color="Color.Secondary">No seasons yet. Create one to get started.</MudText>
+}
+else
+{
+    <MudTable Items="_seasons" Hover="true" Striped="true">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Weekday</MudTh>
+            <MudTh>Start Date</MudTh>
+            <MudTh>End Date</MudTh>
+            <MudTh>Time</MudTh>
+            <MudTh>Matchdays</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Name</MudTd>
+            <MudTd>@context.Weekday</MudTd>
+            <MudTd>@context.StartDate.ToShortDateString()</MudTd>
+            <MudTd>@context.EndDate.ToShortDateString()</MudTd>
+            <MudTd>@context.StartHour.ToString("HH:mm") – @context.EndHour.ToString("HH:mm")</MudTd>
+            <MudTd>@context.MatchdayCount</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Visibility" Title="View"
+                               OnClick="@(() => Navigation.NavigateTo($"/seasons/{context.Id}"))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Title="Edit"
+                               OnClick="@(() => Navigation.NavigateTo($"/seasons/{context.Id}/edit"))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Title="Delete" Color="Color.Error"
+                               OnClick="@(() => ConfirmDelete(context))" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+@code {
+    private List<SeasonDto> _seasons = [];
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSeasons();
+    }
+
+    private async Task LoadSeasons()
+    {
+        _loading = true;
+        try
+        {
+            _seasons = await SeasonApi.GetSeasonsAsync();
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to load seasons.", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task ConfirmDelete(SeasonDto season)
+    {
+        var confirmed = await DialogService.ShowMessageBoxAsync(
+            "Confirm Delete",
+            $"Delete season \"{season.Name}\"? This cannot be undone.",
+            yesText: "Delete", cancelText: "Cancel");
+        if (confirmed == true)
+            await DeleteSeason(season.Id);
+    }
+
+    private async Task DeleteSeason(int id)
+    {
+        try
+        {
+            await SeasonApi.DeleteSeasonAsync(id);
+            Snackbar.Add("Season deleted.", Severity.Success);
+            await LoadSeasons();
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to delete season.", Severity.Error);
+        }
+    }
+}
