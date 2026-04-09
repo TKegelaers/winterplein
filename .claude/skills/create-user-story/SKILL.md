@@ -70,7 +70,7 @@ Save to: `.tasks/<epic-slug>/story<N>-<kebab-title>.md`
 
 ### Key formatting rules
 
-- **Acceptance criteria** are organized by layer/component (Domain entity, DTOs, CQRS handlers, API endpoints, Blazor UI). Match the structure the user's feature actually touches — don't add layers that aren't relevant.
+- **Acceptance criteria** are organized by layer/component following this order: Domain → CQRS & Repository → API → UI → Tests. Skip layers the story doesn't touch. Each story is a vertical slice — include all relevant layers, not just one.
 - **Tasks** are small, individually completable units of work. Use `(blockedBy: TX)` to indicate a task that can't start until TX is done. The annotation goes on the dependent task (e.g. T2 can't start until T1 is done → T2's entry says `(blockedBy: T1)`). Cross-story references are allowed and common: `(blockedBy: Story 1 T5)` or multiple: `(blockedBy: T1, Story 2 T3, Story 2 T4)`.
 - **Technical Notes** capture anything a developer needs to know that isn't obvious from the acceptance criteria alone: naming conventions, EF Core considerations, CORS, MediatR registration, etc.
 

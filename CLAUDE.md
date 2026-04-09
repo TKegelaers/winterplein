@@ -70,6 +70,9 @@ See ROADMAP.md for the authoritative status table. Summary:
 **Epic 2 — Season Management**
 - Stories 1–5: all Pending — **next up: Story 1 (Season Domain & DTOs)**
 
+**Epic 3 — Season Match Planning**
+- Stories 1–3: all Pending
+
 ## Development Notes
 
 - The application layer uses CQRS via MediatR: commands (write) and queries (read) live in `Winterplein.Application`, handlers are registered via `services.AddMediatR(...)`

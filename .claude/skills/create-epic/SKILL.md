@@ -17,7 +17,7 @@ Before writing anything, make sure you know:
 2. **Epic title** — short, imperative phrase (e.g. "Match Statistics", "PDF Export", "User Authentication").
 3. **Epic slug** — kebab-case version of the title (e.g. `match-statistics`). Combined with the number: `epicN-<slug>`.
 4. **Goal sentence** — one sentence describing what this epic delivers and why. Appears as the `> blockquote` under the epic heading.
-5. **Planned stories** — a list of stories for this epic (title + one-line description). Stories should follow the standard layer breakdown for this stack: Domain → CQRS & Repository → API Endpoints → Blazor UI → Tests. Not all layers are required — only include what the feature touches.
+5. **Planned stories** — a list of stories for this epic (title + one-line description). Stories should be **functional slices** — each story delivers a complete, user-facing capability that cuts vertically through the stack (domain, application, API, UI, tests as needed). Avoid single-layer technical stories like "Domain Models" or "Write Tests". Instead, group by what the user can do: "Enroll Players in a Season", "Generate Matches for a Matchday", etc.
 6. **Dependencies** — does this epic depend on another epic being complete first? Check the existing epics in `ROADMAP.md`.
 
 If the user's request is vague, ask one clarifying question before writing — don't ask multiple at once.
@@ -55,7 +55,7 @@ If `CLAUDE.md` has a "Current State" section listing epics and their status, add
 
 - Epic titles use short, imperative phrases — same convention as story titles.
 - The epic slug must be lowercase kebab-case, matching the folder name exactly.
-- Stories in the table follow the layer order: Domain → CQRS & Repository → API → UI → Tests. Skip layers the epic doesn't touch.
+- Stories represent functional capabilities, ordered by dependency (foundational features first, then features that build on them). Each story should be a vertical slice delivering end-to-end value, including all layers it touches (domain, CQRS, API, UI, tests).
 - Status for all new stories is `Pending`.
 - Do not create story files — tell the user to run `/create-user-story` for each story after the epic is set up.
 
