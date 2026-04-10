@@ -46,7 +46,7 @@ dotnet test --filter "FullyQualifiedName~MyTestClass.MyTestMethod"
 
 Clean Architecture with strict dependency rules:
 
-``` text
+```text
 Winterplein.Domain          — entities, no external dependencies
 Winterplein.Shared          — DTOs shared between API and Client, no external dependencies
 Winterplein.Application     — CQRS commands/queries/handlers (MediatR), refs Domain + Shared
@@ -65,13 +65,20 @@ Key constraint: `Winterplein.Client` only references `Winterplein.Shared` — it
 See ROADMAP.md for the authoritative status table. Summary:
 
 **Epic 1 — Match Generation**
+
 - Stories 1–7: all Done
 
 **Epic 2 — Season Management**
+
 - Stories 1–5: all Pending — **next up: Story 1 (Season Domain & DTOs)**
 
 **Epic 3 — Season Match Planning**
+
 - Stories 1–3: all Pending
+
+**Epic 4 — Player Absence Management**
+
+- Stories 1–2: all Pending
 
 ## Development Notes
 

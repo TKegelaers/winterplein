@@ -10,15 +10,15 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 > Generate all possible doubles matches from a player list.
 
-| # | Story | Description | Status |
-| --- | ------- | ------------- | -------- |
-| 1 | [Set Up Solution](.tasks/epic1-match-generation/story1-project-setup.md) | Scaffold solution with all projects, MudBlazor, CORS | Done |
-| 2 | [Define Domain Models](.tasks/epic1-match-generation/story2-domain-models.md) | Player, Team, Match entities + Shared DTOs | Done |
-| 3 | [Implement Match Generator](.tasks/epic1-match-generation/story3-match-generation-service.md) | C(N,4)×3 algorithm, unit tests | Done |
-| 4 | [Build Player & Match API](.tasks/epic1-match-generation/story4-api-endpoints.md) | Controllers, CQRS/MediatR, Swagger, integration tests | Done |
-| 5 | [Build Player UI](.tasks/epic1-match-generation/story5-player-management-ui.md) | Add/remove players in Blazor WASM | Done |
-| 6 | [Build Match Display](.tasks/epic1-match-generation/story6-match-display-ui.md) | Generate and display all matches | Done |
-| 7 | [Polish UI](.tasks/epic1-match-generation/story7-ui-polish.md) | Layout, home page, responsive design | Done |
+| #   | Story                                                                                         | Description                                           | Status |
+| --- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ------ |
+| 1   | [Set Up Solution](.tasks/epic1-match-generation/story1-project-setup.md)                      | Scaffold solution with all projects, MudBlazor, CORS  | Done   |
+| 2   | [Define Domain Models](.tasks/epic1-match-generation/story2-domain-models.md)                 | Player, Team, Match entities + Shared DTOs            | Done   |
+| 3   | [Implement Match Generator](.tasks/epic1-match-generation/story3-match-generation-service.md) | C(N,4)×3 algorithm, unit tests                        | Done   |
+| 4   | [Build Player & Match API](.tasks/epic1-match-generation/story4-api-endpoints.md)             | Controllers, CQRS/MediatR, Swagger, integration tests | Done   |
+| 5   | [Build Player UI](.tasks/epic1-match-generation/story5-player-management-ui.md)               | Add/remove players in Blazor WASM                     | Done   |
+| 6   | [Build Match Display](.tasks/epic1-match-generation/story6-match-display-ui.md)               | Generate and display all matches                      | Done   |
+| 7   | [Polish UI](.tasks/epic1-match-generation/story7-ui-polish.md)                                | Layout, home page, responsive design                  | Done   |
 
 ---
 
@@ -28,13 +28,13 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 > Manage seasons with a name, date range, weekly matchday, and start/end hours. Matchdays are computed from the date range and weekday — not stored.
 
-| # | Story | Description | Status |
-| --- | ------- | ------------- | -------- |
-| 1 | [Define Season Domain & DTOs](.tasks/epic2-season-management/story1-domain-and-dtos.md) | `Season` entity with `GetMatchdays()`, `SeasonDto`, Create/Update request DTOs | Pending |
-| 2 | [Implement Season CQRS & Repository](.tasks/epic2-season-management/story2-cqrs-and-repository.md) | MediatR commands/queries, `ISeasonRepository`, `InMemorySeasonRepository` | Pending |
-| 3 | [Build Season API](.tasks/epic2-season-management/story3-api-endpoints.md) | CRUD + matchdays endpoints, `SeasonMapper`, DI registration | Pending |
-| 4 | [Build Season UI](.tasks/epic2-season-management/story4-blazor-ui.md) | `SeasonApiClient`, list/create/edit/detail pages, `SeasonForm` component | Pending |
-| 5 | [Write Season Tests](.tasks/epic2-season-management/story5-tests.md) | Unit tests for domain + handlers, integration tests for API endpoints | Pending |
+| #   | Story                                                                                              | Description                                                                    | Status  |
+| --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------- |
+| 1   | [Define Season Domain & DTOs](.tasks/epic2-season-management/story1-domain-and-dtos.md)            | `Season` entity with `GetMatchdays()`, `SeasonDto`, Create/Update request DTOs | Pending |
+| 2   | [Implement Season CQRS & Repository](.tasks/epic2-season-management/story2-cqrs-and-repository.md) | MediatR commands/queries, `ISeasonRepository`, `InMemorySeasonRepository`      | Pending |
+| 3   | [Build Season API](.tasks/epic2-season-management/story3-api-endpoints.md)                         | CRUD + matchdays endpoints, `SeasonMapper`, DI registration                    | Pending |
+| 4   | [Build Season UI](.tasks/epic2-season-management/story4-blazor-ui.md)                              | `SeasonApiClient`, list/create/edit/detail pages, `SeasonForm` component       | Pending |
+| 5   | [Write Season Tests](.tasks/epic2-season-management/story5-tests.md)                               | Unit tests for domain + handlers, integration tests for API endpoints          | Pending |
 
 ---
 
@@ -42,16 +42,26 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 > Generate and schedule matches for a season's matchdays using enrolled players.
 
-| # | Story | Description | Status |
-| --- | ------- | ------------- | -------- |
-| 1 | [View Season Match Pool](.tasks/epic3-season-match-planning/story1-view-season-match-pool.md) | View all possible matches generated from a season's enrolled players | Pending |
-| 2 | [Generate Season Schedule](.tasks/epic3-season-match-planning/story2-plan-match-for-matchday.md) | Automatically assign random unique matches to all open matchdays at once | Pending |
-| 3 | [Browse & Manage Schedule](.tasks/epic3-season-match-planning/story3-browse-and-manage-schedule.md) | View full matchday schedule, clear individual or all planned matches | Pending |
+| #   | Story                                                                                               | Description                                                              | Status  |
+| --- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------- |
+| 1   | [View Season Match Pool](.tasks/epic3-season-match-planning/story1-view-season-match-pool.md)       | View all possible matches generated from a season's enrolled players     | Pending |
+| 2   | [Generate Season Schedule](.tasks/epic3-season-match-planning/story2-plan-match-for-matchday.md)    | Automatically assign random unique matches to all open matchdays at once | Pending |
+| 3   | [Browse & Manage Schedule](.tasks/epic3-season-match-planning/story3-browse-and-manage-schedule.md) | View full matchday schedule, clear individual or all planned matches     | Pending |
+
+---
+
+## Epic 4 — Player Absence Management
+
+> Record player absences per matchday so the automatic schedule generator only picks matches where all four players are available.
+
+| #   | Story                                                                                                                   | Description                                                                                | Status  |
+| --- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------- |
+| 1   | [Record Player Absences](.tasks/epic4-player-absence-management/story1-record-player-absences.md)                       | Mark/unmark players as absent on specific matchdays, with domain, API, and UI              | Pending |
+| 2   | [Absence-Aware Schedule Generation](.tasks/epic4-player-absence-management/story2-absence-aware-schedule-generation.md) | Filter the match pool per matchday to exclude matches with absent players before assigning | Pending |
 
 ---
 
 ## Future Epics
 
 | Epic | Description |
-|------|-------------|
-| Player Absence Management | Record player absences per matchday; exclude absent players from match generation on that day |
+| ---- | ----------- |
