@@ -88,6 +88,10 @@ See ROADMAP.md for the authoritative status table. Summary:
 
 - Stories 1–4: all Pending
 
+**Epic 7 — E2E Tests with Playwright**
+
+- Stories 1–4: all Pending
+
 ## Development Notes
 
 - The application layer uses CQRS via MediatR: commands (write) and queries (read) live in `Winterplein.Application`, handlers are registered via `services.AddMediatR(...)`
