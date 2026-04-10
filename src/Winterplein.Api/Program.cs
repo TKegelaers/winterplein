@@ -1,3 +1,4 @@
+using Wolverine;
 using Winterplein.Api.ExceptionHandling;
 using Winterplein.Application.Interfaces;
 using Winterplein.Application.Queries.GetAllPlayers;
@@ -11,7 +12,7 @@ builder.Services.AddControllers()
 builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllPlayersQuery).Assembly));
+builder.Host.UseWolverine(opts => opts.Discovery.IncludeAssembly(typeof(GetAllPlayersQuery).Assembly));
 // TODO: Replace Singleton with Scoped when switching to real persistence (e.g. EF Core)
 builder.Services.AddSingleton<IPlayerRepository, InMemoryPlayerRepository>();
 builder.Services.AddSingleton<ISeasonRepository, InMemorySeasonRepository>();

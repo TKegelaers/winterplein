@@ -7,25 +7,22 @@ namespace Winterplein.UnitTests.Application.Handlers;
 public class RemovePlayerCommandHandlerTests
 {
     private readonly Mock<IPlayerRepository> _repo = new();
-    private readonly RemovePlayerCommandHandler _sut;
-
-    public RemovePlayerCommandHandlerTests() => _sut = new RemovePlayerCommandHandler(_repo.Object);
 
     [Fact]
-    public async Task Handle_CallsRepoRemoveWithCorrectId()
+    public void Handle_CallsRepoRemoveWithCorrectId()
     {
-        await _sut.Handle(new RemovePlayerCommand(42), CancellationToken.None);
+        RemovePlayerCommandHandler.Handle(new RemovePlayerCommand(42), _repo.Object);
 
         _repo.Verify(r => r.Remove(42), Times.Once);
     }
 
     [Fact]
-    public async Task Handle_ThrowsKeyNotFoundException_WhenPlayerNotFound()
+    public void Handle_ThrowsKeyNotFoundException_WhenPlayerNotFound()
     {
         _repo.Setup(r => r.Remove(99)).Throws(new KeyNotFoundException());
 
-        var act = () => _sut.Handle(new RemovePlayerCommand(99), CancellationToken.None);
+        var act = () => RemovePlayerCommandHandler.Handle(new RemovePlayerCommand(99), _repo.Object);
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        act.Should().Throw<KeyNotFoundException>();
     }
 }

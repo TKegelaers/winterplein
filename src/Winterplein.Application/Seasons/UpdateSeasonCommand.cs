@@ -1,5 +1,3 @@
-using MediatR;
-
 namespace Winterplein.Application.Seasons;
 
 public record UpdateSeasonCommand(
@@ -9,4 +7,4 @@ public record UpdateSeasonCommand(
     DateOnly EndDate,
     DayOfWeek Weekday,
     TimeOnly StartHour,
-    TimeOnly EndHour) : IRequest<bool>;
+    TimeOnly EndHour);

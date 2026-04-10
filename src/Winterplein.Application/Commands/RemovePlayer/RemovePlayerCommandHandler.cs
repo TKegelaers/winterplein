@@ -1,14 +1,11 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
 
 namespace Winterplein.Application.Commands.RemovePlayer;
 
-public class RemovePlayerCommandHandler(IPlayerRepository repo)
-    : IRequestHandler<RemovePlayerCommand>
+public static class RemovePlayerCommandHandler
 {
-    public Task Handle(RemovePlayerCommand request, CancellationToken cancellationToken)
+    public static void Handle(RemovePlayerCommand request, IPlayerRepository repo)
     {
         repo.Remove(request.Id);
-        return Task.CompletedTask;
     }
 }

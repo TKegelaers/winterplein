@@ -5,20 +5,20 @@
 
 ## Description
 
-Expose season CRUD and matchday computation via an ASP.NET Core Controller, using MediatR and a static mapper.
+Expose season CRUD and matchday computation via an ASP.NET Core Controller, using Wolverine and a static mapper.
 
 ## Acceptance Criteria
 
 ### Endpoints
 
-| Method | Route | Request | Response |
-|--------|-------|---------|----------|
-| GET | `/api/seasons` | — | `List<SeasonDto>` 200 |
-| GET | `/api/seasons/{id}` | — | `SeasonDto` 200 / 404 |
-| POST | `/api/seasons` | `CreateSeasonRequest` | `SeasonDto` 201 |
-| PUT | `/api/seasons/{id}` | `UpdateSeasonRequest` | `SeasonDto` 200 / 404 |
-| DELETE | `/api/seasons/{id}` | — | 204 / 404 |
-| GET | `/api/seasons/{id}/matchdays` | — | `List<DateOnly>` 200 / 404 |
+| Method | Route                         | Request               | Response                   |
+| ------ | ----------------------------- | --------------------- | -------------------------- |
+| GET    | `/api/seasons`                | —                     | `List<SeasonDto>` 200      |
+| GET    | `/api/seasons/{id}`           | —                     | `SeasonDto` 200 / 404      |
+| POST   | `/api/seasons`                | `CreateSeasonRequest` | `SeasonDto` 201            |
+| PUT    | `/api/seasons/{id}`           | `UpdateSeasonRequest` | `SeasonDto` 200 / 404      |
+| DELETE | `/api/seasons/{id}`           | —                     | 204 / 404                  |
+| GET    | `/api/seasons/{id}/matchdays` | —                     | `List<DateOnly>` 200 / 404 |
 
 - `{id}` route parameters are `int`
 - Controller inherits from `ControllerBase` with `[ApiController]` and `[Route("api/seasons")]`
@@ -31,9 +31,9 @@ Expose season CRUD and matchday computation via an ASP.NET Core Controller, usin
 
 ## Technical Notes
 
-- Each action delegates to MediatR — no business logic in the controller
+- Each action delegates to Wolverine (`IMessageBus.InvokeAsync<T>`) — no business logic in the controller
 - `SeasonMapper.ToDto` populates `Matchdays` by calling `season.GetMatchdays()`
-- Register MediatR scanning `Winterplein.Application` assembly and `ISeasonRepository` → `InMemorySeasonRepository` in `Program.cs`
+- Register Wolverine via `builder.Host.UseWolverine(...)` and `ISeasonRepository` → `InMemorySeasonRepository` in `Program.cs`
 
 ## Tasks
 
@@ -43,7 +43,7 @@ Expose season CRUD and matchday computation via an ASP.NET Core Controller, usin
 - [x] T4: Implement PUT `/api/seasons/{id:int}` with request validation (blockedBy: T1, Story 2 T5)
 - [x] T5: Implement DELETE `/api/seasons/{id:int}` action (blockedBy: T1, Story 2 T6)
 - [x] T6: Implement GET `/api/seasons/{id:int}/matchdays` action (blockedBy: T2)
-- [x] T7: Register MediatR + `ISeasonRepository` DI in `Program.cs` (blockedBy: Story 2 T8)
+- [x] T7: Register Wolverine + `ISeasonRepository` DI in `Program.cs` (blockedBy: Story 2 T8)
 - [x] T8: Implement player-season actions (blockedBy: T1, Story 2 T10, T11, T12):
   - `GET /api/seasons/{id:int}/players` → `List<PlayerDto>` 200 / 404
   - `POST /api/seasons/{id:int}/players` body: `AddSeasonPlayerRequest` → `SeasonDto` 200 / 404 / 400

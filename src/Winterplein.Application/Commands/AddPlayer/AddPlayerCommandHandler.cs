@@ -1,4 +1,3 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
 using Winterplein.Application.Mappers;
 using Winterplein.Domain.Enums;
@@ -7,14 +6,13 @@ using Winterplein.Shared.DTOs;
 
 namespace Winterplein.Application.Commands.AddPlayer;
 
-public class AddPlayerCommandHandler(IPlayerRepository repo)
-    : IRequestHandler<AddPlayerCommand, PlayerDto>
+public static class AddPlayerCommandHandler
 {
-    public Task<PlayerDto> Handle(AddPlayerCommand request, CancellationToken cancellationToken)
+    public static PlayerDto Handle(AddPlayerCommand request, IPlayerRepository repo)
     {
         var gender = (Gender)request.Gender;
         var name = new Name(request.FirstName, request.LastName);
         var player = repo.Add(name, gender);
-        return Task.FromResult(player.ToDto());
+        return player.ToDto();
     }
 }

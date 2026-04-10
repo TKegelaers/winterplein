@@ -8,12 +8,9 @@ namespace Winterplein.UnitTests.Application.Handlers;
 public class GetAllPlayersQueryHandlerTests
 {
     private readonly Mock<IPlayerRepository> _repo = new();
-    private readonly GetAllPlayersQueryHandler _sut;
-
-    public GetAllPlayersQueryHandlerTests() => _sut = new GetAllPlayersQueryHandler(_repo.Object);
 
     [Fact]
-    public async Task Handle_ReturnsAllPlayersAsDtos()
+    public void Handle_ReturnsAllPlayersAsDtos()
     {
         var players = new[]
         {
@@ -22,7 +19,7 @@ public class GetAllPlayersQueryHandlerTests
         };
         _repo.Setup(r => r.GetAll()).Returns(players);
 
-        var result = await _sut.Handle(new GetAllPlayersQuery(), CancellationToken.None);
+        var result = GetAllPlayersQueryHandler.Handle(new GetAllPlayersQuery(), _repo.Object);
 
         result.Should().HaveCount(2);
         result[0].Id.Should().Be(1);
@@ -30,11 +27,11 @@ public class GetAllPlayersQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsEmptyList_WhenNoPlayers()
+    public void Handle_ReturnsEmptyList_WhenNoPlayers()
     {
         _repo.Setup(r => r.GetAll()).Returns(Array.Empty<Winterplein.Domain.Entities.Player>());
 
-        var result = await _sut.Handle(new GetAllPlayersQuery(), CancellationToken.None);
+        var result = GetAllPlayersQueryHandler.Handle(new GetAllPlayersQuery(), _repo.Object);
 
         result.Should().BeEmpty();
     }

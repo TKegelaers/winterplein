@@ -1,12 +1,10 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
 using Winterplein.Domain.Entities;
 
 namespace Winterplein.Application.Seasons;
 
-public class GetSeasonsQueryHandler(ISeasonRepository seasonRepository)
-    : IRequestHandler<GetSeasonsQuery, List<Season>>
+public static class GetSeasonsQueryHandler
 {
-    public Task<List<Season>> Handle(GetSeasonsQuery request, CancellationToken cancellationToken)
-        => Task.FromResult(seasonRepository.GetAll().ToList());
+    public static List<Season> Handle(GetSeasonsQuery query, ISeasonRepository seasonRepository) =>
+        seasonRepository.GetAll().ToList();
 }

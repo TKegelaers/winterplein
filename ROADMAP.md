@@ -2,7 +2,7 @@
 
 Winterplein is a tennis doubles match generator. Given a list of players, it automatically generates all possible doubles (2v2) matches using combinatorics: C(N,4) groups × 3 unique team pairings = total matches (e.g. 10 players → 630 matches).
 
-**Tech stack:** .NET 10 · Blazor WebAssembly · ASP.NET Core Web API · MudBlazor · Clean Architecture
+**Tech stack:** .NET 10 · Blazor WebAssembly · ASP.NET Core Web API · MudBlazor · Clean Architecture · Wolverine
 
 ---
 
@@ -65,10 +65,10 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 > Replace MediatR with Wolverine as the mediator/message bus, adopting convention-based handlers while preserving the CQRS architecture.
 
-| #   | Story                                                                                                                               | Description                                                                             | Status  |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------- |
-| 1   | [Replace MediatR with Wolverine Using Shims](.tasks/epic5-wolverine-migration/story1-replace-mediatr-with-wolverine-shims.md)       | Swap NuGet package, DI, controllers, and using directives via Wolverine's MediatR shims | Pending |
-| 2   | [Convert Handlers to Wolverine Native Conventions](.tasks/epic5-wolverine-migration/story2-convert-handlers-to-wolverine-native.md) | Remove shims, convert to static Handle methods with method injection                    | Pending |
+| #   | Story                                                                                                                               | Description                                                                             | Status |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------ |
+| 1   | [Replace MediatR with Wolverine Using Shims](.tasks/epic5-wolverine-migration/story1-replace-mediatr-with-wolverine-shims.md)       | Swap NuGet package, DI, controllers, and using directives via Wolverine's MediatR shims | Done   |
+| 2   | [Convert Handlers to Wolverine Native Conventions](.tasks/epic5-wolverine-migration/story2-convert-handlers-to-wolverine-native.md) | Remove shims, convert to static Handle methods with method injection                    | Done   |
 
 ---
 

@@ -1,25 +1,23 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
 using Winterplein.Application.Mappers;
 using Winterplein.Shared.DTOs;
 
 namespace Winterplein.Application.Seasons;
 
-public class AddSeasonPlayerCommandHandler(ISeasonRepository seasonRepository, IPlayerRepository playerRepository)
-    : IRequestHandler<AddSeasonPlayerCommand, SeasonDto?>
+public static class AddSeasonPlayerCommandHandler
 {
-    public Task<SeasonDto?> Handle(AddSeasonPlayerCommand request, CancellationToken cancellationToken)
+    public static SeasonDto? Handle(AddSeasonPlayerCommand request, ISeasonRepository seasonRepository, IPlayerRepository playerRepository)
     {
         var season = seasonRepository.GetById(request.SeasonId);
         if (season == null)
-            return Task.FromResult<SeasonDto?>(null);
+            return null;
 
         var player = playerRepository.GetById(request.PlayerId);
         if (player == null)
-            return Task.FromResult<SeasonDto?>(null);
+            return null;
 
         season.AddPlayer(player);
         seasonRepository.Update(season);
-        return Task.FromResult<SeasonDto?>(season.ToDto());
+        return season.ToDto();
     }
 }

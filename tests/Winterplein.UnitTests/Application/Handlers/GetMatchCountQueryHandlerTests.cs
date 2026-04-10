@@ -1,6 +1,7 @@
 using Moq;
 using Winterplein.Application.Interfaces;
 using Winterplein.Application.Queries.GetMatchCount;
+using Winterplein.Shared.DTOs;
 
 namespace Winterplein.UnitTests.Application.Handlers;
 
@@ -8,19 +9,16 @@ public class GetMatchCountQueryHandlerTests
 {
     private readonly Mock<IPlayerRepository> _repo = new();
     private readonly Mock<IMatchGeneratorService> _generator = new();
-    private readonly GetMatchCountQueryHandler _sut;
-
-    public GetMatchCountQueryHandlerTests() =>
-        _sut = new GetMatchCountQueryHandler(_repo.Object, _generator.Object);
 
     [Fact]
-    public async Task Handle_ReturnsCalculatedMatchCount()
+    public void Handle_ReturnsCalculatedMatchCount()
     {
         _repo.Setup(r => r.Count).Returns(10);
         _generator.Setup(g => g.CalculateMatchCount(10)).Returns(630);
 
-        var result = await _sut.Handle(new GetMatchCountQuery(), CancellationToken.None);
+        var result = GetMatchCountQueryHandler.Handle(new GetMatchCountQuery(), _repo.Object, _generator.Object);
 
-        result.Should().Be(630);
+        result.Should().BeOfType<MatchCountResponse>();
+        result.Count.Should().Be(630);
     }
 }
