@@ -19,9 +19,9 @@ Allow a user to view all possible doubles matches generated from a season's enro
 
 ### API Endpoints (on `SeasonsController`)
 
-| Method | Route | Request | Response |
-|--------|-------|---------|----------|
-| GET | `/api/seasons/{id}/match-pool` | — | `GenerateMatchesResponse` 200 / 404 |
+| Method | Route                          | Request | Response                            |
+| ------ | ------------------------------ | ------- | ----------------------------------- |
+| GET    | `/api/seasons/{id}/match-pool` | —       | `GenerateMatchesResponse` 200 / 404 |
 
 ### Blazor UI (`Winterplein.Client/`)
 
@@ -37,7 +37,7 @@ Allow a user to view all possible doubles matches generated from a season's enro
 
 - The match pool is **not persisted** — it is computed on-the-fly from the enrolled players using the existing `IMatchGeneratorService`
 - Reuses the existing `GenerateMatchesResponse` DTO (contains `List<MatchDto>` and `TotalCount`)
-- Match IDs in the pool are deterministic (sequential, based on generation order) for a given player set — Story 2 uses these IDs to reference specific matches
+- Match IDs in the pool are deterministic (sequential, based on generation order) for a given player set — Story 2 uses these IDs internally for uniqueness tracking during schedule generation
 
 ## Tasks
 

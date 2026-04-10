@@ -45,8 +45,8 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 | # | Story | Description | Status |
 | --- | ------- | ------------- | -------- |
 | 1 | [View Season Match Pool](.tasks/epic3-season-match-planning/story1-view-season-match-pool.md) | View all possible matches generated from a season's enrolled players | Pending |
-| 2 | [Plan a Match for a Matchday](.tasks/epic3-season-match-planning/story2-plan-match-for-matchday.md) | Select one match from the pool and assign it to a matchday | Pending |
-| 3 | [Browse & Manage Schedule](.tasks/epic3-season-match-planning/story3-browse-and-manage-schedule.md) | View full matchday schedule, clear planned matches | Pending |
+| 2 | [Generate Season Schedule](.tasks/epic3-season-match-planning/story2-plan-match-for-matchday.md) | Automatically assign random unique matches to all open matchdays at once | Pending |
+| 3 | [Browse & Manage Schedule](.tasks/epic3-season-match-planning/story3-browse-and-manage-schedule.md) | View full matchday schedule, clear individual or all planned matches | Pending |
 
 ---
 
