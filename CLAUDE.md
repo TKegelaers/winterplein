@@ -80,6 +80,14 @@ See ROADMAP.md for the authoritative status table. Summary:
 
 - Stories 1–2: all Pending
 
+**Epic 5 — Migrate from MediatR to Wolverine**
+
+- Stories 1–2: all Pending
+
+**Epic 6 — SQL Server Persistence with EF Core**
+
+- Stories 1–4: all Pending
+
 ## Development Notes
 
 - The application layer uses CQRS via MediatR: commands (write) and queries (read) live in `Winterplein.Application`, handlers are registered via `services.AddMediatR(...)`

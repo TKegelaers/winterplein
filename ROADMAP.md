@@ -61,6 +61,30 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 ---
 
+## Epic 5 — Migrate from MediatR to Wolverine
+
+> Replace MediatR with Wolverine as the mediator/message bus, adopting convention-based handlers while preserving the CQRS architecture.
+
+| #   | Story                                                                                                                               | Description                                                                             | Status  |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------- |
+| 1   | [Replace MediatR with Wolverine Using Shims](.tasks/epic5-wolverine-migration/story1-replace-mediatr-with-wolverine-shims.md)       | Swap NuGet package, DI, controllers, and using directives via Wolverine's MediatR shims | Pending |
+| 2   | [Convert Handlers to Wolverine Native Conventions](.tasks/epic5-wolverine-migration/story2-convert-handlers-to-wolverine-native.md) | Remove shims, convert to static Handle methods with method injection                    | Pending |
+
+---
+
+## Epic 6 — SQL Server Persistence with EF Core
+
+> Replace in-memory repositories with SQL Server persistence using Entity Framework Core, preserving the Clean Architecture repository pattern.
+
+| #   | Story                                                                                                                                     | Description                                                                             | Status  |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------- |
+| 1   | [Make Domain Entities EF Core Compatible](.tasks/epic6-sql-server-ef-core/story1-make-domain-entities-ef-core-compatible.md)              | Add private parameterless constructors and private set accessors to all domain entities | Pending |
+| 2   | [Convert Repositories to Async](.tasks/epic6-sql-server-ef-core/story2-convert-repositories-to-async.md)                                  | Make IPlayerRepository and ISeasonRepository fully async, update handlers               | Pending |
+| 3   | [Add DbContext, Configurations, and EF Repos](.tasks/epic6-sql-server-ef-core/story3-add-dbcontext-configurations-and-ef-repositories.md) | EF Core setup, entity configurations, SQL Server repositories, DI wiring, migration     | Pending |
+| 4   | [Update Test Infrastructure for EF Core](.tasks/epic6-sql-server-ef-core/story4-update-test-infrastructure-for-ef-core.md)                | Replace in-memory repo DI swaps with SQLite in-memory DbContext in integration tests    | Pending |
+
+---
+
 ## Future Epics
 
 | Epic | Description |
