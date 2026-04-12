@@ -97,7 +97,7 @@ public class SeasonHandlerTests
     // --- DeleteSeasonCommandHandler ---
 
     [Fact]
-    public void DeleteSeasonCommandHandler_Succeeds_WhenSeasonDeleted()
+    public void DeleteSeasonCommandHandler_DoesNotThrow_WhenSeasonExists()
     {
         _repo.Setup(r => r.Delete(1)).Returns(true);
 
@@ -119,7 +119,7 @@ public class SeasonHandlerTests
     // --- AddSeasonPlayerCommandHandler ---
 
     [Fact]
-    public void AddSeasonPlayerCommandHandler_ReturnsSeasonDto_WhenBothFound()
+    public void AddSeasonPlayerCommandHandler_ReturnsSeason_WhenBothFound()
     {
         var season = new SeasonBuilder().WithId(1).Build();
         var player = new PlayerBuilder().WithId(10).Build();
@@ -130,29 +130,29 @@ public class SeasonHandlerTests
         var result = AddSeasonPlayerCommandHandler.Handle(new AddSeasonPlayerCommand(1, 10), _repo.Object, _playerRepo.Object);
 
         result.Should().NotBeNull();
-        result!.Players.Should().Contain(p => p.Id == 10);
+        result.Players.Should().Contain(p => p.Id == 10);
     }
 
     [Fact]
-    public void AddSeasonPlayerCommandHandler_ReturnsNull_WhenSeasonNotFound()
+    public void AddSeasonPlayerCommandHandler_ThrowsKeyNotFoundException_WhenSeasonNotFound()
     {
         _repo.Setup(r => r.GetById(It.IsAny<int>())).Returns((Season?)null);
 
-        var result = AddSeasonPlayerCommandHandler.Handle(new AddSeasonPlayerCommand(999, 1), _repo.Object, _playerRepo.Object);
+        var act = () => AddSeasonPlayerCommandHandler.Handle(new AddSeasonPlayerCommand(999, 1), _repo.Object, _playerRepo.Object);
 
-        result.Should().BeNull();
+        act.Should().Throw<KeyNotFoundException>();
     }
 
     [Fact]
-    public void AddSeasonPlayerCommandHandler_ReturnsNull_WhenPlayerNotFound()
+    public void AddSeasonPlayerCommandHandler_ThrowsKeyNotFoundException_WhenPlayerNotFound()
     {
         var season = new SeasonBuilder().WithId(1).Build();
         _repo.Setup(r => r.GetById(1)).Returns(season);
         _playerRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns((Player?)null);
 
-        var result = AddSeasonPlayerCommandHandler.Handle(new AddSeasonPlayerCommand(1, 999), _repo.Object, _playerRepo.Object);
+        var act = () => AddSeasonPlayerCommandHandler.Handle(new AddSeasonPlayerCommand(1, 999), _repo.Object, _playerRepo.Object);
 
-        result.Should().BeNull();
+        act.Should().Throw<KeyNotFoundException>();
     }
 
     // --- RemoveSeasonPlayerCommandHandler ---
@@ -184,7 +184,7 @@ public class SeasonHandlerTests
     // --- GetSeasonPlayersQueryHandler ---
 
     [Fact]
-    public void GetSeasonPlayersQueryHandler_ReturnsPlayerDtos_WhenSeasonFound()
+    public void GetSeasonPlayersQueryHandler_ReturnsPlayers_WhenSeasonFound()
     {
         var player = new PlayerBuilder().WithId(1).Build();
         var season = new SeasonBuilder().WithPlayer(player).Build();

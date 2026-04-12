@@ -68,6 +68,35 @@ public class SeasonCrudTests : IDisposable
     }
 }
 
+public class SeasonNotFoundTests : IDisposable
+{
+    private readonly WinterpleinApiFactory _factory = new();
+    private readonly HttpClient _client;
+
+    public SeasonNotFoundTests() => _client = _factory.CreateClient();
+    public void Dispose() => _factory.Dispose();
+
+    private static UpdateSeasonRequest ValidUpdateRequest() =>
+        new("Updated", new DateOnly(2025, 1, 6), new DateOnly(2025, 3, 31),
+            DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0));
+
+    [Fact]
+    public async Task Update_Returns404_WhenSeasonNotFound()
+    {
+        var response = await _client.PutAsJsonAsync("/api/seasons/99999", ValidUpdateRequest(), JsonOpts.Options);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Delete_Returns404_WhenSeasonNotFound()
+    {
+        var response = await _client.DeleteAsync("/api/seasons/99999");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+}
+
 public class SeasonValidationTests : IDisposable
 {
     private readonly WinterpleinApiFactory _factory = new();

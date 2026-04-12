@@ -8,10 +8,10 @@ namespace Winterplein.Application.Commands.AddPlayer;
 
 public static class AddPlayerCommandHandler
 {
-    public static PlayerDto Handle(AddPlayerCommand request, IPlayerRepository repo)
+    public static PlayerDto Handle(AddPlayerCommand command, IPlayerRepository repo)
     {
-        var gender = (Gender)request.Gender;
-        var name = new Name(request.FirstName, request.LastName);
+        var gender = (Gender)command.Gender;
+        var name = new Name(command.FirstName, command.LastName);
         var player = repo.Add(name, gender);
         return player.ToDto();
     }

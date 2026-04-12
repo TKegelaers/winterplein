@@ -5,10 +5,10 @@ namespace Winterplein.Application.Seasons;
 
 public static class CreateSeasonCommandHandler
 {
-    public static Season Handle(CreateSeasonCommand request, ISeasonRepository seasonRepository)
+    public static Season Handle(CreateSeasonCommand command, ISeasonRepository seasonRepository)
     {
-        var season = new Season(0, request.Name, request.StartDate, request.EndDate,
-            request.Weekday, request.StartHour, request.EndHour);
+        var season = new Season(0, command.Name, command.StartDate, command.EndDate,
+            command.Weekday, command.StartHour, command.EndHour);
         return seasonRepository.Add(season);
     }
 }

@@ -1,7 +1,6 @@
 using Moq;
 using Winterplein.Application.Interfaces;
 using Winterplein.Application.Queries.GetMatchCount;
-using Winterplein.Shared.DTOs;
 
 namespace Winterplein.UnitTests.Application.Handlers;
 
@@ -18,7 +17,6 @@ public class GetMatchCountQueryHandlerTests
 
         var result = GetMatchCountQueryHandler.Handle(new GetMatchCountQuery(), _repo.Object, _generator.Object);
 
-        result.Should().BeOfType<MatchCountResponse>();
         result.Count.Should().Be(630);
     }
 }

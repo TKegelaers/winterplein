@@ -4,12 +4,12 @@ namespace Winterplein.Application.Seasons;
 
 public static class RemoveSeasonPlayerCommandHandler
 {
-    public static void Handle(RemoveSeasonPlayerCommand request, ISeasonRepository seasonRepository)
+    public static void Handle(RemoveSeasonPlayerCommand command, ISeasonRepository seasonRepository)
     {
-        var season = seasonRepository.GetById(request.SeasonId)
-            ?? throw new KeyNotFoundException($"Season {request.SeasonId} not found.");
+        var season = seasonRepository.GetById(command.SeasonId)
+            ?? throw new KeyNotFoundException($"Season {command.SeasonId} not found.");
 
-        season.RemovePlayer(request.PlayerId);
+        season.RemovePlayer(command.PlayerId);
         seasonRepository.Update(season);
     }
 }

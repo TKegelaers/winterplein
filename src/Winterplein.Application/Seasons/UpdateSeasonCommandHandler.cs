@@ -5,13 +5,13 @@ namespace Winterplein.Application.Seasons;
 
 public static class UpdateSeasonCommandHandler
 {
-    public static Season Handle(UpdateSeasonCommand request, ISeasonRepository seasonRepository)
+    public static Season Handle(UpdateSeasonCommand command, ISeasonRepository seasonRepository)
     {
-        var existing = seasonRepository.GetById(request.Id)
-            ?? throw new KeyNotFoundException($"Season {request.Id} not found.");
+        var existing = seasonRepository.GetById(command.Id)
+            ?? throw new KeyNotFoundException($"Season {command.Id} not found.");
 
-        var updated = new Season(request.Id, request.Name, request.StartDate, request.EndDate,
-            request.Weekday, request.StartHour, request.EndHour, existing.Players);
+        var updated = new Season(command.Id, command.Name, command.StartDate, command.EndDate,
+            command.Weekday, command.StartHour, command.EndHour, existing.Players);
         seasonRepository.Update(updated);
         return updated;
     }

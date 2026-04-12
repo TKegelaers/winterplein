@@ -4,8 +4,8 @@ namespace Winterplein.Application.Commands.RemovePlayer;
 
 public static class RemovePlayerCommandHandler
 {
-    public static void Handle(RemovePlayerCommand request, IPlayerRepository repo)
+    public static void Handle(RemovePlayerCommand command, IPlayerRepository repo)
     {
-        repo.Remove(request.Id);
+        repo.Remove(command.Id);
     }
 }

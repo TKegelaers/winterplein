@@ -60,15 +60,15 @@ public class SeasonsController(IMessageBus bus) : ControllerBase
     [HttpGet("{id:int}/players")]
     public async Task<IActionResult> GetPlayers(int id)
     {
-        var players = await bus.InvokeAsync<List<PlayerDto>?>(new GetSeasonPlayersQuery(id));
-        return players == null ? NotFound() : Ok(players);
+        var players = await bus.InvokeAsync<List<Player>?>(new GetSeasonPlayersQuery(id));
+        return players == null ? NotFound() : Ok(players.Select(p => p.ToDto()).ToList());
     }
 
     [HttpPost("{id:int}/players")]
     public async Task<IActionResult> AddPlayer(int id, AddSeasonPlayerRequest request)
     {
-        var season = await bus.InvokeAsync<SeasonDto?>(new AddSeasonPlayerCommand(id, request.PlayerId));
-        return season == null ? NotFound() : Ok(season);
+        var season = await bus.InvokeAsync<Season>(new AddSeasonPlayerCommand(id, request.PlayerId));
+        return Ok(season.ToDto());
     }
 
     [HttpDelete("{id:int}/players/{playerId:int}")]
