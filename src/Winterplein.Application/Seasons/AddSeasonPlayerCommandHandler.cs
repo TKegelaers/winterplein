@@ -1,25 +1,20 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
-using Winterplein.Application.Mappers;
-using Winterplein.Shared.DTOs;
+using Winterplein.Domain.Entities;
 
 namespace Winterplein.Application.Seasons;
 
-public class AddSeasonPlayerCommandHandler(ISeasonRepository seasonRepository, IPlayerRepository playerRepository)
-    : IRequestHandler<AddSeasonPlayerCommand, SeasonDto?>
+public static class AddSeasonPlayerCommandHandler
 {
-    public Task<SeasonDto?> Handle(AddSeasonPlayerCommand request, CancellationToken cancellationToken)
+    public static Season Handle(AddSeasonPlayerCommand command, ISeasonRepository seasonRepository, IPlayerRepository playerRepository)
     {
-        var season = seasonRepository.GetById(request.SeasonId);
-        if (season == null)
-            return Task.FromResult<SeasonDto?>(null);
+        var season = seasonRepository.GetById(command.SeasonId)
+            ?? throw new KeyNotFoundException($"Season {command.SeasonId} not found.");
 
-        var player = playerRepository.GetById(request.PlayerId);
-        if (player == null)
-            return Task.FromResult<SeasonDto?>(null);
+        var player = playerRepository.GetById(command.PlayerId)
+            ?? throw new KeyNotFoundException($"Player {command.PlayerId} not found.");
 
         season.AddPlayer(player);
         seasonRepository.Update(season);
-        return Task.FromResult<SeasonDto?>(season.ToDto());
+        return season;
     }
 }

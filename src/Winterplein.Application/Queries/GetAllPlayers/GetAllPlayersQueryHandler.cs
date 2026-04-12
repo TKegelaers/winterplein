@@ -1,13 +1,11 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
 using Winterplein.Application.Mappers;
 using Winterplein.Shared.DTOs;
 
 namespace Winterplein.Application.Queries.GetAllPlayers;
 
-public class GetAllPlayersQueryHandler(IPlayerRepository repo)
-    : IRequestHandler<GetAllPlayersQuery, List<PlayerDto>>
+public static class GetAllPlayersQueryHandler
 {
-    public Task<List<PlayerDto>> Handle(GetAllPlayersQuery request, CancellationToken cancellationToken) =>
-        Task.FromResult(repo.GetAll().Select(p => p.ToDto()).ToList());
+    public static List<PlayerDto> Handle(GetAllPlayersQuery query, IPlayerRepository repo) =>
+        repo.GetAll().Select(p => p.ToDto()).ToList();
 }

@@ -10,7 +10,7 @@ Winterplein is a tennis doubles match generator. Given N players, it generates a
 - .tasks/ = one folder per epic and one file per user story
 - User stories have tasks with dependencies using TaskCreate and addBlockedBy.
 
-**Tech stack:** .NET 10 · Blazor WebAssembly · ASP.NET Core Controllers · MudBlazor · Clean Architecture · CQRS · MediatR
+**Tech stack:** .NET 10 · Blazor WebAssembly · ASP.NET Core Controllers · MudBlazor · Clean Architecture · CQRS · Wolverine
 
 ## Workflow
 
@@ -49,7 +49,7 @@ Clean Architecture with strict dependency rules:
 ```text
 Winterplein.Domain          — entities, no external dependencies
 Winterplein.Shared          — DTOs shared between API and Client, no external dependencies
-Winterplein.Application     — CQRS commands/queries/handlers (MediatR), refs Domain + Shared
+Winterplein.Application     — CQRS commands/queries/handlers (Wolverine native), refs Domain + Shared only
 Winterplein.Infrastructure  — EF Core, external services, refs Application + Domain
 Winterplein.Api             — ASP.NET Core Controllers, refs Application + Infrastructure + Shared
 Winterplein.Client          — Blazor WASM (MudBlazor), refs Shared only
@@ -82,7 +82,7 @@ See ROADMAP.md for the authoritative status table. Summary:
 
 **Epic 5 — Migrate from MediatR to Wolverine**
 
-- Stories 1–2: all Pending
+- Stories 1–2: all Done
 
 **Epic 6 — SQL Server Persistence with EF Core**
 
@@ -94,8 +94,10 @@ See ROADMAP.md for the authoritative status table. Summary:
 
 ## Development Notes
 
-- The application layer uses CQRS via MediatR: commands (write) and queries (read) live in `Winterplein.Application`, handlers are registered via `services.AddMediatR(...)`
-- The match generation algorithm lives in `Winterplein.Application` as a MediatR command handler (`GenerateMatchesCommandHandler`)
+- The application layer uses CQRS via Wolverine: commands (write) and queries (read) live in `Winterplein.Application`; handlers are static classes with a static `Handle(message, ...deps)` method — Wolverine discovers them by convention and injects dependencies as method parameters
+- Wolverine is registered in `Winterplein.Api/Program.cs` via `builder.Host.UseWolverine(opts => opts.Discovery.IncludeAssembly(...))`. Controllers use `IMessageBus.InvokeAsync<T>(message)` for queries/commands that return a result, and `IMessageBus.InvokeAsync(message)` for void commands
+- Handlers must return reference types (not `int`, `bool`, etc.) — Wolverine does not support value-type returns from `InvokeAsync<T>`
+- The match generation algorithm lives in `Winterplein.Application` as a Wolverine native handler (`GenerateMatchesCommandHandler`)
 - API uses Controllers (`[ApiController]` + `ControllerBase`) for both epics
 - CORS must allow the Blazor client origin (`http://localhost:5149`) — configure in `Winterplein.Api/Program.cs`
 - MudBlazor is the UI component library for the Blazor client

@@ -1,5 +1,5 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Wolverine;
 using Winterplein.Application.Commands.AddPlayer;
 using Winterplein.Application.Commands.RemovePlayer;
 using Winterplein.Application.Queries.GetAllPlayers;
@@ -9,23 +9,23 @@ namespace Winterplein.Api.Controllers;
 
 [ApiController]
 [Route("api/players")]
-public class PlayersController(ISender sender) : ControllerBase
+public class PlayersController(IMessageBus bus) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAll() =>
-        Ok(await sender.Send(new GetAllPlayersQuery()));
+        Ok(await bus.InvokeAsync<List<PlayerDto>>(new GetAllPlayersQuery()));
 
     [HttpPost]
     public async Task<IActionResult> Add(AddPlayerRequest request)
     {
-        var player = await sender.Send(new AddPlayerCommand(request.FirstName, request.LastName, request.Gender));
+        var player = await bus.InvokeAsync<PlayerDto>(new AddPlayerCommand(request.FirstName, request.LastName, request.Gender));
         return Created($"/api/players/{player.Id}", player);
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        await sender.Send(new RemovePlayerCommand(id));
+        await bus.InvokeAsync(new RemovePlayerCommand(id));
         return NoContent();
     }
 }

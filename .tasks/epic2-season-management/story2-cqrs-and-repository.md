@@ -5,7 +5,7 @@
 
 ## Description
 
-Implement the CQRS commands/queries with MediatR handlers and an in-memory repository for season persistence.
+Implement the CQRS commands/queries with Wolverine native handlers and an in-memory repository for season persistence.
 
 ## Acceptance Criteria
 

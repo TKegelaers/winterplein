@@ -1,19 +1,17 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
 using Winterplein.Application.Mappers;
 using Winterplein.Shared.DTOs;
 
 namespace Winterplein.Application.Commands.GenerateMatches;
 
-public class GenerateMatchesCommandHandler(IPlayerRepository repo, IMatchGeneratorService generator)
-    : IRequestHandler<GenerateMatchesCommand, GenerateMatchesResponse>
+public static class GenerateMatchesCommandHandler
 {
-    public Task<GenerateMatchesResponse> Handle(GenerateMatchesCommand request, CancellationToken cancellationToken)
+    public static GenerateMatchesResponse Handle(GenerateMatchesCommand command, IPlayerRepository repo, IMatchGeneratorService generator)
     {
         var allPlayers = repo.GetAll();
         var generated = generator.GenerateAllMatches(allPlayers);
-        return Task.FromResult(new GenerateMatchesResponse(
+        return new GenerateMatchesResponse(
             generated.Select(m => m.ToDto()).ToList(),
-            generated.Count));
+            generated.Count);
     }
 }

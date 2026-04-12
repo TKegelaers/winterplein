@@ -1,5 +1,3 @@
-using MediatR;
-
 namespace Winterplein.Application.Commands.RemovePlayer;
 
-public record RemovePlayerCommand(int Id) : IRequest;
+public record RemovePlayerCommand(int Id);

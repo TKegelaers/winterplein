@@ -1,17 +1,14 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
 using Winterplein.Domain.Entities;
 
 namespace Winterplein.Application.Seasons;
 
-public class CreateSeasonCommandHandler(ISeasonRepository seasonRepository)
-    : IRequestHandler<CreateSeasonCommand, int>
+public static class CreateSeasonCommandHandler
 {
-    public Task<int> Handle(CreateSeasonCommand request, CancellationToken cancellationToken)
+    public static Season Handle(CreateSeasonCommand command, ISeasonRepository seasonRepository)
     {
-        var season = new Season(0, request.Name, request.StartDate, request.EndDate,
-            request.Weekday, request.StartHour, request.EndHour);
-        var created = seasonRepository.Add(season);
-        return Task.FromResult(created.Id);
+        var season = new Season(0, command.Name, command.StartDate, command.EndDate,
+            command.Weekday, command.StartHour, command.EndHour);
+        return seasonRepository.Add(season);
     }
 }

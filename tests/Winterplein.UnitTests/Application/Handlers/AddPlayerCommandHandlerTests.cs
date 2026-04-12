@@ -11,12 +11,9 @@ namespace Winterplein.UnitTests.Application.Handlers;
 public class AddPlayerCommandHandlerTests
 {
     private readonly Mock<IPlayerRepository> _playerRepository = new();
-    private readonly AddPlayerCommandHandler _handler;
-
-    public AddPlayerCommandHandlerTests() => _handler = new AddPlayerCommandHandler(_playerRepository.Object);
 
     [Fact]
-    public async Task Handle_ReturnsPlayerDto()
+    public void Handle_ReturnsPlayerDto()
     {
         var player = new PlayerBuilder()
             .WithId(5)
@@ -24,7 +21,7 @@ public class AddPlayerCommandHandlerTests
             .Build();
         _playerRepository.Setup(r => r.Add(It.IsAny<Name>(), It.IsAny<Gender>())).Returns(player);
 
-        var result = await _handler.Handle(new AddPlayerCommand("John", "Doe", GenderDto.Male), CancellationToken.None);
+        var result = AddPlayerCommandHandler.Handle(new AddPlayerCommand("John", "Doe", GenderDto.Male), _playerRepository.Object);
 
         result.Id.Should().Be(5);
         result.FirstName.Should().Be("John");
@@ -32,12 +29,12 @@ public class AddPlayerCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_CallsRepoWithCorrectGender()
+    public void Handle_CallsRepoWithCorrectGender()
     {
         var player = new PlayerBuilder().Build();
         _playerRepository.Setup(r => r.Add(It.IsAny<Name>(), It.IsAny<Gender>())).Returns(player);
 
-        await _handler.Handle(new AddPlayerCommand("Jane", "Doe", GenderDto.Female), CancellationToken.None);
+        AddPlayerCommandHandler.Handle(new AddPlayerCommand("Jane", "Doe", GenderDto.Female), _playerRepository.Object);
 
         _playerRepository.Verify(r => r.Add(It.IsAny<Name>(), Gender.Female), Times.Once);
     }

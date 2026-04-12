@@ -1,11 +1,10 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
+using Winterplein.Shared.DTOs;
 
 namespace Winterplein.Application.Queries.GetMatchCount;
 
-public class GetMatchCountQueryHandler(IPlayerRepository repo, IMatchGeneratorService generator)
-    : IRequestHandler<GetMatchCountQuery, int>
+public static class GetMatchCountQueryHandler
 {
-    public Task<int> Handle(GetMatchCountQuery request, CancellationToken cancellationToken) =>
-        Task.FromResult(generator.CalculateMatchCount(repo.Count));
+    public static MatchCountResponse Handle(GetMatchCountQuery query, IPlayerRepository repo, IMatchGeneratorService generator) =>
+        new MatchCountResponse(generator.CalculateMatchCount(repo.Count));
 }

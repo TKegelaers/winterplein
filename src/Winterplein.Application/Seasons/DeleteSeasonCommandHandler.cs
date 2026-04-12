@@ -1,11 +1,13 @@
-using MediatR;
 using Winterplein.Application.Interfaces;
 
 namespace Winterplein.Application.Seasons;
 
-public class DeleteSeasonCommandHandler(ISeasonRepository seasonRepository)
-    : IRequestHandler<DeleteSeasonCommand, bool>
+public static class DeleteSeasonCommandHandler
 {
-    public Task<bool> Handle(DeleteSeasonCommand request, CancellationToken cancellationToken)
-        => Task.FromResult(seasonRepository.Delete(request.Id));
+    public static void Handle(DeleteSeasonCommand command, ISeasonRepository seasonRepository)
+    {
+        var deleted = seasonRepository.Delete(command.Id);
+        if (!deleted)
+            throw new KeyNotFoundException($"Season {command.Id} not found.");
+    }
 }
