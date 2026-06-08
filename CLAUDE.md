@@ -6,18 +6,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Winterplein is a tennis doubles match generator. Given N players, it generates all possible doubles (2v2) matches using combinatorics: C(N,4) groups × 3 unique team pairings (e.g. 10 players → 630 matches).
 
-- ROADMAP.md = high-level plan
-- .tasks/ = one folder per epic and one file per user story
-- User stories have tasks with dependencies using TaskCreate and addBlockedBy.
+- ROADMAP.md = high-level plan (epics + story status table)
+- docs/changes/ = one folder per story/change, containing change.md (from /w-explore) and plan.md + tasks/ (from /w-plan)
 
 **Tech stack:** .NET 10 · Blazor WebAssembly · ASP.NET Core Controllers · MudBlazor · Clean Architecture · CQRS · Wolverine
 
 ## Workflow
 
-1. Always read ROADMAP.md before starting work
-2. Pick the next incomplete task from the relevant .tasks/epic file
-3. Mark tasks as done when complete
-4. Update ROADMAP.md after implementing or creating new epics, user stories or tasks.
+### Planning a new story
+
+1. Run `/create-epic` to register a new epic in ROADMAP.md (plain-text story titles, no file links yet).
+2. Run `/w-explore` for each story — produces `docs/changes/<change-name>/change.md`. Update the ROADMAP.md story title cell to link to that file.
+3. Run `/w-plan <change-name>` — produces `docs/changes/<change-name>/plan.md` and task files. Append the plan link in the same ROADMAP.md cell.
+
+### Implementing
+
+4. Always read ROADMAP.md before starting work.
+5. Pick the next pending task from the relevant `docs/changes/<change-name>/plan.md`.
+6. Mark tasks done in the plan file as work completes.
+7. Update ROADMAP.md story Status column when a story is complete.
 
 ## Commands
 
