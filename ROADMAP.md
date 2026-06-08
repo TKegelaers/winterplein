@@ -76,12 +76,12 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 > Replace in-memory repositories with SQL Server persistence using Entity Framework Core, preserving the Clean Architecture repository pattern.
 
-| #   | Story                                                                                                                                     | Description                                                                             | Status  |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------- |
-| 1   | [Make Domain Entities EF Core Compatible](.tasks/epic6-sql-server-ef-core/story1-make-domain-entities-ef-core-compatible.md)              | Add private parameterless constructors and private set accessors to all domain entities | Pending |
-| 2   | [Convert Repositories to Async](.tasks/epic6-sql-server-ef-core/story2-convert-repositories-to-async.md)                                  | Make IPlayerRepository and ISeasonRepository fully async, update handlers               | Pending |
-| 3   | [Add DbContext, Configurations, and EF Repos](.tasks/epic6-sql-server-ef-core/story3-add-dbcontext-configurations-and-ef-repositories.md) | EF Core setup, entity configurations, SQL Server repositories, DI wiring, migration     | Pending |
-| 4   | [Update Test Infrastructure for EF Core](.tasks/epic6-sql-server-ef-core/story4-update-test-infrastructure-for-ef-core.md)                | Replace in-memory repo DI swaps with SQLite in-memory DbContext in integration tests    | Pending |
+| #   | Story                                                                                                                                                              | Description                                                                             | Status  |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------- |
+| 1   | [Make Domain Entities EF Core Compatible](docs/changes/ef-core-domain-compatibility/change.md) · [plan](docs/changes/ef-core-domain-compatibility/plan.md)         | Add private parameterless constructors and private set accessors to all domain entities | Pending |
+| 2   | [Convert Repositories to Async](docs/changes/async-repository-interfaces/change.md) · [plan](docs/changes/async-repository-interfaces/plan.md)                     | Make IPlayerRepository and ISeasonRepository fully async, update handlers               | Pending |
+| 3   | [Add DbContext, Configurations, and EF Repos](docs/changes/ef-core-dbcontext-repositories/change.md) · [plan](docs/changes/ef-core-dbcontext-repositories/plan.md) | EF Core setup, entity configurations, SQL Server repositories, DI wiring, migration     | Pending |
+| 4   | [Update Test Infrastructure for EF Core](docs/changes/ef-core-test-infrastructure/change.md) · [plan](docs/changes/ef-core-test-infrastructure/plan.md)            | Replace in-memory repo DI swaps with SQLite in-memory DbContext in integration tests    | Pending |
 
 ---
 
