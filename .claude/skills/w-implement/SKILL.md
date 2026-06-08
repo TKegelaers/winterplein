@@ -1,6 +1,6 @@
 ---
 name: w-implement
-description: 'Instructions for implementing a feature, use this skill when you want to implement a new feature or make changes to an existing one'
+description: "Instructions for implementing a feature, use this skill when you want to implement a new feature or make changes to an existing one"
 argument-hint: <change-name>
 user-invocable: true
 ---
@@ -12,7 +12,7 @@ user-invocable: true
 $change-name = $
 
 We defined a plan document outlining the atomic tasks required to implement a change.
-Find the document in `docs/changes/{{$change-name}}/plan.md`.
+Find the document in `docs/epics/{{$change-name}}/plan.md`.
 
 You are to coordinate the implementation of the change by following the plan, delegating each task to a separate subagent and keeping track of the implementation status of each task.
 
@@ -36,7 +36,7 @@ Based on the dependencies and implementation status of the tasks outlined in the
 
 #### 2.2 Delegate task to subagent
 
-For each task identified in step 2.1, create a new subagent and delegate the implementation of the task to it. Provide the subagent with the necessary context for the task by referring it to the corresponding task file in `docs/changes/{{$change-name}}/tasks/{{$task-name}}/task.md`.
+For each task identified in step 2.1, create a new subagent and delegate the implementation of the task to it. Provide the subagent with the necessary context for the task by referring it to the corresponding task file in `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md`.
 
 Tell the subagent to use the `w-implement-task` skill for the implementation of the task.
 
@@ -44,7 +44,7 @@ Update the task status to "in progress" in the `plan.md` document after delegati
 
 ### 2.3 Delegate review of the task to a subagent
 
-Once the subagent has completed the implementation of the task, delegate the review of the task to a separate subagent by referring it to the corresponding task file in `docs/changes/{{$change-name}}/tasks/{{$task-name}}/task.md`.
+Once the subagent has completed the implementation of the task, delegate the review of the task to a separate subagent by referring it to the corresponding task file in `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md`.
 
 Tell the subagent to use the `w-review-task` skill for the review of the task.
 

@@ -1,7 +1,7 @@
 ---
 name: w-plan
-description: 'Create a detailed implementation plan with atomic tasks'
-argument-hint: <change-name>
+description: "Create a detailed implementation plan with atomic tasks"
+argument-hint: <epic-folder>/<change-name>
 user-invocable: true
 ---
 
@@ -9,10 +9,10 @@ user-invocable: true
 
 ## Context
 
-$change-name = $
+$path = $ (format: `<epic-folder>/<change-name>`, e.g. `epic2-season-management/season-domain-and-dtos`)
 
 We defined a change document outlining the problem, solution, and acceptance criteria for a new change.
-You can find it in `docs/changes/{{$change-name}}/change.md`.
+You can find it in `docs/epics/{{$path}}/change.md`.
 
 Understand the required changes and create a high-level plan for implementation.
 
@@ -49,10 +49,10 @@ Identify the dependencies between the tasks defined in step 3 to determine the o
 
 ## Output
 
-Create a `task.md` file for each atomic task in directory `docs/changes/{{change-name}}/tasks/{{task-name}}/`.
+Create a `task.md` file for each atomic task in directory `docs/epics/{{$path}}/tasks/{{task-name}}/`.
 Each task file should adhere to the structure outlined in `templates/task.md`.
 
-Create a `plan.md` file in directory `docs/changes/{{change-name}}/` that outlines the overall implementation plan, including the list of tasks, their implementation status and the dependencies between them. The plan should adhere to the structure outlined in `./templates/plan.md`.
+Create a `plan.md` file in directory `docs/epics/{{$path}}/` that outlines the overall implementation plan, including the list of tasks, their implementation status and the dependencies between them. The plan should adhere to the structure outlined in `./templates/plan.md`.
 
 ### keep in mind
 

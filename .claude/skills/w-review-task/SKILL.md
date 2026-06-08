@@ -1,6 +1,6 @@
 ---
 name: w-review-task
-description: 'Instructions for reviewing a subtask of a feature, use this skill when you want to review a specific task defined in the plan.md for a change'
+description: "Instructions for reviewing a subtask of a feature, use this skill when you want to review a specific task defined in the plan.md for a change"
 argument-hint: <change-name> <task-name>
 user-invocable: false
 disable-model-invocation: false
@@ -16,8 +16,8 @@ $task-name = $2
 We are about to review the implementation of a specific task
 Be critical in your review and provide constructive feedback to ensure the quality of the implementation and that it meets the defined acceptance criteria for the task.
 
-Find the information related to the task in `docs/changes/{{$change-name}}/tasks/{{$task-name}}/`.
-Read `docs/changes/{{$change-name}}/plan.md` to determine task status.
+Find the information related to the task in `docs/epics/{{$change-name}}/tasks/{{$task-name}}/`.
+Read `docs/epics/{{$change-name}}/plan.md` to determine task status.
 If the task is not in status "under review", report back to your parent agent that the task is not ready for review yet.
 
 ## Process

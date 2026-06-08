@@ -1,6 +1,6 @@
 ---
 name: w-explore
-description: 'Explore a new change by asking structured questions to gather context and align understanding'
+description: "Explore a new change by asking structured questions to gather context and align understanding"
 user-invocable: true
 ---
 
@@ -47,10 +47,12 @@ Continue until you have a complete understanding of the change.
 
 ## Output
 
+Ask the user which epic this story belongs to (or derive it from context if obvious). Use the epic's folder name from `docs/epics/` (e.g. `epic2-season-management`).
+
 Think of a short name for the feature or fix that captures its essence.
 (e.g. "add-user-session-cache", "fix-session-expiry-bug" )
 
-Create a `change.md` file in the appropriate directory under `docs/changes/{{change-name}}`.
+Create a `change.md` file at `docs/epics/{{epic-folder}}/{{change-name}}/change.md`.
 Adhere to the structure outlined in `templates/change.md`.
 
 ### keep in mind

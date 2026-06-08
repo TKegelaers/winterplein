@@ -1,6 +1,6 @@
 ---
 name: w-implement-task
-description: 'Instructions for implementing a subtask of a feature, use this skill when you want to implement a specific task defined in the plan.md for a change'
+description: "Instructions for implementing a subtask of a feature, use this skill when you want to implement a specific task defined in the plan.md for a change"
 argument-hint: <change-name> <task-name>
 user-invocable: false
 disable-model-invocation: false
@@ -14,7 +14,7 @@ $change-name = $1
 $task-name = $2
 
 We are about to implement a specific task defined in the plan.md for a change.
-Find the information related to the task in `docs/changes/{{$change-name}}/tasks/{{$task-name}}/`.
+Find the information related to the task in `docs/epics/{{$change-name}}/tasks/{{$task-name}}/`.
 
 There should be a task.md file that outlines what has to be done for the task.
 There could be a review.md file if the task has been reviewed before and sent back for re-implementation.

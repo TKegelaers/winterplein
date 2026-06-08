@@ -29,13 +29,13 @@ Story links are added after `/w-explore` creates the `change.md`. Use plain text
 Once `/w-explore` has run for a story, update the title cell to:
 
 ```
-[<Story Title>](docs/changes/<change-name>/change.md)
+[<Story Title>](docs/epics/<change-name>/change.md)
 ```
 
 Once `/w-plan` has also run, append a plan link in the same cell:
 
 ```
-[<Story Title>](docs/changes/<change-name>/change.md) · [plan](docs/changes/<change-name>/plan.md)
+[<Story Title>](docs/epics/<change-name>/change.md) · [plan](docs/epics/<change-name>/plan.md)
 ```
 
 ### CLAUDE.md Current State entry
