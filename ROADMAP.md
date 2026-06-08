@@ -89,12 +89,12 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 > Validate end-to-end user flows across the full stack using Playwright, running against the live Blazor WASM + API dev stack.
 
-| #   | Story                                                                                                    | Description                                                                  | Status  |
-| --- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------- |
-| 1   | [Scaffold Playwright Test Project](.tasks/epic7-e2e-playwright/story1-scaffold-playwright-project.md)    | Create test project, configure app startup, base URL, and CI task            | Pending |
-| 2   | [Test Player & Match Generation](.tasks/epic7-e2e-playwright/story2-test-player-and-match-generation.md) | E2E tests for the add-players → generate-matches → view-results flow         | Pending |
-| 3   | [Test Season Management](.tasks/epic7-e2e-playwright/story3-test-season-management.md)                   | E2E tests for season CRUD, matchday listing, and player enrollment           | Pending |
-| 4   | [Test Match Schedule Planning](.tasks/epic7-e2e-playwright/story4-test-match-schedule-planning.md)       | E2E tests for schedule generation, absence management, and schedule browsing | Pending |
+| #   | Story                                                                                                                                                                                   | Description                                                                  | Status  |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------- |
+| 1   | [Scaffold Playwright Test Project](docs/epics/epic7-e2e-playwright/scaffold-playwright-project/change.md) · [plan](docs/epics/epic7-e2e-playwright/scaffold-playwright-project/plan.md) | Create test project, configure app startup, base URL, and CI task            | Pending |
+| 2   | [Test Player & Match Generation](docs/epics/epic7-e2e-playwright/test-player-match-generation/change.md) · [plan](docs/epics/epic7-e2e-playwright/test-player-match-generation/plan.md) | E2E tests for the add-players → generate-matches → view-results flow         | Pending |
+| 3   | [Test Season Management](docs/epics/epic7-e2e-playwright/test-season-management/change.md) · [plan](docs/epics/epic7-e2e-playwright/test-season-management/plan.md)                     | E2E tests for season CRUD, matchday listing, and player enrollment           | Pending |
+| 4   | [Test Match Schedule Planning](docs/epics/epic7-e2e-playwright/test-match-schedule-planning/change.md) · [plan](docs/epics/epic7-e2e-playwright/test-match-schedule-planning/plan.md)   | E2E tests for schedule generation, absence management, and schedule browsing | Pending |
 
 ---
 
