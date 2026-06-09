@@ -2,9 +2,9 @@ namespace Winterplein.Domain.Entities;
 
 public class Team : IEquatable<Team>
 {
-    public int Id { get; }
-    public Player Player1 { get; }
-    public Player Player2 { get; }
+    public int Id { get; private set; }
+    public Player Player1 { get; private set; }
+    public Player Player2 { get; private set; }
 
     public Team(int id, Player player1, Player player2)
     {
@@ -12,6 +12,8 @@ public class Team : IEquatable<Team>
         Player1 = player1 ?? throw new ArgumentNullException(nameof(player1));
         Player2 = player2 ?? throw new ArgumentNullException(nameof(player2));
     }
+
+    private Team() { Player1 = null!; Player2 = null!; }
 
     public bool Equals(Team? other)
     {
