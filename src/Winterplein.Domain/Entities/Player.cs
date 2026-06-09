@@ -5,9 +5,9 @@ namespace Winterplein.Domain.Entities;
 
 public class Player
 {
-    public int Id { get; }
-    public Name Name { get; }
-    public Gender Gender { get; }
+    public int Id { get; private set; }
+    public Name Name { get; private set; }
+    public Gender Gender { get; private set; }
 
     public Player(int id, Name name, Gender gender)
     {
@@ -15,4 +15,6 @@ public class Player
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Gender = gender;
     }
+
+    private Player() { Name = null!; }
 }
