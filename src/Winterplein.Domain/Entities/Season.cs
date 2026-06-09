@@ -1,18 +1,16 @@
-using Winterplein.Domain.Entities;
-
 namespace Winterplein.Domain.Entities;
 
 public class Season
 {
-    private readonly List<Player> _players = [];
+    private List<Player> _players = [];
 
-    public int Id { get; }
-    public string Name { get; }
-    public DateOnly StartDate { get; }
-    public DateOnly EndDate { get; }
-    public DayOfWeek Weekday { get; }
-    public TimeOnly StartHour { get; }
-    public TimeOnly EndHour { get; }
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    public DateOnly StartDate { get; private set; }
+    public DateOnly EndDate { get; private set; }
+    public DayOfWeek Weekday { get; private set; }
+    public TimeOnly StartHour { get; private set; }
+    public TimeOnly EndHour { get; private set; }
     public IReadOnlyList<Player> Players => _players.AsReadOnly();
 
     public Season(int id, string name, DateOnly startDate, DateOnly endDate, DayOfWeek weekday, TimeOnly startHour, TimeOnly endHour, IEnumerable<Player>? players = null)
@@ -35,6 +33,8 @@ public class Season
         if (players != null)
             _players.AddRange(players);
     }
+
+    private Season() { _players = new List<Player>(); Name = null!; }
 
     public IReadOnlyList<DateOnly> GetMatchdays()
     {
