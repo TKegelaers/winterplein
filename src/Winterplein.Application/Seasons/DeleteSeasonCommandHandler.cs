@@ -4,10 +4,8 @@ namespace Winterplein.Application.Seasons;
 
 public static class DeleteSeasonCommandHandler
 {
-    public static void Handle(DeleteSeasonCommand command, ISeasonRepository seasonRepository)
+    public static async Task Handle(DeleteSeasonCommand command, ISeasonRepository seasonRepository, CancellationToken ct = default)
     {
-        var deleted = seasonRepository.Delete(command.Id);
-        if (!deleted)
-            throw new KeyNotFoundException($"Season {command.Id} not found.");
+        await seasonRepository.DeleteAsync(command.Id, ct);
     }
 }

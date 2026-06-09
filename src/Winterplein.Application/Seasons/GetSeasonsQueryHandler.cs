@@ -5,6 +5,6 @@ namespace Winterplein.Application.Seasons;
 
 public static class GetSeasonsQueryHandler
 {
-    public static List<Season> Handle(GetSeasonsQuery query, ISeasonRepository seasonRepository) =>
-        seasonRepository.GetAll().ToList();
+    public static async Task<List<Season>> Handle(GetSeasonsQuery query, ISeasonRepository seasonRepository, CancellationToken ct = default) =>
+        (await seasonRepository.GetAllAsync(ct)).ToList();
 }

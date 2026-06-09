@@ -5,14 +5,13 @@ namespace Winterplein.Application.Seasons;
 
 public static class UpdateSeasonCommandHandler
 {
-    public static Season Handle(UpdateSeasonCommand command, ISeasonRepository seasonRepository)
+    public static async Task<Season> Handle(UpdateSeasonCommand command, ISeasonRepository seasonRepository, CancellationToken ct = default)
     {
-        var existing = seasonRepository.GetById(command.Id)
+        var existing = await seasonRepository.GetByIdAsync(command.Id, ct)
             ?? throw new KeyNotFoundException($"Season {command.Id} not found.");
 
         var updated = new Season(command.Id, command.Name, command.StartDate, command.EndDate,
             command.Weekday, command.StartHour, command.EndHour, existing.Players);
-        seasonRepository.Update(updated);
-        return updated;
+        return await seasonRepository.UpdateAsync(updated, ct);
     }
 }

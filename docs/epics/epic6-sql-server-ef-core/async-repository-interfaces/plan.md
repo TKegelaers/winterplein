@@ -7,25 +7,25 @@ Convert `IPlayerRepository` and `ISeasonRepository` from synchronous to fully as
 ## Task list
 
 - T1 [update-player-repository-interface](./tasks/update-player-repository-interface/task.md)
-  - status: pending
+  - status: completed
   - dependencies: none
 
 - T2 [update-season-repository-interface](./tasks/update-season-repository-interface/task.md)
-  - status: pending
+  - status: completed
   - dependencies: none
 
 - T3 [update-inmemory-repositories](./tasks/update-inmemory-repositories/task.md)
-  - status: pending
+  - status: completed
   - dependencies: T1, T2
 
 - T4 [update-player-handlers](./tasks/update-player-handlers/task.md)
-  - status: pending
+  - status: completed
   - dependencies: T1
 
 - T5 [update-season-handlers](./tasks/update-season-handlers/task.md)
-  - status: pending
+  - status: completed
   - dependencies: T2
 
 - T6 [update-handler-unit-tests](./tasks/update-handler-unit-tests/task.md)
-  - status: pending
+  - status: completed
   - dependencies: T4, T5

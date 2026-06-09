@@ -6,6 +6,6 @@ namespace Winterplein.Application.Queries.GetAllPlayers;
 
 public static class GetAllPlayersQueryHandler
 {
-    public static List<PlayerDto> Handle(GetAllPlayersQuery query, IPlayerRepository repo) =>
-        repo.GetAll().Select(p => p.ToDto()).ToList();
+    public static async Task<List<PlayerDto>> Handle(GetAllPlayersQuery query, IPlayerRepository repo, CancellationToken ct = default) =>
+        (await repo.GetAllAsync(ct)).Select(p => p.ToDto()).ToList();
 }

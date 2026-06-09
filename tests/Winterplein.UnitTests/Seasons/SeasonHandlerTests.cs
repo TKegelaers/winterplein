@@ -14,12 +14,12 @@ public class SeasonHandlerTests
     // --- CreateSeasonCommandHandler ---
 
     [Fact]
-    public void CreateSeasonCommandHandler_ReturnsNewSeason()
+    public async Task CreateSeasonCommandHandler_ReturnsNewSeason()
     {
         var season = new SeasonBuilder().WithId(5).Build();
-        _repo.Setup(r => r.Add(It.IsAny<Season>())).Returns(season);
+        _repo.Setup(r => r.AddAsync(It.IsAny<Season>(), It.IsAny<CancellationToken>())).ReturnsAsync(season);
 
-        var result = CreateSeasonCommandHandler.Handle(new CreateSeasonCommand(
+        var result = await CreateSeasonCommandHandler.Handle(new CreateSeasonCommand(
             "Test", new DateOnly(2025, 1, 1), new DateOnly(2025, 12, 31),
             DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0)),
             _repo.Object);
@@ -30,12 +30,12 @@ public class SeasonHandlerTests
     // --- GetSeasonsQueryHandler ---
 
     [Fact]
-    public void GetSeasonsQueryHandler_ReturnsAllSeasons()
+    public async Task GetSeasonsQueryHandler_ReturnsAllSeasons()
     {
         var seasons = new List<Season> { new SeasonBuilder().Build(), new SeasonBuilder().WithId(2).Build() };
-        _repo.Setup(r => r.GetAll()).Returns(seasons);
+        _repo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(seasons);
 
-        var result = GetSeasonsQueryHandler.Handle(new GetSeasonsQuery(), _repo.Object);
+        var result = await GetSeasonsQueryHandler.Handle(new GetSeasonsQuery(), _repo.Object);
 
         result.Should().HaveCount(2);
     }
@@ -43,23 +43,23 @@ public class SeasonHandlerTests
     // --- GetSeasonByIdQueryHandler ---
 
     [Fact]
-    public void GetSeasonByIdQueryHandler_ReturnsCorrectSeason()
+    public async Task GetSeasonByIdQueryHandler_ReturnsCorrectSeason()
     {
         var season = new SeasonBuilder().WithId(3).Build();
-        _repo.Setup(r => r.GetById(3)).Returns(season);
+        _repo.Setup(r => r.GetByIdAsync(3, It.IsAny<CancellationToken>())).ReturnsAsync(season);
 
-        var result = GetSeasonByIdQueryHandler.Handle(new GetSeasonByIdQuery(3), _repo.Object);
+        var result = await GetSeasonByIdQueryHandler.Handle(new GetSeasonByIdQuery(3), _repo.Object);
 
         result.Should().NotBeNull();
         result!.Id.Should().Be(3);
     }
 
     [Fact]
-    public void GetSeasonByIdQueryHandler_ReturnsNull_ForUnknownId()
+    public async Task GetSeasonByIdQueryHandler_ReturnsNull_ForUnknownId()
     {
-        _repo.Setup(r => r.GetById(It.IsAny<int>())).Returns((Season?)null);
+        _repo.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync((Season?)null);
 
-        var result = GetSeasonByIdQueryHandler.Handle(new GetSeasonByIdQuery(999), _repo.Object);
+        var result = await GetSeasonByIdQueryHandler.Handle(new GetSeasonByIdQuery(999), _repo.Object);
 
         result.Should().BeNull();
     }
@@ -67,13 +67,14 @@ public class SeasonHandlerTests
     // --- UpdateSeasonCommandHandler ---
 
     [Fact]
-    public void UpdateSeasonCommandHandler_ReturnsUpdatedSeason_WhenSeasonFound()
+    public async Task UpdateSeasonCommandHandler_ReturnsUpdatedSeason_WhenSeasonFound()
     {
         var existing = new SeasonBuilder().WithId(1).Build();
-        _repo.Setup(r => r.GetById(1)).Returns(existing);
-        _repo.Setup(r => r.Update(It.IsAny<Season>())).Returns(true);
+        var updated = new SeasonBuilder().WithId(1).WithName("Updated").Build();
+        _repo.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(existing);
+        _repo.Setup(r => r.UpdateAsync(It.IsAny<Season>(), It.IsAny<CancellationToken>())).ReturnsAsync(updated);
 
-        var result = UpdateSeasonCommandHandler.Handle(new UpdateSeasonCommand(
+        var result = await UpdateSeasonCommandHandler.Handle(new UpdateSeasonCommand(
             1, "Updated", new DateOnly(2025, 1, 1), new DateOnly(2025, 12, 31),
             DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0)),
             _repo.Object);
@@ -82,115 +83,115 @@ public class SeasonHandlerTests
     }
 
     [Fact]
-    public void UpdateSeasonCommandHandler_ThrowsKeyNotFoundException_ForUnknownId()
+    public async Task UpdateSeasonCommandHandler_ThrowsKeyNotFoundException_ForUnknownId()
     {
-        _repo.Setup(r => r.GetById(It.IsAny<int>())).Returns((Season?)null);
+        _repo.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync((Season?)null);
 
         var act = () => UpdateSeasonCommandHandler.Handle(new UpdateSeasonCommand(
             999, "X", new DateOnly(2025, 1, 1), new DateOnly(2025, 12, 31),
             DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0)),
             _repo.Object);
 
-        act.Should().Throw<KeyNotFoundException>();
+        await act.Should().ThrowAsync<KeyNotFoundException>();
     }
 
     // --- DeleteSeasonCommandHandler ---
 
     [Fact]
-    public void DeleteSeasonCommandHandler_DoesNotThrow_WhenSeasonExists()
+    public async Task DeleteSeasonCommandHandler_DoesNotThrow_WhenSeasonExists()
     {
-        _repo.Setup(r => r.Delete(1)).Returns(true);
+        _repo.Setup(r => r.DeleteAsync(1, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         var act = () => DeleteSeasonCommandHandler.Handle(new DeleteSeasonCommand(1), _repo.Object);
 
-        act.Should().NotThrow();
+        await act.Should().NotThrowAsync();
     }
 
     [Fact]
-    public void DeleteSeasonCommandHandler_ThrowsKeyNotFoundException_ForUnknownId()
+    public async Task DeleteSeasonCommandHandler_ThrowsKeyNotFoundException_ForUnknownId()
     {
-        _repo.Setup(r => r.Delete(999)).Returns(false);
+        _repo.Setup(r => r.DeleteAsync(999, It.IsAny<CancellationToken>())).ThrowsAsync(new KeyNotFoundException());
 
         var act = () => DeleteSeasonCommandHandler.Handle(new DeleteSeasonCommand(999), _repo.Object);
 
-        act.Should().Throw<KeyNotFoundException>();
+        await act.Should().ThrowAsync<KeyNotFoundException>();
     }
 
     // --- AddSeasonPlayerCommandHandler ---
 
     [Fact]
-    public void AddSeasonPlayerCommandHandler_ReturnsSeason_WhenBothFound()
+    public async Task AddSeasonPlayerCommandHandler_ReturnsSeason_WhenBothFound()
     {
         var season = new SeasonBuilder().WithId(1).Build();
         var player = new PlayerBuilder().WithId(10).Build();
-        _repo.Setup(r => r.GetById(1)).Returns(season);
-        _repo.Setup(r => r.Update(It.IsAny<Season>())).Returns(true);
-        _playerRepo.Setup(r => r.GetById(10)).Returns(player);
+        _repo.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(season);
+        _repo.Setup(r => r.UpdateAsync(It.IsAny<Season>(), It.IsAny<CancellationToken>())).ReturnsAsync(season);
+        _playerRepo.Setup(r => r.GetByIdAsync(10, It.IsAny<CancellationToken>())).ReturnsAsync(player);
 
-        var result = AddSeasonPlayerCommandHandler.Handle(new AddSeasonPlayerCommand(1, 10), _repo.Object, _playerRepo.Object);
+        var result = await AddSeasonPlayerCommandHandler.Handle(new AddSeasonPlayerCommand(1, 10), _repo.Object, _playerRepo.Object);
 
         result.Should().NotBeNull();
         result.Players.Should().Contain(p => p.Id == 10);
     }
 
     [Fact]
-    public void AddSeasonPlayerCommandHandler_ThrowsKeyNotFoundException_WhenSeasonNotFound()
+    public async Task AddSeasonPlayerCommandHandler_ThrowsKeyNotFoundException_WhenSeasonNotFound()
     {
-        _repo.Setup(r => r.GetById(It.IsAny<int>())).Returns((Season?)null);
+        _repo.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync((Season?)null);
 
         var act = () => AddSeasonPlayerCommandHandler.Handle(new AddSeasonPlayerCommand(999, 1), _repo.Object, _playerRepo.Object);
 
-        act.Should().Throw<KeyNotFoundException>();
+        await act.Should().ThrowAsync<KeyNotFoundException>();
     }
 
     [Fact]
-    public void AddSeasonPlayerCommandHandler_ThrowsKeyNotFoundException_WhenPlayerNotFound()
+    public async Task AddSeasonPlayerCommandHandler_ThrowsKeyNotFoundException_WhenPlayerNotFound()
     {
         var season = new SeasonBuilder().WithId(1).Build();
-        _repo.Setup(r => r.GetById(1)).Returns(season);
-        _playerRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns((Player?)null);
+        _repo.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(season);
+        _playerRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync((Player?)null);
 
         var act = () => AddSeasonPlayerCommandHandler.Handle(new AddSeasonPlayerCommand(1, 999), _repo.Object, _playerRepo.Object);
 
-        act.Should().Throw<KeyNotFoundException>();
+        await act.Should().ThrowAsync<KeyNotFoundException>();
     }
 
     // --- RemoveSeasonPlayerCommandHandler ---
 
     [Fact]
-    public void RemoveSeasonPlayerCommandHandler_Succeeds_WhenPlayerRemoved()
+    public async Task RemoveSeasonPlayerCommandHandler_Succeeds_WhenPlayerRemoved()
     {
         var players = Enumerable.Range(1, 5).Select(i => new PlayerBuilder().WithId(i).Build()).ToList();
         var season = new SeasonBuilder().WithId(1).Build();
         players.ForEach(season.AddPlayer);
-        _repo.Setup(r => r.GetById(1)).Returns(season);
-        _repo.Setup(r => r.Update(It.IsAny<Season>())).Returns(true);
+        _repo.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(season);
+        _repo.Setup(r => r.UpdateAsync(It.IsAny<Season>(), It.IsAny<CancellationToken>())).ReturnsAsync(season);
 
         var act = () => RemoveSeasonPlayerCommandHandler.Handle(new RemoveSeasonPlayerCommand(1, 1), _repo.Object);
 
-        act.Should().NotThrow();
+        await act.Should().NotThrowAsync();
     }
 
     [Fact]
-    public void RemoveSeasonPlayerCommandHandler_ThrowsKeyNotFoundException_WhenSeasonNotFound()
+    public async Task RemoveSeasonPlayerCommandHandler_ThrowsKeyNotFoundException_WhenSeasonNotFound()
     {
-        _repo.Setup(r => r.GetById(It.IsAny<int>())).Returns((Season?)null);
+        _repo.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync((Season?)null);
 
         var act = () => RemoveSeasonPlayerCommandHandler.Handle(new RemoveSeasonPlayerCommand(999, 1), _repo.Object);
 
-        act.Should().Throw<KeyNotFoundException>();
+        await act.Should().ThrowAsync<KeyNotFoundException>();
     }
 
     // --- GetSeasonPlayersQueryHandler ---
 
     [Fact]
-    public void GetSeasonPlayersQueryHandler_ReturnsPlayers_WhenSeasonFound()
+    public async Task GetSeasonPlayersQueryHandler_ReturnsPlayers_WhenSeasonFound()
     {
         var player = new PlayerBuilder().WithId(1).Build();
         var season = new SeasonBuilder().WithPlayer(player).Build();
-        _repo.Setup(r => r.GetById(1)).Returns(season);
+        _repo.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(season);
 
-        var result = GetSeasonPlayersQueryHandler.Handle(new GetSeasonPlayersQuery(1), _repo.Object);
+        var result = await GetSeasonPlayersQueryHandler.Handle(new GetSeasonPlayersQuery(1), _repo.Object);
 
         result.Should().NotBeNull();
         result!.Should().HaveCount(1);
@@ -198,11 +199,11 @@ public class SeasonHandlerTests
     }
 
     [Fact]
-    public void GetSeasonPlayersQueryHandler_ReturnsNull_WhenSeasonNotFound()
+    public async Task GetSeasonPlayersQueryHandler_ReturnsNull_WhenSeasonNotFound()
     {
-        _repo.Setup(r => r.GetById(It.IsAny<int>())).Returns((Season?)null);
+        _repo.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync((Season?)null);
 
-        var result = GetSeasonPlayersQueryHandler.Handle(new GetSeasonPlayersQuery(999), _repo.Object);
+        var result = await GetSeasonPlayersQueryHandler.Handle(new GetSeasonPlayersQuery(999), _repo.Object);
 
         result.Should().BeNull();
     }
