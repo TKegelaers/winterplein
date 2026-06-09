@@ -36,17 +36,13 @@ Based on the dependencies and implementation status of the tasks outlined in the
 
 #### 2.2 Delegate task to subagent
 
-For each task identified in step 2.1, create a new subagent and delegate the implementation of the task to it. Provide the subagent with the necessary context for the task by referring it to the corresponding task file in `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md`.
-
-Tell the subagent to use the `w-implement-task` skill for the implementation of the task.
+For each task identified in step 2.1, spawn a subagent using `subagent_type: w-implement-task`. In the prompt, provide the change path and task name so the agent can locate `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md`.
 
 Update the task status to "in progress" in the `plan.md` document after delegating the task to a subagent.
 
 ### 2.3 Delegate review of the task to a subagent
 
-Once the subagent has completed the implementation of the task, delegate the review of the task to a separate subagent by referring it to the corresponding task file in `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md`.
-
-Tell the subagent to use the `w-review-task` skill for the review of the task.
+Once the subagent has completed the implementation of the task, spawn a separate subagent using `subagent_type: w-review-task`. In the prompt, provide the change path and task name so the agent can locate `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md`.
 
 Update the task status to "under review" in the `plan.md` document after delegating the review of the task to a subagent.
 
