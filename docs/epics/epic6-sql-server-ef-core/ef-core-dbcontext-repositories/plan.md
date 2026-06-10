@@ -7,21 +7,21 @@ Replace in-memory repositories with SQL Server persistence using EF Core. Add `W
 ## Task list
 
 - T1 [add-ef-core-packages](./tasks/add-ef-core-packages/task.md)
-  - status: pending
+  - status: completed
   - dependencies: none
 
 - T2 [create-dbcontext-and-configurations](./tasks/create-dbcontext-and-configurations/task.md)
-  - status: pending
+  - status: completed
   - dependencies: T1
 
 - T3 [implement-ef-repositories](./tasks/implement-ef-repositories/task.md)
-  - status: pending
+  - status: completed
   - dependencies: T2
 
 - T4 [wire-up-di-and-connection-string](./tasks/wire-up-di-and-connection-string/task.md)
-  - status: pending
+  - status: completed
   - dependencies: T3
 
 - T5 [run-initial-migration](./tasks/run-initial-migration/task.md)
-  - status: pending
+  - status: in progress
   - dependencies: T4

@@ -4,7 +4,7 @@
 
 Update `Program.cs` and `appsettings.json` to use the EF Core implementations:
 
-- Add `ConnectionStrings:WinterpleinDb` to `appsettings.json` pointing to LocalDB (`(localdb)\MSSQLLocalDB`).
+- Add `ConnectionStrings:WinterpleinDb` to `appsettings.json` pointing to LocalDB (`Data Source=.;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Application Name="Winterplein API";Command Timeout=0`).
 - Register `WinterpleinDbContext` with `AddDbContext<WinterpleinDbContext>(opts => opts.UseSqlServer(...))`.
 - Replace `AddSingleton<IPlayerRepository, InMemoryPlayerRepository>` with `AddScoped<IPlayerRepository, EfPlayerRepository>`.
 - Replace `AddSingleton<ISeasonRepository, InMemorySeasonRepository>` with `AddScoped<ISeasonRepository, EfSeasonRepository>`.

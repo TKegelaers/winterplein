@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Wolverine;
 using Winterplein.Api.ExceptionHandling;
 using Winterplein.Application.Interfaces;
@@ -13,9 +14,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Host.UseWolverine(opts => opts.Discovery.IncludeAssembly(typeof(GetAllPlayersQuery).Assembly));
-// TODO: Replace Singleton with Scoped when switching to real persistence (e.g. EF Core)
-builder.Services.AddSingleton<IPlayerRepository, InMemoryPlayerRepository>();
-builder.Services.AddSingleton<ISeasonRepository, InMemorySeasonRepository>();
+builder.Services.AddDbContext<WinterpleinDbContext>(opts =>
+    opts.UseSqlServer(builder.Configuration.GetConnectionString("WinterpleinDb")));
+builder.Services.AddScoped<IPlayerRepository, EfPlayerRepository>();
+builder.Services.AddScoped<ISeasonRepository, EfSeasonRepository>();
 builder.Services.AddSingleton<IMatchGeneratorService, MatchGeneratorService>();
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
 builder.Services.AddCors(options =>
