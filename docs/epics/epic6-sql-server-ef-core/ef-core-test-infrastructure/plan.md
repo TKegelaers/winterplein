@@ -7,9 +7,9 @@ Swap the integration test factory's in-memory repository stubs for a SQLite in-m
 ## Task list
 
 - T1 [update-project-references](./tasks/update-project-references/task.md)
-  - status: pending
+  - status: done
   - dependencies: none
 
 - T2 [refactor-api-factory](./tasks/refactor-api-factory/task.md)
-  - status: pending
+  - status: done
   - dependencies: (blockedBy: T1)
