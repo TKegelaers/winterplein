@@ -23,5 +23,5 @@ Replace in-memory repositories with SQL Server persistence using EF Core. Add `W
   - dependencies: T3
 
 - T5 [run-initial-migration](./tasks/run-initial-migration/task.md)
-  - status: in progress
+  - status: completed
   - dependencies: T4
