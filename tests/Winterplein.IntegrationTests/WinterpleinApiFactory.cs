@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Winterplein.Infrastructure.Persistence;
@@ -10,22 +10,59 @@ namespace Winterplein.IntegrationTests;
 
 public class WinterpleinApiFactory : WebApplicationFactory<Program>
 {
-    // A single open connection keeps the in-memory SQLite database alive for the
-    // lifetime of the factory; closing it drops the schema and all data.
-    private readonly SqliteConnection _connection = new("DataSource=:memory:");
+    public WinterpleinApiFactory()
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: false)
+            .Build();
 
-    public WinterpleinApiFactory() => _connection.Open();
+        ConnectionString = configuration.GetConnectionString("WinterpleinDb")
+            ?? throw new InvalidOperationException(
+                "Connection string 'WinterpleinDb' is missing from the test appsettings.json.");
+    }
+
+    /// <summary>
+    /// The SQL Server connection string the test database runs against. Exposed so
+    /// Respawn can reset the database and seed builders can open their own scope.
+    /// </summary>
+    public string ConnectionString { get; }
+
+    /// <summary>
+    /// Creates a fresh <see cref="WinterpleinDbContext"/> in its own DI scope for
+    /// seeding and direct database access. The returned <see cref="ScopedDbContext"/>
+    /// owns both the context and the scope; disposing it disposes both, so callers
+    /// should wrap the result in a <c>using</c>.
+    /// </summary>
+    public ScopedDbContext CreateDbContext()
+    {
+        var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<WinterpleinDbContext>();
+        return new ScopedDbContext(scope, db);
+    }
+
+    /// <summary>
+    /// A <see cref="WinterpleinDbContext"/> together with the DI scope it was
+    /// resolved from. Disposing this disposes the scope (and therefore the
+    /// scoped context), avoiding the scope leak that arises from returning a
+    /// scoped service without holding onto its scope.
+    /// </summary>
+    public sealed class ScopedDbContext(IServiceScope scope, WinterpleinDbContext context) : IDisposable
+    {
+        public WinterpleinDbContext Context { get; } = context;
+
+        public void Dispose() => scope.Dispose();
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
         {
-            // Replace the SQL Server DbContext registered in Program.cs with a
-            // SQLite in-memory one, so each test class gets an isolated database
-            // that exercises the full EF Core pipeline without needing SQL Server.
-            // Every AddDbContext call registers an IDbContextOptionsConfiguration
-            // that is aggregated into the options; the SQL Server one must be
-            // removed too, otherwise both providers end up configured.
+            // Replace the SQL Server DbContext registered in Program.cs with one
+            // pointed at the integration-test database. Every AddDbContext call
+            // registers an IDbContextOptionsConfiguration that is aggregated into
+            // the options; the production registration must be removed too,
+            // otherwise both end up configured.
             var descriptorsToRemove = services.Where(d =>
                 d.ServiceType == typeof(DbContextOptions<WinterpleinDbContext>) ||
                 d.ServiceType == typeof(DbContextOptions) ||
@@ -36,7 +73,7 @@ public class WinterpleinApiFactory : WebApplicationFactory<Program>
             foreach (var descriptor in descriptorsToRemove)
                 services.Remove(descriptor);
 
-            services.AddDbContext<WinterpleinDbContext>(opts => opts.UseSqlite(_connection));
+            services.AddDbContext<WinterpleinDbContext>(opts => opts.UseSqlServer(ConnectionString));
         });
     }
 
@@ -46,15 +83,8 @@ public class WinterpleinApiFactory : WebApplicationFactory<Program>
 
         using var scope = host.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<WinterpleinDbContext>();
-        db.Database.EnsureCreated();
+        db.Database.Migrate();
 
         return host;
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-            _connection.Dispose();
-        base.Dispose(disposing);
     }
 }
