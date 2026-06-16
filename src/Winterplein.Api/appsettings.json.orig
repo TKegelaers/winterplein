@@ -1,0 +1,20 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "AllowedOrigins": [
+    "https://zealous-river-0e159f010.1.azurestaticapps.net",
+    "https://www.winterplein.com"
+  ],
+  "ConnectionStrings": {
+<<<<<<< HEAD
+    "WinterpleinDb": "Data Source=.;Initial Catalog=Winterplein;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Application Name=\"Winterplein API\";Command Timeout=0"
+=======
+    "WinterpleinDb": "Data Source=.;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Application Name=\"Winterplein API\";Command Timeout=0"
+>>>>>>> 0a0c8363f9b16cbc9e2d4750ef3741f8b4f4db46
+  }
+}
