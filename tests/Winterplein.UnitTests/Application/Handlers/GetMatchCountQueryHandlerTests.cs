@@ -10,12 +10,12 @@ public class GetMatchCountQueryHandlerTests
     private readonly Mock<IMatchGeneratorService> _generator = new();
 
     [Fact]
-    public void Handle_ReturnsCalculatedMatchCount()
+    public async Task Handle_ReturnsCalculatedMatchCount()
     {
-        _repo.Setup(r => r.Count).Returns(10);
+        _repo.Setup(r => r.CountAsync(It.IsAny<CancellationToken>())).ReturnsAsync(10);
         _generator.Setup(g => g.CalculateMatchCount(10)).Returns(630);
 
-        var result = GetMatchCountQueryHandler.Handle(new GetMatchCountQuery(), _repo.Object, _generator.Object);
+        var result = await GetMatchCountQueryHandler.Handle(new GetMatchCountQuery(), _repo.Object, _generator.Object);
 
         result.Count.Should().Be(630);
     }

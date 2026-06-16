@@ -6,9 +6,9 @@ namespace Winterplein.Application.Commands.GenerateMatches;
 
 public static class GenerateMatchesCommandHandler
 {
-    public static GenerateMatchesResponse Handle(GenerateMatchesCommand command, IPlayerRepository repo, IMatchGeneratorService generator)
+    public static async Task<GenerateMatchesResponse> Handle(GenerateMatchesCommand command, IPlayerRepository repo, IMatchGeneratorService generator, CancellationToken ct = default)
     {
-        var allPlayers = repo.GetAll();
+        var allPlayers = await repo.GetAllAsync(ct);
         var generated = generator.GenerateAllMatches(allPlayers);
         return new GenerateMatchesResponse(
             generated.Select(m => m.ToDto()).ToList(),

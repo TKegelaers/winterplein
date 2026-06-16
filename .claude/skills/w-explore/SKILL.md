@@ -26,6 +26,17 @@ Optionally, also ask questions to fill out these additional sections if relevant
 
 ## Process
 
+### 0 Resolve the epic (required)
+
+Every change must belong to an epic. Resolve this before any exploration.
+
+- If the user provided an epic, use it.
+- If not, ask which epic the change belongs to. List the existing epic folders under `docs/epics/` so the user can pick one (e.g. `epic2-season-management`).
+- The epic must map to an existing folder in `docs/epics/`.
+- The user may also choose to start a **new** epic. In that case, run the `w-create-epic` skill (`/create-epic`) to register the epic first, then use its folder. Do not invent an epic folder ad hoc.
+
+Do not proceed to the steps below until an epic is confirmed (existing or newly created).
+
 ### 1 Initial change description
 
 If the user did not provide a broad idea of the feature or bug, ask them to describe the change they want to make.
@@ -47,7 +58,7 @@ Continue until you have a complete understanding of the change.
 
 ## Output
 
-Ask the user which epic this story belongs to (or derive it from context if obvious). Use the epic's folder name from `docs/epics/` (e.g. `epic2-season-management`).
+Use the epic resolved in step 0 — its folder name from `docs/epics/` (e.g. `epic2-season-management`).
 
 Think of a short name for the feature or fix that captures its essence.
 (e.g. "add-user-session-cache", "fix-session-expiry-bug" )

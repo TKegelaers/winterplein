@@ -1,7 +1,5 @@
 using Winterplein.Application.Interfaces;
 using Winterplein.Domain.Entities;
-using Winterplein.Domain.Enums;
-using Winterplein.Domain.ValueObjects;
 
 namespace Winterplein.Infrastructure.Persistence;
 
@@ -11,40 +9,42 @@ public class InMemoryPlayerRepository : IPlayerRepository
     private readonly Lock _lock = new();
     private int _nextId = 1;
 
-    public IReadOnlyList<Player> GetAll()
+    public Task<IReadOnlyList<Player>> GetAllAsync(CancellationToken ct = default)
     {
         lock (_lock)
-            return _players.ToList();
+            return Task.FromResult<IReadOnlyList<Player>>(_players.ToList());
     }
 
-    public Player? GetById(int id)
+    public Task<Player?> GetByIdAsync(int id, CancellationToken ct = default)
     {
         lock (_lock)
-            return _players.FirstOrDefault(p => p.Id == id);
+            return Task.FromResult(_players.FirstOrDefault(p => p.Id == id));
     }
 
-    public int Count
+    public Task<int> CountAsync(CancellationToken ct = default)
     {
-        get { lock (_lock) return _players.Count; }
+        lock (_lock)
+            return Task.FromResult(_players.Count);
     }
 
-    public Player Add(Name name, Gender gender)
+    public Task<Player> AddAsync(Player player, CancellationToken ct = default)
     {
         lock (_lock)
         {
-            var player = new Player(_nextId++, name, gender);
-            _players.Add(player);
-            return player;
+            var withId = new Player(_nextId++, player.Name, player.Gender);
+            _players.Add(withId);
+            return Task.FromResult(withId);
         }
     }
 
-    public void Remove(int id)
+    public Task RemoveAsync(int id, CancellationToken ct = default)
     {
         lock (_lock)
         {
             var player = _players.FirstOrDefault(p => p.Id == id)
                 ?? throw new KeyNotFoundException($"Player with id {id} not found.");
             _players.Remove(player);
+            return Task.CompletedTask;
         }
     }
 }

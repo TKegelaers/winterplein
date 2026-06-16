@@ -5,16 +5,15 @@ namespace Winterplein.Application.Seasons;
 
 public static class AddSeasonPlayerCommandHandler
 {
-    public static Season Handle(AddSeasonPlayerCommand command, ISeasonRepository seasonRepository, IPlayerRepository playerRepository)
+    public static async Task<Season> Handle(AddSeasonPlayerCommand command, ISeasonRepository seasonRepository, IPlayerRepository playerRepository, CancellationToken ct = default)
     {
-        var season = seasonRepository.GetById(command.SeasonId)
+        var season = await seasonRepository.GetByIdAsync(command.SeasonId, ct)
             ?? throw new KeyNotFoundException($"Season {command.SeasonId} not found.");
 
-        var player = playerRepository.GetById(command.PlayerId)
+        var player = await playerRepository.GetByIdAsync(command.PlayerId, ct)
             ?? throw new KeyNotFoundException($"Player {command.PlayerId} not found.");
 
         season.AddPlayer(player);
-        seasonRepository.Update(season);
-        return season;
+        return await seasonRepository.UpdateAsync(season, ct);
     }
 }

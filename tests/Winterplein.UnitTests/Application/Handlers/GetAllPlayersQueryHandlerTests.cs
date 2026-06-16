@@ -10,16 +10,16 @@ public class GetAllPlayersQueryHandlerTests
     private readonly Mock<IPlayerRepository> _repo = new();
 
     [Fact]
-    public void Handle_ReturnsAllPlayersAsDtos()
+    public async Task Handle_ReturnsAllPlayersAsDtos()
     {
         var players = new[]
         {
             new PlayerBuilder().WithId(1).Build(),
             new PlayerBuilder().WithId(2).Build()
         };
-        _repo.Setup(r => r.GetAll()).Returns(players);
+        _repo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(players);
 
-        var result = GetAllPlayersQueryHandler.Handle(new GetAllPlayersQuery(), _repo.Object);
+        var result = await GetAllPlayersQueryHandler.Handle(new GetAllPlayersQuery(), _repo.Object);
 
         result.Should().HaveCount(2);
         result[0].Id.Should().Be(1);
@@ -27,11 +27,11 @@ public class GetAllPlayersQueryHandlerTests
     }
 
     [Fact]
-    public void Handle_ReturnsEmptyList_WhenNoPlayers()
+    public async Task Handle_ReturnsEmptyList_WhenNoPlayers()
     {
-        _repo.Setup(r => r.GetAll()).Returns(Array.Empty<Winterplein.Domain.Entities.Player>());
+        _repo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(Array.Empty<Winterplein.Domain.Entities.Player>());
 
-        var result = GetAllPlayersQueryHandler.Handle(new GetAllPlayersQuery(), _repo.Object);
+        var result = await GetAllPlayersQueryHandler.Handle(new GetAllPlayersQuery(), _repo.Object);
 
         result.Should().BeEmpty();
     }

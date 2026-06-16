@@ -9,20 +9,22 @@ public class RemovePlayerCommandHandlerTests
     private readonly Mock<IPlayerRepository> _repo = new();
 
     [Fact]
-    public void Handle_CallsRepoRemoveWithCorrectId()
+    public async Task Handle_CallsRepoRemoveWithCorrectId()
     {
-        RemovePlayerCommandHandler.Handle(new RemovePlayerCommand(42), _repo.Object);
+        _repo.Setup(r => r.RemoveAsync(42, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        _repo.Verify(r => r.Remove(42), Times.Once);
+        await RemovePlayerCommandHandler.Handle(new RemovePlayerCommand(42), _repo.Object);
+
+        _repo.Verify(r => r.RemoveAsync(42, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public void Handle_ThrowsKeyNotFoundException_WhenPlayerNotFound()
+    public async Task Handle_ThrowsKeyNotFoundException_WhenPlayerNotFound()
     {
-        _repo.Setup(r => r.Remove(99)).Throws(new KeyNotFoundException());
+        _repo.Setup(r => r.RemoveAsync(99, It.IsAny<CancellationToken>())).ThrowsAsync(new KeyNotFoundException());
 
         var act = () => RemovePlayerCommandHandler.Handle(new RemovePlayerCommand(99), _repo.Object);
 
-        act.Should().Throw<KeyNotFoundException>();
+        await act.Should().ThrowAsync<KeyNotFoundException>();
     }
 }

@@ -7,17 +7,17 @@ Add private parameterless constructors and change get-only properties to `{ get;
 ## Task list
 
 - T1 [make-name-ef-compatible](./tasks/make-name-ef-compatible/task.md)
-  - status: pending
+  - status: completed
   - dependencies: none
 
 - T2 [make-player-ef-compatible](./tasks/make-player-ef-compatible/task.md)
-  - status: pending
+  - status: completed
   - dependencies: none
 
 - T3 [make-team-match-ef-compatible](./tasks/make-team-match-ef-compatible/task.md)
-  - status: pending
+  - status: completed
   - dependencies: none
 
 - T4 [make-season-ef-compatible](./tasks/make-season-ef-compatible/task.md)
-  - status: pending
+  - status: completed
   - dependencies: none

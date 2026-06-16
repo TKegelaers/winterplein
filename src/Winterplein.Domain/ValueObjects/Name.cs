@@ -2,8 +2,8 @@ namespace Winterplein.Domain.ValueObjects;
 
 public record Name
 {
-    public string FirstName { get; }
-    public string LastName { get; }
+    public string FirstName { get; init; }
+    public string LastName { get; init; }
 
     public Name(string firstName, string lastName)
     {
@@ -15,4 +15,6 @@ public record Name
         FirstName = firstName;
         LastName = lastName;
     }
+
+    private Name() { FirstName = null!; LastName = null!; }
 }

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pwsh -NoProfile -Command \"dotnet build *\")",
+      "Bash(pwsh -NoProfile -Command \"dotnet test *\")"
+    ]
+  }
+}

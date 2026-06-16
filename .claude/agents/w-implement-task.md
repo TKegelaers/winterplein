@@ -17,6 +17,10 @@ If you cannot find the `task.md` file, report back to your parent agent that the
 
 If a `review.md` file exists for the task, read it to understand prior reviewer feedback and incorporate it into the implementation.
 
+### 0.3 Find design.md file for broader context
+
+If there is a `design.md` file in `docs/epics/<change-path>/`, read it to understand the overall technical approach and architecture decisions that inform this task.
+
 ### 1 Understand the task
 
 Read `task.md` (and `review.md` if present) to understand: scope, domain model changes, test cases to implement, and affected files.
@@ -29,9 +33,15 @@ Explore the codebase for an existing implementation similar to this task. Use it
 
 Implement the task as defined in `task.md`, incorporating any reviewer feedback.
 
-- Use a TDD approach: write the failing test first, then implement the code to make it pass.
-- Stay within the scope defined in `task.md`. If you identify out-of-scope work, note it and add a new task to `plan.md` instead.
-- Match the coding style and conventions found in the existing codebase.
+- Work using a TDD approach by writing a unit test that defines the expected behavior for the task, then implement the necessary code to make the test pass.
+- Make sure to only implement the specific scope defined for the task, and not to go beyond it. If you identify additional work that needs to be done that is outside of the scope of the task, make a note of it and create a new task for it in `plan.md`.
+- Adhere to the existing coding standards and best practices in the codebase, and make sure that the implementation is consistent with other existing implementations in the codebase.
+
+### 4 Run tests
+
+Run the tests for the affected project to verify the implementation compiles and tests pass. If the affected service is not testable in isolation (e.g. integration-only), run at minimum `dotnet build` on the solution.
+
+Fix any test failures before proceeding.
 
 ### 4 Report completion
 

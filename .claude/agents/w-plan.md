@@ -20,9 +20,35 @@ Read `docs/epics/<path>/change.md` to understand the problem, proposed solution,
 
 ### 2 Investigate existing codebase
 
-Explore the codebase to understand where and how to implement the change. Look at existing patterns — similar handlers, repositories, controllers, components — so tasks are grounded in actual file locations and conventions.
+Explore the existing codebase to understand where and how to implement the change.
 
-### 3 Define atomic tasks
+- Find 2-3 similar implementations in the same or analogous service and understand their structure
+- Identify the affected Clean Architecture layers and relevant files
+- Check for existing patterns (controllers, handlers, validators, migrations) that the change should follow
+- Note any existing builders or test patterns for the affected domain
+
+### 3 Create design document
+
+Based on the investigation, create a `design.md` that captures the technical approach for the change.
+
+The design should cover:
+
+**Technical approach**: how the solution will be implemented at a high level.
+
+**Architecture decisions**: for each non-trivial choice, use ADR format — state the decision, list alternatives considered, and explain the rationale.
+```markdown
+### Decision: Use ComponentStore over global store
+**Alternatives**: Global NgRx store, Signal-based state
+**Rationale**: Feature-scoped state doesn't need global visibility; ComponentStore is the established pattern in this service.
+```
+
+**Data flow**: how data moves through the system. Use mermaid sequence/flow diagrams for anything beyond a simple request-response.
+
+**File changes overview**: which files will be created, modified or deleted.
+
+**Key patterns**: which existing codebase patterns will be reused or extended.
+
+### 4 Define atomic tasks
 
 Break the change into clear, atomic tasks that can be completed in separate sessions.
 
@@ -34,11 +60,13 @@ For each task define:
 - Test cases: what tests need to be written to verify correct implementation
 - Affected files: which files are created, modified, or deleted
 
-### 4 Determine task dependencies
+### 5 Determine task dependencies
 
-Identify dependencies between tasks to determine implementation order. Note which tasks can run in parallel.
+Identify the dependencies between the tasks defined in step 4 to determine the order of implementation. Some tasks may be independent and can be done in parallel, while others may require the completion of previous tasks.
 
 ## Output
+
+Create a `design.md` file in `docs/changes/{{change-name}}/` that documents the technical approach and architecture decisions for the change.
 
 Create a `task.md` for each atomic task at `docs/epics/<path>/tasks/<task-name>/task.md`. Follow the structure in `templates/task.md`.
 
@@ -46,5 +74,6 @@ Create `docs/epics/<path>/plan.md` listing all tasks, their status (all `pending
 
 ### Keep in mind
 
-- No code snippets. Goal is to define tasks, not start implementation.
-- Be concise. One clear sentence per scope item beats a paragraph.
+- Do not provide code snippets. The goal is to investigate the codebase and define the architecture and tasks, not to start implementation.
+- Do not be verbose. Be concise and clear in describing the scope, domain model changes, test cases and affected files for each task.
+- The design.md should focus on technical approach and architecture, not on the problem or solution (those go in change.md).
