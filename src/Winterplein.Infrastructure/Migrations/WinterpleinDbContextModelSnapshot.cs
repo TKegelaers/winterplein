@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Winterplein.Infrastructure.Persistence;
+using Winterplein.Infrastructure;
 
 #nullable disable
 
@@ -34,7 +34,7 @@ namespace Winterplein.Infrastructure.Migrations
 
                     b.HasIndex("SeasonId");
 
-                    b.ToTable("SeasonPlayers");
+                    b.ToTable("SeasonPlayers", (string)null);
                 });
 
             modelBuilder.Entity("Winterplein.Domain.Entities.Match", b =>
@@ -57,7 +57,7 @@ namespace Winterplein.Infrastructure.Migrations
 
                     b.HasIndex("Team2Id");
 
-                    b.ToTable("Matches");
+                    b.ToTable("Matches", (string)null);
                 });
 
             modelBuilder.Entity("Winterplein.Domain.Entities.Player", b =>
@@ -74,7 +74,7 @@ namespace Winterplein.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Players");
+                    b.ToTable("Players", (string)null);
                 });
 
             modelBuilder.Entity("Winterplein.Domain.Entities.Season", b =>
@@ -106,7 +106,7 @@ namespace Winterplein.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Seasons");
+                    b.ToTable("Seasons", (string)null);
                 });
 
             modelBuilder.Entity("Winterplein.Domain.Entities.Team", b =>
@@ -129,7 +129,7 @@ namespace Winterplein.Infrastructure.Migrations
 
                     b.HasIndex("Player2Id");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Teams", (string)null);
                 });
 
             modelBuilder.Entity("SeasonPlayers", b =>
@@ -185,7 +185,7 @@ namespace Winterplein.Infrastructure.Migrations
 
                             b1.HasKey("PlayerId");
 
-                            b1.ToTable("Players");
+                            b1.ToTable("Players", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("PlayerId");

@@ -1,5 +1,5 @@
 using Winterplein.Domain.Entities;
-using Winterplein.Shared.DTOs;
+using Winterplein.Application.IO.DTOs;
 
 namespace Winterplein.Application.Mappers;
 

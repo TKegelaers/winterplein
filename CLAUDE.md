@@ -33,7 +33,7 @@ Winterplein is a tennis doubles match generator. Given N players, it generates a
 dotnet build
 
 # Run API (http://localhost:5095)
-dotnet run --project src/Winterplein.Api
+dotnet run --project src/Winterplein.WebApi
 
 # Run Blazor WASM client (http://localhost:5149)
 dotnet run --project src/Winterplein.Client
@@ -42,7 +42,7 @@ dotnet run --project src/Winterplein.Client
 dotnet test
 
 # Run a single test project
-dotnet test tests/Winterplein.UnitTests
+dotnet test tests/Winterplein.Application.UnitTests
 dotnet test tests/Winterplein.IntegrationTests
 
 # Run a specific test by name filter
@@ -54,18 +54,21 @@ dotnet test --filter "FullyQualifiedName~MyTestClass.MyTestMethod"
 Clean Architecture with strict dependency rules:
 
 ```text
-Winterplein.Domain          — entities, no external dependencies
-Winterplein.Shared          — DTOs shared between API and Client, no external dependencies
-Winterplein.Application     — CQRS commands/queries/handlers (Wolverine native), refs Domain + Shared only
-Winterplein.Infrastructure  — EF Core, external services, refs Application + Domain
-Winterplein.Api             — ASP.NET Core Controllers, refs Application + Infrastructure + Shared
-Winterplein.Client          — Blazor WASM (MudBlazor), refs Shared only
-tests/Winterplein.UnitTests        — xUnit + FluentAssertions, refs Application + Domain + UnitTests.Common
-tests/Winterplein.UnitTests.Common — Test builders, refs Domain
-tests/Winterplein.IntegrationTests — xUnit + FluentAssertions, refs Api + UnitTests.Common
+Winterplein.Domain                 — entities, no external dependencies
+Winterplein.Application.IO         — DTOs + CQRS commands/queries (contracts), no Domain dependency
+Winterplein.Application            — CQRS handlers (Wolverine native) in CommandHandlers/QueryHandlers, Ports/, Mappers/; refs Domain + Application.IO
+Winterplein.Infrastructure         — EF Core (DbContext, Configurations/, Repositories/), refs Application + Domain
+Winterplein.WebApi                 — ASP.NET Core Controllers + Configuration/ (IocConfig), refs Application + Infrastructure + Application.IO
+Winterplein.Client                 — Blazor WASM (MudBlazor), refs Application.IO only
+tests/Winterplein.Domain.UnitTests         — refs Domain + Common.UnitTests
+tests/Winterplein.Application.UnitTests     — refs Application + Application.IO + Domain + Common.UnitTests
+tests/Winterplein.Infrastructure.UnitTests  — refs Infrastructure + Application + Domain + Common.UnitTests
+tests/Winterplein.WebApi.UnitTests          — refs WebApi + Application.IO + Common.UnitTests
+tests/Winterplein.Common.UnitTests          — Test builders, refs Domain
+tests/Winterplein.IntegrationTests          — refs WebApi + Infrastructure + Common.UnitTests
 ```
 
-Key constraint: `Winterplein.Client` only references `Winterplein.Shared` — it communicates with the API over HTTP, never directly calling application or domain code.
+Key constraint: `Winterplein.Client` only references `Winterplein.Application.IO` — it communicates with the API over HTTP, never directly calling application or domain code.
 
 ## Current State
 
@@ -99,19 +102,23 @@ See ROADMAP.md for the authoritative status table. Summary:
 
 - Stories 1–4: all Pending
 
+**Epic 8 — Solution Structure Alignment**
+
+- Story 1: Done
+
 ## Development Notes
 
-- The application layer uses CQRS via Wolverine: commands (write) and queries (read) live in `Winterplein.Application`; handlers are static classes with a static `Handle(message, ...deps)` method — Wolverine discovers them by convention and injects dependencies as method parameters
-- Wolverine is registered in `Winterplein.Api/Program.cs` via `builder.Host.UseWolverine(opts => opts.Discovery.IncludeAssembly(...))`. Controllers use `IMessageBus.InvokeAsync<T>(message)` for queries/commands that return a result, and `IMessageBus.InvokeAsync(message)` for void commands
+- The application layer uses CQRS via Wolverine: command/query message types (write/read) live in `Winterplein.Application.IO` (so the Client can reference them); their handlers live in `Winterplein.Application` under `CommandHandlers/`/`QueryHandlers/` as static classes with a static `Handle(message, ...deps)` method — Wolverine discovers them by convention and injects dependencies as method parameters
+- Wolverine is registered in `Winterplein.WebApi` (`Configuration/IocConfig.cs`) via `UseWolverine(opts => opts.Discovery.IncludeAssembly(typeof(IAmApplication).Assembly))`. Controllers use `IMessageBus.InvokeAsync<T>(message)` for queries/commands that return a result, and `IMessageBus.InvokeAsync(message)` for void commands
 - Handlers must return reference types (not `int`, `bool`, etc.) — Wolverine does not support value-type returns from `InvokeAsync<T>`
 - The match generation algorithm lives in `Winterplein.Application` as a Wolverine native handler (`GenerateMatchesCommandHandler`)
 - API uses Controllers (`[ApiController]` + `ControllerBase`) for both epics
-- CORS must allow the Blazor client origin (`http://localhost:5149`) — configure in `Winterplein.Api/Program.cs`
+- CORS must allow the Blazor client origin (`http://localhost:5149`) — configure in `Winterplein.WebApi` (`Configuration/IocConfig.cs`)
 - MudBlazor is the UI component library for the Blazor client
 - xUnit is used for all tests; `Xunit` is globally imported in test projects
 - FluentAssertions is used alongside xUnit; `FluentAssertions` is globally imported in test projects
 - Moq is used for mocking; `using Moq;` must be added explicitly (not globally imported)
-- Test builders live in `tests/Winterplein.UnitTests.Common/Builders/` (`PlayerBuilder`, `TeamBuilder`, `MatchBuilder`, `NameBuilder`)
+- Test builders live in `tests/Winterplein.Common.UnitTests/Builders/` (`PlayerBuilder`, `TeamBuilder`, `MatchBuilder`, `NameBuilder`)
 - Domain→DTO mappers are extension methods in `src/Winterplein.Application/Mappers/`
 - `AppState` (scoped service in `Winterplein.Client/Services/`) holds `PlayerCount` and `MatchCount` for cross-component state sharing; components subscribe via `AppState.OnChange` and implement `IDisposable` to unsubscribe
 - Custom MudBlazor theme is defined in `Winterplein.Client/WinterpleinTheme.cs` (tennis/sport palette: green primary, amber secondary)

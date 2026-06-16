@@ -1,15 +1,18 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/Winterplein.Api/Winterplein.Api.csproj" />
+    <Project Path="src/Winterplein.Application.IO/Winterplein.Application.IO.csproj" />
     <Project Path="src/Winterplein.Application/Winterplein.Application.csproj" />
     <Project Path="src/Winterplein.Client/Winterplein.Client.csproj" />
     <Project Path="src/Winterplein.Domain/Winterplein.Domain.csproj" />
     <Project Path="src/Winterplein.Infrastructure/Winterplein.Infrastructure.csproj" />
-    <Project Path="src/Winterplein.Shared/Winterplein.Shared.csproj" />
+    <Project Path="src/Winterplein.WebApi/Winterplein.WebApi.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Winterplein.Application.UnitTests/Winterplein.Application.UnitTests.csproj" />
+    <Project Path="tests/Winterplein.Common.UnitTests/Winterplein.Common.UnitTests.csproj" />
+    <Project Path="tests/Winterplein.Domain.UnitTests/Winterplein.Domain.UnitTests.csproj" />
+    <Project Path="tests/Winterplein.Infrastructure.UnitTests/Winterplein.Infrastructure.UnitTests.csproj" />
     <Project Path="tests/Winterplein.IntegrationTests/Winterplein.IntegrationTests.csproj" />
-    <Project Path="tests/Winterplein.UnitTests.Common/Winterplein.UnitTests.Common.csproj" />
-    <Project Path="tests/Winterplein.UnitTests/Winterplein.UnitTests.csproj" />
+    <Project Path="tests/Winterplein.WebApi.UnitTests/Winterplein.WebApi.UnitTests.csproj" />
   </Folder>
 </Solution>

@@ -99,6 +99,16 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 ---
 
+## Epic 8 — Solution Structure Alignment
+
+> Refactor the solution and project layout to match the KOAla service project layout reference (`docs/service-project-layout.md`), adapted pragmatically to Winterplein (keep Wolverine, EF Core, Blazor client).
+
+| #   | Story                                                                                                                                                                                                   | Description                                                                                                        | Status |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------ |
+| 1   | [Align Solution to Service Layout](docs/epics/epic8-solution-structure-alignment/align-solution-layout/change.md) · [plan](docs/epics/epic8-solution-structure-alignment/align-solution-layout/plan.md) | Rename Shared→Application.IO and Api→WebApi, restructure Application/Infrastructure folders, split tests per layer | Done   |
+
+---
+
 ## Future Epics
 
 | Epic | Description |

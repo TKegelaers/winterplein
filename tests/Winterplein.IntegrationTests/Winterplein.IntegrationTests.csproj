@@ -31,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Winterplein.Api\Winterplein.Api.csproj" />
-    <ProjectReference Include="..\Winterplein.UnitTests.Common\Winterplein.UnitTests.Common.csproj" />
+    <ProjectReference Include="..\..\src\Winterplein.WebApi\Winterplein.WebApi.csproj" />
+    <ProjectReference Include="..\Winterplein.Common.UnitTests\Winterplein.Common.UnitTests.csproj" />
     <ProjectReference Include="..\..\src\Winterplein.Infrastructure\Winterplein.Infrastructure.csproj" />
   </ItemGroup>
 
