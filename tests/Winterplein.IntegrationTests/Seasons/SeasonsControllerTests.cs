@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Winterplein.IntegrationTests.SeedBuilders;
 using Winterplein.Shared.DTOs;
 
 namespace Winterplein.IntegrationTests.Seasons;
@@ -14,14 +15,8 @@ file static class JsonOpts
     };
 }
 
-public class SeasonCrudTests : IDisposable
+public class SeasonCrudTests : IntegrationTestBase
 {
-    private readonly WinterpleinApiFactory _factory = new();
-    private readonly HttpClient _client;
-
-    public SeasonCrudTests() => _client = _factory.CreateClient();
-    public void Dispose() => _factory.Dispose();
-
     private static CreateSeasonRequest ValidRequest(string name = "Test Season") =>
         new(name, new DateOnly(2025, 1, 6), new DateOnly(2025, 3, 31),
             DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0));
@@ -30,7 +25,7 @@ public class SeasonCrudTests : IDisposable
     public async Task FullCrudCycle()
     {
         // POST → 201
-        var createResponse = await _client.PostAsJsonAsync("/api/seasons", ValidRequest(), JsonOpts.Options);
+        var createResponse = await Client.PostAsJsonAsync("/api/seasons", ValidRequest(), JsonOpts.Options);
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         var created = await createResponse.Content.ReadFromJsonAsync<SeasonDto>(JsonOpts.Options);
         created.Should().NotBeNull();
@@ -38,13 +33,13 @@ public class SeasonCrudTests : IDisposable
         int id = created.Id;
 
         // GET list → contains season
-        var listResponse = await _client.GetAsync("/api/seasons");
+        var listResponse = await Client.GetAsync("/api/seasons");
         listResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var list = await listResponse.Content.ReadFromJsonAsync<List<SeasonDto>>(JsonOpts.Options);
         list.Should().Contain(s => s.Id == id);
 
         // GET by id → 200
-        var getResponse = await _client.GetAsync($"/api/seasons/{id}");
+        var getResponse = await Client.GetAsync($"/api/seasons/{id}");
         getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var fetched = await getResponse.Content.ReadFromJsonAsync<SeasonDto>(JsonOpts.Options);
         fetched!.Id.Should().Be(id);
@@ -53,29 +48,23 @@ public class SeasonCrudTests : IDisposable
         var updateRequest = new UpdateSeasonRequest("Updated Season",
             new DateOnly(2025, 1, 6), new DateOnly(2025, 3, 31),
             DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0));
-        var putResponse = await _client.PutAsJsonAsync($"/api/seasons/{id}", updateRequest, JsonOpts.Options);
+        var putResponse = await Client.PutAsJsonAsync($"/api/seasons/{id}", updateRequest, JsonOpts.Options);
         putResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var updated = await putResponse.Content.ReadFromJsonAsync<SeasonDto>(JsonOpts.Options);
         updated!.Name.Should().Be("Updated Season");
 
         // DELETE → 204
-        var deleteResponse = await _client.DeleteAsync($"/api/seasons/{id}");
+        var deleteResponse = await Client.DeleteAsync($"/api/seasons/{id}");
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // GET by id after delete → 404
-        var afterDeleteResponse = await _client.GetAsync($"/api/seasons/{id}");
+        var afterDeleteResponse = await Client.GetAsync($"/api/seasons/{id}");
         afterDeleteResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }
 
-public class SeasonNotFoundTests : IDisposable
+public class SeasonNotFoundTests : IntegrationTestBase
 {
-    private readonly WinterpleinApiFactory _factory = new();
-    private readonly HttpClient _client;
-
-    public SeasonNotFoundTests() => _client = _factory.CreateClient();
-    public void Dispose() => _factory.Dispose();
-
     private static UpdateSeasonRequest ValidUpdateRequest() =>
         new("Updated", new DateOnly(2025, 1, 6), new DateOnly(2025, 3, 31),
             DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0));
@@ -83,7 +72,7 @@ public class SeasonNotFoundTests : IDisposable
     [Fact]
     public async Task Update_Returns404_WhenSeasonNotFound()
     {
-        var response = await _client.PutAsJsonAsync("/api/seasons/99999", ValidUpdateRequest(), JsonOpts.Options);
+        var response = await Client.PutAsJsonAsync("/api/seasons/99999", ValidUpdateRequest(), JsonOpts.Options);
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -91,20 +80,14 @@ public class SeasonNotFoundTests : IDisposable
     [Fact]
     public async Task Delete_Returns404_WhenSeasonNotFound()
     {
-        var response = await _client.DeleteAsync("/api/seasons/99999");
+        var response = await Client.DeleteAsync("/api/seasons/99999");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }
 
-public class SeasonValidationTests : IDisposable
+public class SeasonValidationTests : IntegrationTestBase
 {
-    private readonly WinterpleinApiFactory _factory = new();
-    private readonly HttpClient _client;
-
-    public SeasonValidationTests() => _client = _factory.CreateClient();
-    public void Dispose() => _factory.Dispose();
-
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
@@ -114,7 +97,7 @@ public class SeasonValidationTests : IDisposable
             new DateOnly(2025, 1, 6), new DateOnly(2025, 3, 31),
             DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0));
 
-        var response = await _client.PostAsJsonAsync("/api/seasons", request, JsonOpts.Options);
+        var response = await Client.PostAsJsonAsync("/api/seasons", request, JsonOpts.Options);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
@@ -126,7 +109,7 @@ public class SeasonValidationTests : IDisposable
             new DateOnly(2025, 6, 1), new DateOnly(2025, 1, 1),
             DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0));
 
-        var response = await _client.PostAsJsonAsync("/api/seasons", request, JsonOpts.Options);
+        var response = await Client.PostAsJsonAsync("/api/seasons", request, JsonOpts.Options);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
@@ -138,30 +121,24 @@ public class SeasonValidationTests : IDisposable
             new DateOnly(2025, 1, 1), new DateOnly(2025, 12, 31),
             DayOfWeek.Monday, new TimeOnly(20, 0), new TimeOnly(18, 0));
 
-        var response = await _client.PostAsJsonAsync("/api/seasons", request, JsonOpts.Options);
+        var response = await Client.PostAsJsonAsync("/api/seasons", request, JsonOpts.Options);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
 
-public class SeasonMatchdaysTests : IDisposable
+public class SeasonMatchdaysTests : IntegrationTestBase
 {
-    private readonly WinterpleinApiFactory _factory = new();
-    private readonly HttpClient _client;
-
-    public SeasonMatchdaysTests() => _client = _factory.CreateClient();
-    public void Dispose() => _factory.Dispose();
-
     [Fact]
     public async Task GetMatchdays_ReturnsCorrectDates()
     {
-        var createResponse = await _client.PostAsJsonAsync("/api/seasons",
+        var createResponse = await Client.PostAsJsonAsync("/api/seasons",
             new CreateSeasonRequest("Test",
                 new DateOnly(2025, 1, 6), new DateOnly(2025, 1, 27),
                 DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0)), JsonOpts.Options);
         var season = await createResponse.Content.ReadFromJsonAsync<SeasonDto>(JsonOpts.Options);
 
-        var response = await _client.GetAsync($"/api/seasons/{season!.Id}/matchdays");
+        var response = await Client.GetAsync($"/api/seasons/{season!.Id}/matchdays");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var matchdays = await response.Content.ReadFromJsonAsync<List<DateOnly>>();
@@ -172,29 +149,23 @@ public class SeasonMatchdaysTests : IDisposable
     [Fact]
     public async Task GetMatchdays_Returns404_ForUnknownSeason()
     {
-        var response = await _client.GetAsync("/api/seasons/99999/matchdays");
+        var response = await Client.GetAsync("/api/seasons/99999/matchdays");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }
 
-public class SeasonPlayerTests : IDisposable
+public class SeasonPlayerTests : IntegrationTestBase
 {
-    private readonly WinterpleinApiFactory _factory = new();
-    private readonly HttpClient _client;
-
-    public SeasonPlayerTests() => _client = _factory.CreateClient();
-    public void Dispose() => _factory.Dispose();
-
     private async Task<SeasonDto> CreateSeason() =>
-        (await (await _client.PostAsJsonAsync("/api/seasons",
+        (await (await Client.PostAsJsonAsync("/api/seasons",
             new CreateSeasonRequest("Test",
                 new DateOnly(2025, 1, 6), new DateOnly(2025, 12, 31),
                 DayOfWeek.Monday, new TimeOnly(18, 0), new TimeOnly(20, 0)), JsonOpts.Options))
         .Content.ReadFromJsonAsync<SeasonDto>(JsonOpts.Options))!;
 
     private async Task<PlayerDto> CreatePlayer(string first = "Jan", string last = "Doe") =>
-        (await (await _client.PostAsJsonAsync("/api/players",
+        (await (await Client.PostAsJsonAsync("/api/players",
             new AddPlayerRequest(first, last, GenderDto.Male)))
         .Content.ReadFromJsonAsync<PlayerDto>())!;
 
@@ -204,7 +175,7 @@ public class SeasonPlayerTests : IDisposable
         var season = await CreateSeason();
         var player = await CreatePlayer();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await Client.PostAsJsonAsync(
             $"/api/seasons/{season.Id}/players", new AddSeasonPlayerRequest(player.Id));
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -217,7 +188,7 @@ public class SeasonPlayerTests : IDisposable
     {
         var player = await CreatePlayer();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await Client.PostAsJsonAsync(
             "/api/seasons/99999/players", new AddSeasonPlayerRequest(player.Id));
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -228,7 +199,7 @@ public class SeasonPlayerTests : IDisposable
     {
         var season = await CreateSeason();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await Client.PostAsJsonAsync(
             $"/api/seasons/{season.Id}/players", new AddSeasonPlayerRequest(99999));
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -239,14 +210,46 @@ public class SeasonPlayerTests : IDisposable
     {
         var season = await CreateSeason();
         var player = await CreatePlayer();
-        await _client.PostAsJsonAsync(
+        await Client.PostAsJsonAsync(
             $"/api/seasons/{season.Id}/players", new AddSeasonPlayerRequest(player.Id));
 
-        var response = await _client.GetAsync($"/api/seasons/{season.Id}/players");
+        var response = await Client.GetAsync($"/api/seasons/{season.Id}/players");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var players = await response.Content.ReadFromJsonAsync<List<PlayerDto>>();
         players.Should().Contain(p => p.Id == player.Id);
+    }
+
+    [Fact]
+    public async Task GetPlayers_Returns200_WithSeededPlayers()
+    {
+        // Seed a season with enrolled players directly through EF Core, then
+        // verify the API returns them — exercising the pre-existing-state path.
+        int seasonId;
+        var seededPlayerIds = new List<int>();
+
+        using (var scoped = Factory.CreateDbContext())
+        {
+            var anna = await new PlayerSeedBuilder()
+                .WithFirstName("Anna").WithLastName("Seed").Seed(scoped.Context);
+            var bram = await new PlayerSeedBuilder()
+                .WithFirstName("Bram").WithLastName("Seed").Seed(scoped.Context);
+            seededPlayerIds.Add(anna.Id);
+            seededPlayerIds.Add(bram.Id);
+
+            var season = await new SeasonSeedBuilder()
+                .WithName("Seeded Season")
+                .WithPlayers([anna, bram])
+                .Seed(scoped.Context);
+            seasonId = season.Id;
+        }
+
+        var response = await Client.GetAsync($"/api/seasons/{seasonId}/players");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var players = await response.Content.ReadFromJsonAsync<List<PlayerDto>>();
+        players.Should().NotBeNull();
+        players!.Select(p => p.Id).Should().BeEquivalentTo(seededPlayerIds);
     }
 
     [Fact]
@@ -256,10 +259,10 @@ public class SeasonPlayerTests : IDisposable
         var players = await Task.WhenAll(
             Enumerable.Range(1, 5).Select(i => CreatePlayer($"P{i}", "L")));
         foreach (var p in players)
-            await _client.PostAsJsonAsync(
+            await Client.PostAsJsonAsync(
                 $"/api/seasons/{season.Id}/players", new AddSeasonPlayerRequest(p.Id));
 
-        var response = await _client.DeleteAsync($"/api/seasons/{season.Id}/players/{players[0].Id}");
+        var response = await Client.DeleteAsync($"/api/seasons/{season.Id}/players/{players[0].Id}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
@@ -269,7 +272,7 @@ public class SeasonPlayerTests : IDisposable
     {
         var season = await CreateSeason();
 
-        var response = await _client.DeleteAsync($"/api/seasons/{season.Id}/players/99999");
+        var response = await Client.DeleteAsync($"/api/seasons/{season.Id}/players/99999");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -281,10 +284,10 @@ public class SeasonPlayerTests : IDisposable
         var players = await Task.WhenAll(
             Enumerable.Range(1, 4).Select(i => CreatePlayer($"P{i}", "L")));
         foreach (var p in players)
-            await _client.PostAsJsonAsync(
+            await Client.PostAsJsonAsync(
                 $"/api/seasons/{season.Id}/players", new AddSeasonPlayerRequest(p.Id));
 
-        var response = await _client.DeleteAsync($"/api/seasons/{season.Id}/players/{players[0].Id}");
+        var response = await Client.DeleteAsync($"/api/seasons/{season.Id}/players/{players[0].Id}");
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }

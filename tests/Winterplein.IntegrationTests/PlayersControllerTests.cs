@@ -4,19 +4,12 @@ using Winterplein.Shared.DTOs;
 
 namespace Winterplein.IntegrationTests;
 
-public class GetAllPlayersTests : IDisposable
+public class GetAllPlayersTests : IntegrationTestBase
 {
-    private readonly WinterpleinApiFactory _factory = new();
-    private readonly HttpClient _client;
-
-    public GetAllPlayersTests() => _client = _factory.CreateClient();
-
-    public void Dispose() => _factory.Dispose();
-
     [Fact]
     public async Task Returns200WithEmptyList_WhenNoPlayersExist()
     {
-        var response = await _client.GetAsync("/api/players");
+        var response = await Client.GetAsync("/api/players");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var players = await response.Content.ReadFromJsonAsync<List<PlayerDto>>();
@@ -24,21 +17,14 @@ public class GetAllPlayersTests : IDisposable
     }
 }
 
-public class AddPlayerTests : IDisposable
+public class AddPlayerTests : IntegrationTestBase
 {
-    private readonly WinterpleinApiFactory _factory = new();
-    private readonly HttpClient _client;
-
-    public AddPlayerTests() => _client = _factory.CreateClient();
-
-    public void Dispose() => _factory.Dispose();
-
     [Fact]
     public async Task Returns201WithPlayerDto_WhenValidRequest()
     {
         var request = new AddPlayerRequest("Jan", "Janssen", GenderDto.Male);
 
-        var response = await _client.PostAsJsonAsync("/api/players", request);
+        var response = await Client.PostAsJsonAsync("/api/players", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
@@ -57,7 +43,7 @@ public class AddPlayerTests : IDisposable
     {
         var request = new AddPlayerRequest(firstName, lastName, GenderDto.Male);
 
-        var response = await _client.PostAsJsonAsync("/api/players", request);
+        var response = await Client.PostAsJsonAsync("/api/players", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
@@ -68,29 +54,22 @@ public class AddPlayerTests : IDisposable
         var json = """{"firstName":"Jan","lastName":"Janssen","gender":"InvalidGender"}""";
         var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-        var response = await _client.PostAsync("/api/players", content);
+        var response = await Client.PostAsync("/api/players", content);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
 
-public class DeletePlayerTests : IDisposable
+public class DeletePlayerTests : IntegrationTestBase
 {
-    private readonly WinterpleinApiFactory _factory = new();
-    private readonly HttpClient _client;
-
-    public DeletePlayerTests() => _client = _factory.CreateClient();
-
-    public void Dispose() => _factory.Dispose();
-
     [Fact]
     public async Task Returns204_WhenPlayerExists()
     {
-        var addResponse = await _client.PostAsJsonAsync("/api/players",
+        var addResponse = await Client.PostAsJsonAsync("/api/players",
             new AddPlayerRequest("Anna", "Berg", GenderDto.Female));
         var player = await addResponse.Content.ReadFromJsonAsync<PlayerDto>();
 
-        var deleteResponse = await _client.DeleteAsync($"/api/players/{player!.Id}");
+        var deleteResponse = await Client.DeleteAsync($"/api/players/{player!.Id}");
 
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
@@ -98,7 +77,7 @@ public class DeletePlayerTests : IDisposable
     [Fact]
     public async Task Returns404_WhenPlayerNotFound()
     {
-        var response = await _client.DeleteAsync("/api/players/99999");
+        var response = await Client.DeleteAsync("/api/players/99999");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
