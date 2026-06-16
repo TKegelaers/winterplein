@@ -17,11 +17,15 @@ If you cannot find the `task.md` file, report back to your parent agent that the
 
 ### 0.2 Check task status
 
-Read `docs/epics/<change-path>/plan.md` to verify the task is in status "under review". If not, report back to your parent agent that the task is not ready for review yet.
+Read `docs/epics/<change-path>/plan.md` to verify the task is in status "under review". If not, report back to your parent agent that the task is not ready for review yet.docs/epics/<change-path>/
 
 ### 0.3 Check for prior review
 
 If a `review.md` already exists for the task, read it to understand previous feedback and whether it has been addressed in the current implementation.
+
+### 0.4 Find design.md file for broader context
+
+If there is a `design.md` file in `docs/epics/<change-path>/`, read it to understand the overall technical approach and architecture decisions. Use this to verify the implementation follows the intended design.
 
 ### 1 Understand the task
 
@@ -29,12 +33,30 @@ Read `task.md` (and `review.md` if present) to understand the scope, domain mode
 
 ### 2 Review the implementation
 
-Examine the code changes, run the tests defined for the task, and verify all acceptance criteria in `task.md` are met.
+Review the implementation across three dimensions:
 
-- Be critical — flag real issues clearly
-- Provide actionable, specific feedback
-- Verify the implementation is consistent with existing code conventions and patterns in the codebase
-- Do not invent issues. A review can validly find zero problems.
+**Completeness** — Are all requirements implemented and tested?
+- All acceptance criteria from `task.md` are covered by code
+- All test cases from `task.md` exist and pass
+- All affected files from `task.md` were created/modified as specified
+
+**Correctness** — Does the implementation work correctly?
+- Implementation matches spec intent and handles the scenarios described
+- Edge cases and error states are handled (not just the happy path)
+- Tests actually verify the expected behavior (not just that no exception is thrown)
+
+**Coherence** — Does the implementation fit the codebase?
+- Follows the technical approach and architecture decisions in `design.md`
+- Consistent with similar implementations in the codebase (naming, patterns, layering)
+- Follows coding standards and best practices defined in `.ai/change-config.md`
+
+For each dimension, note any findings. Classify each issue as:
+
+| Severity | Meaning |
+|----------|---------|
+| **Critical** | Must fix — breaks correctness, missing core requirement, violates architecture |
+| **Warning** | Should fix — suboptimal pattern, missing edge case, naming drift from design |
+| **Suggestion** | Nice to have — minor improvement, alternative approach |
 
 ### 3 Write review.md (if issues found)
 

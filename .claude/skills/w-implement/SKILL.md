@@ -13,6 +13,7 @@ $change-name = $
 
 We defined a plan document outlining the atomic tasks required to implement a change.
 Find the document in `docs/epics/{{$change-name}}/plan.md`.
+There is also a `design.md` in the same directory documenting the technical approach and architecture decisions.
 
 You are to coordinate the implementation of the change by following the plan, delegating each task to a separate subagent and keeping track of the implementation status of each task.
 
@@ -34,15 +35,17 @@ Orchestrate the implementation of the plan by delegating each task to a separate
 
 Based on the dependencies and implementation status of the tasks outlined in the plan.md, determine which task(s) can be implemented next.
 
+If resuming after an interruption, re-read plan.md to find tasks still in "pending" or "in progress" status and continue from there.
+
 #### 2.2 Delegate task to subagent
 
-For each task identified in step 2.1, spawn a subagent using `subagent_type: w-implement-task`. In the prompt, provide the change path and task name so the agent can locate `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md`.
+For each task identified in step 2.1, spawn a subagent using `subagent_type: w-implement-task`. In the prompt, provide the change path and task name so the agent can locate `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md` and the design document in `docs/epics/{{$change-name}}/design.md`.
 
 Update the task status to "in progress" in the `plan.md` document after delegating the task to a subagent.
 
 ### 2.3 Delegate review of the task to a subagent
 
-Once the subagent has completed the implementation of the task, spawn a separate subagent using `subagent_type: w-review-task`. In the prompt, provide the change path and task name so the agent can locate `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md`.
+Once the subagent has completed the implementation of the task, spawn a separate subagent using `subagent_type: w-review-task`. In the prompt, provide the change path and task name so the agent can locate `docs/epics/{{$change-name}}/tasks/{{$task-name}}/task.md` and the design document in `docs/epics/{{$change-name}}/design.md`.
 
 Update the task status to "under review" in the `plan.md` document after delegating the review of the task to a subagent.
 
