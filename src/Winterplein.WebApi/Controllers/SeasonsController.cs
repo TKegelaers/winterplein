@@ -78,4 +78,11 @@ public class SeasonsController(IMessageBus bus) : ControllerBase
         await bus.InvokeAsync(new RemoveSeasonPlayerCommand(id, playerId));
         return NoContent();
     }
+
+    [HttpGet("{id:int}/match-pool")]
+    public async Task<IActionResult> GetMatchPool(int id)
+    {
+        var pool = await bus.InvokeAsync<GenerateMatchesResponse?>(new GetSeasonMatchPoolQuery(id));
+        return pool == null ? NotFound() : Ok(pool);
+    }
 }

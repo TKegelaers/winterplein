@@ -77,4 +77,12 @@ public class SeasonApiClient(HttpClient httpClient)
         response.EnsureSuccessStatusCode();
         return true;
     }
+
+    public async Task<GenerateMatchesResponse?> GetMatchPoolAsync(int seasonId)
+    {
+        var response = await httpClient.GetAsync($"/api/seasons/{seasonId}/match-pool");
+        if (response.StatusCode == HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<GenerateMatchesResponse>(_json);
+    }
 }

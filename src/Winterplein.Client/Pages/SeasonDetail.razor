@@ -98,6 +98,44 @@ else
             </RowTemplate>
         </MudTable>
     }
+
+    <MudExpansionPanels Class="mt-4" Elevation="2">
+        <MudExpansionPanel Text="Match Pool" Expanded="_poolExpanded"
+                           ExpandedChanged="OnPoolExpandedChanged">
+            @if (_poolLoading)
+            {
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+            }
+            else if (_matchPool == null || _matchPool.TotalCount == 0)
+            {
+                <MudText Color="Color.Secondary">
+                    Not enough players — a season needs at least 4 enrolled players to generate matches.
+                </MudText>
+            }
+            else
+            {
+                <MudText Class="mb-3">@_matchPool.TotalCount possible matches</MudText>
+
+                <MudTable Items="_matchPool.Matches" Hover="true" Dense="true">
+                    <HeaderContent>
+                        <MudTh>#</MudTh>
+                        <MudTh>Team 1</MudTh>
+                        <MudTh>Team 2</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.Id</MudTd>
+                        <MudTd>@FormatTeam(context.Team1)</MudTd>
+                        <MudTd>@FormatTeam(context.Team2)</MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            }
+        </MudExpansionPanel>
+    </MudExpansionPanels>
 }
 
 @code {
@@ -108,6 +146,11 @@ else
     private List<PlayerDto> _availablePlayers = [];
     private PlayerDto? _selectedPlayer;
     private bool _loading = true;
+
+    private bool _poolExpanded;
+    private bool _poolLoading;
+    private bool _poolLoaded;
+    private GenerateMatchesResponse? _matchPool;
 
     protected override async Task OnInitializedAsync()
     {
@@ -191,4 +234,33 @@ else
             Snackbar.Add("Failed to remove player.", Severity.Error);
         }
     }
+
+    private async Task OnPoolExpandedChanged(bool expanded)
+    {
+        _poolExpanded = expanded;
+        if (!expanded || _poolLoaded) return;
+        await LoadMatchPool();
+    }
+
+    private async Task LoadMatchPool()
+    {
+        _poolLoading = true;
+        try
+        {
+            _matchPool = await SeasonApi.GetMatchPoolAsync(Id);
+            _poolLoaded = true;
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to load match pool.", Severity.Error);
+        }
+        finally
+        {
+            _poolLoading = false;
+        }
+    }
+
+    private static string FormatTeam(TeamDto team) =>
+        $"{team.Player1.FirstName} {team.Player1.LastName} & " +
+        $"{team.Player2.FirstName} {team.Player2.LastName}";
 }
