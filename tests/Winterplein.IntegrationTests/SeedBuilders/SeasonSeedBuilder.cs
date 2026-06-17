@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Winterplein.Domain.Entities;
-using Winterplein.Infrastructure.Persistence;
+using Winterplein.Infrastructure;
 
 namespace Winterplein.IntegrationTests.SeedBuilders;
 

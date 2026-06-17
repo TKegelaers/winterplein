@@ -1,4 +1,4 @@
-using Winterplein.Application.Interfaces;
+using Winterplein.Application.Ports;
 using Winterplein.Domain.Entities;
 
 namespace Winterplein.Application.Services;

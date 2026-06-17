@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Winterplein.Shared\Winterplein.Shared.csproj" />
+    <ProjectReference Include="..\Winterplein.Application.IO\Winterplein.Application.IO.csproj" />
   </ItemGroup>
 
 </Project>

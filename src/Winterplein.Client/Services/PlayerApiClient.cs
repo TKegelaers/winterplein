@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using Winterplein.Shared.DTOs;
+using Winterplein.Application.IO.DTOs;
 
 namespace Winterplein.Client.Services;
 

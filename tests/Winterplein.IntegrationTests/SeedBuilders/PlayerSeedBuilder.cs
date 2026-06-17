@@ -1,7 +1,7 @@
 using Winterplein.Domain.Entities;
 using Winterplein.Domain.Enums;
 using Winterplein.Domain.ValueObjects;
-using Winterplein.Infrastructure.Persistence;
+using Winterplein.Infrastructure;
 
 namespace Winterplein.IntegrationTests.SeedBuilders;
 
