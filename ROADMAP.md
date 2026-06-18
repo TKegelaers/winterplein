@@ -42,11 +42,11 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 > Generate and schedule matches for a season's matchdays using enrolled players.
 
-| #   | Story                                                                                                                                                                   | Description                                                              | Status  |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------- |
-| 1   | [View Season Match Pool](docs/epics/epic3-season-match-planning/season-match-pool/change.md) · [plan](docs/epics/epic3-season-match-planning/season-match-pool/plan.md) | View all possible matches generated from a season's enrolled players     | Done    |
-| 2   | [Generate Season Schedule](docs/epics/epic3-season-match-planning/season-schedule-generation/change.md)                                                                 | Automatically assign random unique matches to all open matchdays at once | Pending |
-| 3   | [Browse & Manage Schedule](docs/epics/epic3-season-match-planning/season-schedule-management/change.md)                                                                 | View full matchday schedule, clear individual or all planned matches     | Pending |
+| #   | Story                                                                                                                                                                                       | Description                                                              | Status  |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------- |
+| 1   | [View Season Match Pool](docs/epics/epic3-season-match-planning/season-match-pool/change.md) · [plan](docs/epics/epic3-season-match-planning/season-match-pool/plan.md)                     | View all possible matches generated from a season's enrolled players     | Done    |
+| 2   | [Generate Season Schedule](docs/epics/epic3-season-match-planning/season-schedule-generation/change.md) · [plan](docs/epics/epic3-season-match-planning/season-schedule-generation/plan.md) | Automatically assign random unique matches to all open matchdays at once | Done    |
+| 3   | [Browse & Manage Schedule](docs/epics/epic3-season-match-planning/season-schedule-management/change.md)                                                                                     | View full matchday schedule, clear individual or all planned matches     | Pending |
 
 ---
 

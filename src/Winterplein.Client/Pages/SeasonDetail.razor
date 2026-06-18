@@ -136,6 +136,51 @@ else
             }
         </MudExpansionPanel>
     </MudExpansionPanels>
+
+    <div class="d-flex align-center justify-space-between mt-4 mb-2">
+        <MudText Typo="Typo.h6">Schedule</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.EventAvailable"
+                   Disabled="@_generatingSchedule" OnClick="GenerateSchedule">
+            Generate Schedule
+        </MudButton>
+    </div>
+
+    @if (_generatingSchedule)
+    {
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
+    }
+    else if (_schedule != null)
+    {
+        @if (_schedule.PlannedMatches.Count == 0)
+        {
+            <MudText Color="Color.Secondary">No matches planned yet.</MudText>
+        }
+        else
+        {
+            <MudText Class="mb-3">
+                @_schedule.PlannedCount planned, @_schedule.OpenCount still open
+            </MudText>
+
+            <MudTable Items="_schedule.PlannedMatches" Hover="true" Dense="true">
+                <HeaderContent>
+                    <MudTh>Date</MudTh>
+                    <MudTh>Team 1</MudTh>
+                    <MudTh>Team 2</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Date.ToShortDateString()</MudTd>
+                    <MudTd>@FormatTeam(context.Team1)</MudTd>
+                    <MudTd>@FormatTeam(context.Team2)</MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        }
+    }
 }
 
 @code {
@@ -151,6 +196,9 @@ else
     private bool _poolLoading;
     private bool _poolLoaded;
     private GenerateMatchesResponse? _matchPool;
+
+    private bool _generatingSchedule;
+    private GenerateScheduleResponse? _schedule;
 
     protected override async Task OnInitializedAsync()
     {
@@ -257,6 +305,33 @@ else
         finally
         {
             _poolLoading = false;
+        }
+    }
+
+    private async Task GenerateSchedule()
+    {
+        _generatingSchedule = true;
+        try
+        {
+            var result = await SeasonApi.GenerateScheduleAsync(Id);
+            if (result == null)
+            {
+                Snackbar.Add("Season not found.", Severity.Error);
+                return;
+            }
+
+            _schedule = result;
+            Snackbar.Add(
+                $"Planned {result.PlannedCount} matchdays, {result.OpenCount} still open.",
+                Severity.Success);
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to generate schedule.", Severity.Error);
+        }
+        finally
+        {
+            _generatingSchedule = false;
         }
     }
 

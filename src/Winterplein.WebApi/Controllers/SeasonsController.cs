@@ -85,4 +85,11 @@ public class SeasonsController(IMessageBus bus) : ControllerBase
         var pool = await bus.InvokeAsync<GenerateMatchesResponse?>(new GetSeasonMatchPoolQuery(id));
         return pool == null ? NotFound() : Ok(pool);
     }
+
+    [HttpPost("{id:int}/schedule/generate")]
+    public async Task<IActionResult> GenerateSchedule(int id)
+    {
+        var result = await bus.InvokeAsync<GenerateScheduleResponse?>(new GenerateScheduleCommand(id));
+        return result == null ? NotFound() : Ok(result);
+    }
 }

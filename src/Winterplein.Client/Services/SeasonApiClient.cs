@@ -85,4 +85,13 @@ public class SeasonApiClient(HttpClient httpClient)
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<GenerateMatchesResponse>(_json);
     }
+
+    public async Task<GenerateScheduleResponse?> GenerateScheduleAsync(int seasonId)
+    {
+        var response = await httpClient.PostAsJsonAsync(
+            $"/api/seasons/{seasonId}/schedule/generate", new { }, _json);
+        if (response.StatusCode == HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<GenerateScheduleResponse>(_json);
+    }
 }
