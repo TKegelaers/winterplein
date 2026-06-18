@@ -33,6 +33,7 @@ public static class IocConfig
             opts.UseSqlServer(builder.Configuration.GetConnectionString("WinterpleinDb")));
         builder.Services.AddScoped<IPlayerRepository, EfPlayerRepository>();
         builder.Services.AddScoped<ISeasonRepository, EfSeasonRepository>();
+        builder.Services.AddScoped<IPlannedMatchRepository, EfPlannedMatchRepository>();
         builder.Services.AddSingleton<IMatchGeneratorService, MatchGeneratorService>();
 
         var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];

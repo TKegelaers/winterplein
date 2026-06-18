@@ -78,4 +78,39 @@ public class SeasonsController(IMessageBus bus) : ControllerBase
         await bus.InvokeAsync(new RemoveSeasonPlayerCommand(id, playerId));
         return NoContent();
     }
+
+    [HttpGet("{id:int}/match-pool")]
+    public async Task<IActionResult> GetMatchPool(int id)
+    {
+        var pool = await bus.InvokeAsync<GenerateMatchesResponse?>(new GetSeasonMatchPoolQuery(id));
+        return pool == null ? NotFound() : Ok(pool);
+    }
+
+    [HttpPost("{id:int}/schedule/generate")]
+    public async Task<IActionResult> GenerateSchedule(int id)
+    {
+        var result = await bus.InvokeAsync<GenerateScheduleResponse?>(new GenerateScheduleCommand(id));
+        return result == null ? NotFound() : Ok(result);
+    }
+
+    [HttpGet("{id:int}/schedule")]
+    public async Task<IActionResult> GetSchedule(int id)
+    {
+        var schedule = await bus.InvokeAsync<SeasonScheduleResponse?>(new GetSeasonScheduleQuery(id));
+        return schedule == null ? NotFound() : Ok(schedule);
+    }
+
+    [HttpDelete("{id:int}/matchdays/{date}/planned-match")]
+    public async Task<IActionResult> ClearPlannedMatch(int id, DateOnly date)
+    {
+        await bus.InvokeAsync(new ClearPlannedMatchCommand(id, date));
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}/schedule")]
+    public async Task<IActionResult> ClearAllPlannedMatches(int id)
+    {
+        await bus.InvokeAsync(new ClearAllPlannedMatchesCommand(id));
+        return NoContent();
+    }
 }

@@ -11,6 +11,7 @@ public class WinterpleinDbContext : DbContext
     public DbSet<Season> Seasons => Set<Season>();
     public DbSet<Team> Teams => Set<Team>();
     public DbSet<Match> Matches => Set<Match>();
+    public DbSet<PlannedMatch> PlannedMatches => Set<PlannedMatch>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

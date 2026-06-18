@@ -11,8 +11,6 @@ public static class GenerateMatchesCommandHandler
     {
         var allPlayers = await repo.GetAllAsync(ct);
         var generated = generator.GenerateAllMatches(allPlayers);
-        return new GenerateMatchesResponse(
-            generated.Select(m => m.ToDto()).ToList(),
-            generated.Count);
+        return generated.ToResponse();
     }
 }

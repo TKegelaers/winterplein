@@ -28,13 +28,13 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 > Manage seasons with a name, date range, weekly matchday, and start/end hours. Matchdays are computed from the date range and weekday — not stored.
 
-| #   | Story                                                                                                     | Description                                                                    | Status  |
-| --- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------- |
-| 1   | [Define Season Domain & DTOs](docs/epics/epic2-season-management/season-domain-and-dtos/change.md)        | `Season` entity with `GetMatchdays()`, `SeasonDto`, Create/Update request DTOs | Pending |
-| 2   | [Implement Season CQRS & Repository](docs/epics/epic2-season-management/season-cqrs-repository/change.md) | Wolverine commands/queries, `ISeasonRepository`, `InMemorySeasonRepository`    | Pending |
-| 3   | [Build Season API](docs/epics/epic2-season-management/season-api-endpoints/change.md)                     | CRUD + matchdays endpoints, `SeasonMapper`, DI registration                    | Pending |
-| 4   | [Build Season UI](docs/epics/epic2-season-management/season-blazor-ui/change.md)                          | `SeasonApiClient`, list/create/edit/detail pages, `SeasonForm` component       | Pending |
-| 5   | [Write Season Tests](docs/epics/epic2-season-management/season-tests/change.md)                           | Unit tests for domain + handlers, integration tests for API endpoints          | Pending |
+| #   | Story                                                                                                     | Description                                                                    | Status |
+| --- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------ |
+| 1   | [Define Season Domain & DTOs](docs/epics/epic2-season-management/season-domain-and-dtos/change.md)        | `Season` entity with `GetMatchdays()`, `SeasonDto`, Create/Update request DTOs | Done   |
+| 2   | [Implement Season CQRS & Repository](docs/epics/epic2-season-management/season-cqrs-repository/change.md) | Wolverine commands/queries, `ISeasonRepository`, `InMemorySeasonRepository`    | Done   |
+| 3   | [Build Season API](docs/epics/epic2-season-management/season-api-endpoints/change.md)                     | CRUD + matchdays endpoints, `SeasonMapper`, DI registration                    | Done   |
+| 4   | [Build Season UI](docs/epics/epic2-season-management/season-blazor-ui/change.md)                          | `SeasonApiClient`, list/create/edit/detail pages, `SeasonForm` component       | Done   |
+| 5   | [Write Season Tests](docs/epics/epic2-season-management/season-tests/change.md)                           | Unit tests for domain + handlers, integration tests for API endpoints          | Done   |
 
 ---
 
@@ -42,11 +42,11 @@ Winterplein is a tennis doubles match generator. Given a list of players, it aut
 
 > Generate and schedule matches for a season's matchdays using enrolled players.
 
-| #   | Story                                                                                                   | Description                                                              | Status  |
-| --- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------- |
-| 1   | [View Season Match Pool](docs/epics/epic3-season-match-planning/season-match-pool/change.md)            | View all possible matches generated from a season's enrolled players     | Pending |
-| 2   | [Generate Season Schedule](docs/epics/epic3-season-match-planning/season-schedule-generation/change.md) | Automatically assign random unique matches to all open matchdays at once | Pending |
-| 3   | [Browse & Manage Schedule](docs/epics/epic3-season-match-planning/season-schedule-management/change.md) | View full matchday schedule, clear individual or all planned matches     | Pending |
+| #   | Story                                                                                                                                                                                       | Description                                                              | Status |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------ |
+| 1   | [View Season Match Pool](docs/epics/epic3-season-match-planning/season-match-pool/change.md) · [plan](docs/epics/epic3-season-match-planning/season-match-pool/plan.md)                     | View all possible matches generated from a season's enrolled players     | Done   |
+| 2   | [Generate Season Schedule](docs/epics/epic3-season-match-planning/season-schedule-generation/change.md) · [plan](docs/epics/epic3-season-match-planning/season-schedule-generation/plan.md) | Automatically assign random unique matches to all open matchdays at once | Done   |
+| 3   | [Browse & Manage Schedule](docs/epics/epic3-season-match-planning/season-schedule-management/change.md) · [plan](docs/epics/epic3-season-match-planning/season-schedule-management/plan.md) | View full matchday schedule, clear individual or all planned matches     | Done   |
 
 ---
 

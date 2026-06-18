@@ -77,4 +77,46 @@ public class SeasonApiClient(HttpClient httpClient)
         response.EnsureSuccessStatusCode();
         return true;
     }
+
+    public async Task<GenerateMatchesResponse?> GetMatchPoolAsync(int seasonId)
+    {
+        var response = await httpClient.GetAsync($"/api/seasons/{seasonId}/match-pool");
+        if (response.StatusCode == HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<GenerateMatchesResponse>(_json);
+    }
+
+    public async Task<GenerateScheduleResponse?> GenerateScheduleAsync(int seasonId)
+    {
+        var response = await httpClient.PostAsJsonAsync(
+            $"/api/seasons/{seasonId}/schedule/generate", new { }, _json);
+        if (response.StatusCode == HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<GenerateScheduleResponse>(_json);
+    }
+
+    public async Task<SeasonScheduleResponse?> GetScheduleAsync(int seasonId)
+    {
+        var response = await httpClient.GetAsync($"/api/seasons/{seasonId}/schedule");
+        if (response.StatusCode == HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<SeasonScheduleResponse>(_json);
+    }
+
+    public async Task<bool> ClearPlannedMatchAsync(int seasonId, DateOnly date)
+    {
+        var response = await httpClient.DeleteAsync(
+            $"/api/seasons/{seasonId}/matchdays/{date:yyyy-MM-dd}/planned-match");
+        if (response.StatusCode == HttpStatusCode.NotFound) return false;
+        response.EnsureSuccessStatusCode();
+        return true;
+    }
+
+    public async Task<bool> ClearAllPlannedMatchesAsync(int seasonId)
+    {
+        var response = await httpClient.DeleteAsync($"/api/seasons/{seasonId}/schedule");
+        if (response.StatusCode == HttpStatusCode.NotFound) return false;
+        response.EnsureSuccessStatusCode();
+        return true;
+    }
 }
