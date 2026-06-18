@@ -92,4 +92,25 @@ public class SeasonsController(IMessageBus bus) : ControllerBase
         var result = await bus.InvokeAsync<GenerateScheduleResponse?>(new GenerateScheduleCommand(id));
         return result == null ? NotFound() : Ok(result);
     }
+
+    [HttpGet("{id:int}/schedule")]
+    public async Task<IActionResult> GetSchedule(int id)
+    {
+        var schedule = await bus.InvokeAsync<SeasonScheduleResponse?>(new GetSeasonScheduleQuery(id));
+        return schedule == null ? NotFound() : Ok(schedule);
+    }
+
+    [HttpDelete("{id:int}/matchdays/{date}/planned-match")]
+    public async Task<IActionResult> ClearPlannedMatch(int id, DateOnly date)
+    {
+        await bus.InvokeAsync(new ClearPlannedMatchCommand(id, date));
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}/schedule")]
+    public async Task<IActionResult> ClearAllPlannedMatches(int id)
+    {
+        await bus.InvokeAsync(new ClearAllPlannedMatchesCommand(id));
+        return NoContent();
+    }
 }

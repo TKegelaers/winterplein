@@ -139,47 +139,75 @@ else
 
     <div class="d-flex align-center justify-space-between mt-4 mb-2">
         <MudText Typo="Typo.h6">Schedule</MudText>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                   StartIcon="@Icons.Material.Filled.EventAvailable"
-                   Disabled="@_generatingSchedule" OnClick="GenerateSchedule">
-            Generate Schedule
-        </MudButton>
+        <div class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                       StartIcon="@Icons.Material.Filled.ClearAll"
+                       Disabled="@(_generatingSchedule || !HasPlannedEntries)"
+                       OnClick="ConfirmClearAll">
+                Clear All
+            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.EventAvailable"
+                       Disabled="@_generatingSchedule" OnClick="GenerateSchedule">
+                Generate Schedule
+            </MudButton>
+        </div>
     </div>
 
-    @if (_generatingSchedule)
+    @if (_generatingSchedule || _scheduleLoading)
     {
         <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
         <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
         <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="40px" Class="mb-2" />
     }
-    else if (_schedule != null)
+    else if (_schedule == null || _schedule.Entries.Count == 0)
     {
-        @if (_schedule.PlannedMatches.Count == 0)
-        {
-            <MudText Color="Color.Secondary">No matches planned yet.</MudText>
-        }
-        else
-        {
-            <MudText Class="mb-3">
-                @_schedule.PlannedCount planned, @_schedule.OpenCount still open
-            </MudText>
-
-            <MudTable Items="_schedule.PlannedMatches" Hover="true" Dense="true">
-                <HeaderContent>
-                    <MudTh>Date</MudTh>
-                    <MudTh>Team 1</MudTh>
-                    <MudTh>Team 2</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd>@context.Date.ToShortDateString()</MudTd>
-                    <MudTd>@FormatTeam(context.Team1)</MudTd>
-                    <MudTd>@FormatTeam(context.Team2)</MudTd>
-                </RowTemplate>
-                <PagerContent>
-                    <MudTablePager />
-                </PagerContent>
-            </MudTable>
-        }
+        <MudText Color="Color.Secondary">No matchdays in this period.</MudText>
+    }
+    else
+    {
+        <MudTable Items="_schedule.Entries" Hover="true" Dense="true">
+            <HeaderContent>
+                <MudTh>Date</MudTh>
+                <MudTh>Match</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Action</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Date.ToShortDateString()</MudTd>
+                <MudTd>
+                    @if (context.IsPlanned && context.PlannedMatch != null)
+                    {
+                        @($"{FormatTeam(context.PlannedMatch.Team1)} vs {FormatTeam(context.PlannedMatch.Team2)}")
+                    }
+                    else
+                    {
+                        <span>—</span>
+                    }
+                </MudTd>
+                <MudTd>
+                    @if (context.IsPlanned)
+                    {
+                        <MudChip T="string" Color="Color.Success" Size="Size.Small">Planned</MudChip>
+                    }
+                    else
+                    {
+                        <MudChip T="string" Color="Color.Default" Size="Size.Small">Open</MudChip>
+                    }
+                </MudTd>
+                <MudTd>
+                    @if (context.IsPlanned)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error"
+                                       Size="Size.Small" Title="Clear"
+                                       OnClick="@(() => ClearPlannedMatch(context.Date))" />
+                    }
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
     }
 }
 
@@ -198,7 +226,10 @@ else
     private GenerateMatchesResponse? _matchPool;
 
     private bool _generatingSchedule;
-    private GenerateScheduleResponse? _schedule;
+    private bool _scheduleLoading;
+    private SeasonScheduleResponse? _schedule;
+
+    private bool HasPlannedEntries => _schedule?.Entries.Any(e => e.IsPlanned) ?? false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -216,6 +247,7 @@ else
             _season = seasonTask.Result;
             _allPlayers = playersTask.Result;
             RefreshAvailablePlayers();
+            await LoadSchedule();
         }
         catch (Exception)
         {
@@ -224,6 +256,23 @@ else
         finally
         {
             _loading = false;
+        }
+    }
+
+    private async Task LoadSchedule()
+    {
+        _scheduleLoading = true;
+        try
+        {
+            _schedule = await SeasonApi.GetScheduleAsync(Id);
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to load schedule.", Severity.Error);
+        }
+        finally
+        {
+            _scheduleLoading = false;
         }
     }
 
@@ -320,7 +369,6 @@ else
                 return;
             }
 
-            _schedule = result;
             Snackbar.Add(
                 $"Planned {result.PlannedCount} matchdays, {result.OpenCount} still open.",
                 Severity.Success);
@@ -332,6 +380,60 @@ else
         finally
         {
             _generatingSchedule = false;
+        }
+
+        await LoadSchedule();
+    }
+
+    private async Task ClearPlannedMatch(DateOnly date)
+    {
+        try
+        {
+            var cleared = await SeasonApi.ClearPlannedMatchAsync(Id, date);
+            if (cleared)
+            {
+                Snackbar.Add("Planned match cleared.", Severity.Success);
+                await LoadSchedule();
+            }
+            else
+            {
+                Snackbar.Add("No planned match to clear.", Severity.Warning);
+            }
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to clear planned match.", Severity.Error);
+        }
+    }
+
+    private async Task ConfirmClearAll()
+    {
+        var confirmed = await DialogService.ShowMessageBoxAsync(
+            "Confirm Clear All",
+            "Clear all planned matches for this season?",
+            yesText: "Clear All", cancelText: "Cancel");
+        if (confirmed == true)
+            await ClearAllPlannedMatches();
+    }
+
+    private async Task ClearAllPlannedMatches()
+    {
+        try
+        {
+            var cleared = await SeasonApi.ClearAllPlannedMatchesAsync(Id);
+            if (cleared)
+            {
+                Snackbar.Add("All planned matches cleared.", Severity.Success);
+                await LoadSchedule();
+            }
+            else
+            {
+                Snackbar.Add("Season not found.", Severity.Error);
+            }
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to clear planned matches.", Severity.Error);
         }
     }
 
